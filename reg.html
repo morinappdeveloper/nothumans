@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>Register — NOT HUMANS</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{-webkit-tap-highlight-color:rgba(0,0,0,0);box-sizing:border-box;margin:0;padding:0;}
+button,a,div,span,img,input,textarea,select,label{outline:none;-webkit-tap-highlight-color:transparent;}
+img{-webkit-user-drag:none;-webkit-touch-callout:none;user-select:none;}
+body{user-select:none;-webkit-user-select:none;font-family:'Rajdhani',sans-serif;background:#f4f6fb;color:#0a0a1a;min-height:100vh;padding-bottom:40px;}
+input,textarea{user-select:text;-webkit-user-select:text;}
+:focus{outline:none;}
+button,a,.card,.item{cursor:pointer;}
+:root{--blue:#1a6fff;--blue-dark:#0d4fd4;--blue-pale:#e8f0ff;--black:#0a0a1a;--white:#fff;--border:#d0d8f0;--gray:#f4f6fb;--text2:#4a5280;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-bottom:1.5px solid var(--border);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;letter-spacing:1px;color:var(--black);text-decoration:none;}
+.nav-logo span{color:var(--blue);}
+.back-btn{display:flex;align-items:center;gap:6px;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--text2);text-decoration:none;background:none;border:none;}
+.back-btn:hover{color:var(--blue);}
+
+/* PAGE HEADER */
+.page-header{background:linear-gradient(135deg,#0a0a1a,#0d1a40);padding:28px 20px 24px;position:relative;overflow:hidden;}
+.page-header::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(26,111,255,0.05) 30px,rgba(26,111,255,0.05) 31px),repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(26,111,255,0.05) 30px,rgba(26,111,255,0.05) 31px);}
+.page-header-content{position:relative;z-index:1;}
+.match-info-pill{display:inline-flex;align-items:center;background:rgba(26,111,255,0.2);border:1px solid rgba(26,111,255,0.4);color:var(--blue);font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;margin-bottom:10px;}
+.page-header h1{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:#fff;letter-spacing:1px;margin-bottom:4px;}
+.page-header p{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.4);}
+
+/* FORM CARD */
+.form-card{background:#fff;border-radius:16px;border:1.5px solid var(--border);margin:16px;overflow:hidden;animation:slideUp 0.4s ease both;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.form-card-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--gray);display:flex;align-items:center;gap:10px;}
+.form-card-header h2{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;color:var(--black);}
+.card-icon{width:28px;height:28px;background:var(--blue-pale);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.form-card-body{padding:16px 18px;}
+
+/* FORM FIELDS */
+.field-group{margin-bottom:14px;}
+.field-label{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text2);text-transform:uppercase;margin-bottom:6px;display:block;}
+.field-input{width:100%;background:var(--gray);border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:600;color:var(--black);transition:border-color 0.2s;-webkit-appearance:none;}
+.field-input:focus{border-color:var(--blue);background:#fff;}
+.field-input::placeholder{color:#b0b8d0;font-weight:500;}
+.field-input[inputmode="numeric"]{letter-spacing:2px;}
+.field-hint{font-size:10px;color:var(--text2);opacity:0.6;margin-top:4px;font-family:'Rajdhani',sans-serif;}
+
+/* PLAYER BLOCK */
+.player-block{background:var(--gray);border-radius:10px;padding:14px;margin-bottom:12px;border:1.5px solid var(--border);transition:border-color 0.2s;}
+.player-block:focus-within{border-color:var(--blue);}
+.player-label{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;color:var(--blue);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.player-opt{font-size:8px;color:var(--text2);opacity:0.7;font-weight:600;}
+.player-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.player-row .field-input{font-size:11px;}
+
+/* SUBMIT BTN */
+.submit-btn{width:100%;background:var(--blue);color:#fff;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;letter-spacing:2px;padding:16px;border:none;border-radius:10px;transition:all 0.2s;margin:4px 0;}
+.submit-btn:hover{background:var(--blue-dark);transform:translateY(-1px);}
+.submit-btn:active{transform:scale(0.98);}
+.submit-btn:disabled{background:var(--border);color:var(--text2);pointer-events:none;}
+
+/* MATCH SUMMARY */
+.match-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.summary-item{background:var(--gray);border-radius:8px;padding:10px 12px;border:1px solid var(--border);}
+.summary-label{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:600;letter-spacing:1px;color:var(--text2);margin-bottom:3px;}
+.summary-value{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:800;color:var(--black);}
+.summary-value.blue{color:var(--blue);}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:#fff;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:600;letter-spacing:1px;padding:12px 20px;border-radius:8px;z-index:999;opacity:0;transition:all 0.3s;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* PROGRESS STEPS */
+.steps{display:flex;align-items:center;padding:16px 20px;gap:0;}
+.step{display:flex;align-items:center;gap:6px;flex:1;}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-num.inactive{background:var(--border);color:var(--text2);}
+.step-text{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;color:var(--black);}
+.step-text.inactive{color:var(--text2);}
+.step-line{flex:1;height:2px;background:var(--border);margin:0 6px;}
+.step-line.active{background:var(--blue);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="back-btn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    BACK
+  </a>
+  <a href="index.html" class="nav-logo">NH <span>ESPORTS</span></a>
+  <div style="width:60px;"></div>
+</nav>
+
+<!-- STEPS -->
+<div class="steps">
+  <div class="step"><div class="step-num">1</div><div class="step-text">SQUAD INFO</div></div>
+  <div class="step-line"></div>
+  <div class="step"><div class="step-num inactive">2</div><div class="step-text inactive">PAYMENT</div></div>
+  <div class="step-line"></div>
+  <div class="step"><div class="step-num inactive">3</div><div class="step-text inactive">CONFIRMED</div></div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="page-header-content">
+    <div class="match-info-pill" id="match-pill">LOADING MATCH...</div>
+    <h1>SQUAD REGISTRATION</h1>
+    <p>FILL IN YOUR TEAM DETAILS BELOW</p>
+  </div>
+</div>
+
+<!-- MATCH SUMMARY -->
+<div style="margin:16px 16px 0;">
+  <div class="match-summary" id="match-summary" style="display:none;">
+    <div class="summary-item"><div class="summary-label">MATCH</div><div class="summary-value" id="s-name">—</div></div>
+    <div class="summary-item"><div class="summary-label">ENTRY</div><div class="summary-value blue" id="s-entry">—</div></div>
+    <div class="summary-item"><div class="summary-label">PRIZE POOL</div><div class="summary-value" id="s-prize">—</div></div>
+    <div class="summary-item"><div class="summary-label">SLOTS LEFT</div><div class="summary-value" id="s-slots">—</div></div>
+  </div>
+</div>
+
+<!-- TEAM INFO -->
+<div class="form-card" style="animation-delay:0.05s;">
+  <div class="form-card-header">
+    <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="2.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+    <h2>TEAM INFORMATION</h2>
+  </div>
+  <div class="form-card-body">
+    <div class="field-group">
+      <label class="field-label">GUILD NAME</label>
+      <input type="text" class="field-input" id="guild" placeholder="YOUR GUILD" autocomplete="off" inputmode="text"/>
+    </div>
+    <div class="field-group">
+      <label class="field-label">TEAM NAME</label>
+      <input type="text" class="field-input" id="teamName" placeholder="YOUR TEAM NAME" autocomplete="off" inputmode="text"/>
+    </div>
+    <div class="field-group">
+      <label class="field-label">IGL CONTACT (WHATSAPP)</label>
+      <input type="tel" class="field-input" id="iglContact" placeholder="10-DIGIT NUMBER" inputmode="numeric" maxlength="10" pattern="[0-9]*"/>
+      <div class="field-hint">Will be used for match room ID delivery</div>
+    </div>
+  </div>
+</div>
+
+<!-- PLAYERS -->
+<div class="form-card" style="animation-delay:0.1s;">
+  <div class="form-card-header">
+    <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div>
+    <h2>PLAYER DETAILS</h2>
+  </div>
+  <div class="form-card-body">
+    <!-- P1 -->
+    <div class="player-block">
+      <div class="player-label">PLAYER 1 <span style="color:#1a6fff;">IGL</span><span class="player-opt">REQUIRED</span></div>
+      <div class="player-row">
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p1ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p1uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+      </div>
+    </div>
+    <!-- P2 -->
+    <div class="player-block">
+      <div class="player-label">PLAYER 2<span class="player-opt">REQUIRED</span></div>
+      <div class="player-row">
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p2ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p2uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+      </div>
+    </div>
+    <!-- P3 -->
+    <div class="player-block">
+      <div class="player-label">PLAYER 3<span class="player-opt">REQUIRED</span></div>
+      <div class="player-row">
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p3ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p3uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+      </div>
+    </div>
+    <!-- P4 -->
+    <div class="player-block">
+      <div class="player-label">PLAYER 4<span class="player-opt">REQUIRED</span></div>
+      <div class="player-row">
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p4ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p4uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+      </div>
+    </div>
+    <!-- P5 EXTRA -->
+    <div class="player-block">
+      <div class="player-label">PLAYER 5 <span style="color:var(--text2);font-size:7px;">(EXTRA)</span><span class="player-opt">OPTIONAL</span></div>
+      <div class="player-row">
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p5ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p5uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+      </div>
+    </div>
+    <!-- P6 EXTRA -->
+    <div class="player-block">
+      <div class="player-label">PLAYER 6 <span style="color:var(--text2);font-size:7px;">(EXTRA)</span><span class="player-opt">OPTIONAL</span></div>
+      <div class="player-row">
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p6ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p6uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="next-btn" onclick="goToPayment()">PROCEED TO PAYMENT</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import{getAuth,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+import{getFirestore,doc,getDoc}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+  authDomain: "nothumans-7e285.firebaseapp.com",
+  projectId: "nothumans-7e285",
+  storageBucket: "nothumans-7e285.firebasestorage.app",
+  messagingSenderId: "409725804600",
+  appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+const params=new URLSearchParams(location.search);
+const matchId=params.get('matchId');
+let matchData={};
+
+onAuthStateChanged(auth,user=>{if(!user){window.location.href='index.html';}});
+
+// UID inputs: numeric only
+document.querySelectorAll('.uid').forEach(inp=>{
+  inp.addEventListener('input',()=>{inp.value=inp.value.replace(/\D/g,'');});
+});
+document.getElementById('iglContact').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'');if(this.value.length>10)this.value=this.value.slice(0,10);});
+
+// Load match info
+async function loadMatch(){
+  if(!matchId){window.location.href='index.html';return;}
+  try{
+    const snap=await getDoc(doc(db,'matches',matchId));
+    if(!snap.exists()){window.location.href='index.html';return;}
+    matchData={id:matchId,...snap.data()};
+    document.getElementById('match-pill').textContent=matchData.name||'TOURNAMENT';
+    document.getElementById('s-name').textContent=matchData.name||'—';
+    document.getElementById('s-entry').textContent=(matchData.entry||0)+'₹';
+    document.getElementById('s-prize').textContent=matchData.prize||'TBA';
+    const slots=parseInt(matchData.slots)||12;
+    const filled=parseInt(matchData.filledSlots)||0;
+    document.getElementById('s-slots').textContent=(slots-filled)+' LEFT';
+    document.getElementById('match-summary').style.display='grid';
+    sessionStorage.setItem('matchData',JSON.stringify(matchData));
+
+    // === DYNAMIC PLAYER FIELDS BASED ON MODE ===
+    setupPlayerFieldsByMode(matchData.mode || '');
+  }catch(e){console.log(e);}
+}
+loadMatch();
+
+// Dynamic player fields based on match mode
+function setupPlayerFieldsByMode(mode) {
+  const modeLower = mode.toLowerCase();
+  const playerBlocks = document.querySelectorAll('.player-block');
+  
+  // Hide all player blocks first
+  playerBlocks.forEach(block => block.style.display = 'none');
+
+  if (modeLower.includes('1v1') || modeLower.includes('1 vs 1')) {
+    // 1v1 Mode
+    if (playerBlocks[0]) {
+      playerBlocks[0].style.display = 'block';
+      playerBlocks[0].querySelector('.player-label').innerHTML = 
+        `PLAYER 1 <span style="color:#1a6fff;">(SOLO)</span><span class="player-opt">REQUIRED</span>`;
+    }
+  } 
+  else if (modeLower.includes('2v2') || modeLower.includes('2 vs 2')) {
+    // 2v2 Mode
+    if (playerBlocks[0]) playerBlocks[0].style.display = 'block';
+    if (playerBlocks[1]) playerBlocks[1].style.display = 'block';
+    
+    if (playerBlocks[0]) {
+      playerBlocks[0].querySelector('.player-label').innerHTML = 
+        `PLAYER 1 <span style="color:#1a6fff;">IGL</span><span class="player-opt">REQUIRED</span>`;
+    }
+  } 
+  else {
+    // Default 4v4 / Squad mode
+    for (let i = 0; i < 4; i++) {
+      if (playerBlocks[i]) playerBlocks[i].style.display = 'block';
+    }
+    // Show optional subs (P5 & P6)
+    if (playerBlocks[4]) playerBlocks[4].style.display = 'block';
+    if (playerBlocks[5]) playerBlocks[5].style.display = 'block';
+  }
+}
+
+window.goToPayment=()=>{
+  const guild=document.getElementById('guild').value.trim();
+  const team=document.getElementById('teamName').value.trim();
+  const igl=document.getElementById('iglContact').value.trim();
+  const p1ign=document.getElementById('p1ign').value.trim();
+  const p1uid=document.getElementById('p1uid').value.trim();
+  const p2ign=document.getElementById('p2ign').value.trim();
+  const p2uid=document.getElementById('p2uid').value.trim();
+  const p3ign=document.getElementById('p3ign').value.trim();
+  const p3uid=document.getElementById('p3uid').value.trim();
+  const p4ign=document.getElementById('p4ign').value.trim();
+  const p4uid=document.getElementById('p4uid').value.trim();
+
+  const modeLower = (matchData.mode || '').toLowerCase();
+
+  if(!guild){showToast('ENTER GUILD NAME');return;}
+  if(!team){showToast('ENTER TEAM NAME');return;}
+  if(!p1ign||!p1uid){showToast('PLAYER 1 IGN & UID REQUIRED');return;}
+  if(!igl||igl.length!==10){showToast('ENTER VALID 10-DIGIT CONTACT');return;}
+
+  // Mode-based validation
+  if (modeLower.includes('2v2') || modeLower.includes('2 vs 2')) {
+    if(!p2ign||!p2uid){showToast('PLAYER 2 IGN & UID REQUIRED');return;}
+  } 
+  else if (!modeLower.includes('1v1') && !modeLower.includes('1 vs 1')) {
+    // Default 4v4 mode - require P2, P3, P4
+    if(!p2ign||!p2uid){showToast('PLAYER 2 IGN & UID REQUIRED');return;}
+    if(!p3ign||!p3uid){showToast('PLAYER 3 IGN & UID REQUIRED');return;}
+    if(!p4ign||!p4uid){showToast('PLAYER 4 IGN & UID REQUIRED');return;}
+  }
+
+  const regData={
+    matchId,guild,teamName:team,iglContact:igl,
+    players:[
+      {slot:1,ign:p1ign,uid:p1uid,role:'IGL'},
+      {slot:2,ign:p2ign,uid:p2uid},
+      {slot:3,ign:p3ign,uid:p3uid},
+      {slot:4,ign:p4ign,uid:p4uid},
+    ]
+  };
+  const p5i=document.getElementById('p5ign').value.trim();
+  const p5u=document.getElementById('p5uid').value.trim();
+  if(p5i||p5u) regData.players.push({slot:5,ign:p5i,uid:p5u,role:'EXTRA'});
+  const p6i=document.getElementById('p6ign').value.trim();
+  const p6u=document.getElementById('p6uid').value.trim();
+  if(p6i||p6u) regData.players.push({slot:6,ign:p6i,uid:p6u,role:'EXTRA'});
+
+  sessionStorage.setItem('regData',JSON.stringify(regData));
+  window.location.href=`payment.html?matchId=${matchId}`;
+};
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);}
+</script>
+</body>
+</html>
