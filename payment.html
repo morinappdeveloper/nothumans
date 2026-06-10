@@ -138,11 +138,13 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
     </div>
     <div class="inv-section">
       <div class="inv-section-title">TEAM DETAILS</div>
-      <div class="inv-row"><span class="inv-key">GUILD</span><span class="inv-val" id="inv-guild">—</span></div>
+      <div class="inv-row" id="inv-guild-row"><span class="inv-key">GUILD</span><span class="inv-val" id="inv-guild">—</span></div>
       <div class="inv-row"><span class="inv-key">TEAM NAME</span><span class="inv-val" id="inv-team">—</span></div>
       <div class="inv-row"><span class="inv-key">IGL CONTACT</span><span class="inv-val" id="inv-contact">—</span></div>
+      <!-- Mac mode: IGL IGN row (hidden by default) -->
+      <div class="inv-row" id="inv-iglign-row" style="display:none;"><span class="inv-key">IGL IGN</span><span class="inv-val blue" id="inv-iglign">—</span></div>
     </div>
-    <div class="inv-section">
+    <div class="inv-section" id="inv-squad-section">
       <div class="inv-section-title">SQUAD ROSTER</div>
       <div class="player-list" id="inv-players"></div>
     </div>
@@ -158,7 +160,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
   <div class="qr-label">SCAN TO PAY</div>
   <div class="qr-amount" id="qr-amount">₹0</div>
   <div id="qr-container"></div>
-  <div class="upi-id" id="upi-id-display">9125427919@fam</div>
+  <div class="upi-id" id="upi-id-display">Loading...</div>
   <div class="qr-note">SCAN THE QR CODE WITH ANY UPI APP<br/>GPAY · PHONEPE · PAYTM · BHIM</div>
 </div>
 
@@ -179,7 +181,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
   </div>
 </div>
 
-<button class="submit-btn" id="submit-btn" disabled onclick="submitRegistration()">SUBMIT & CONFIRM REGISTRATION</button>
+<button class="submit-btn" id="submit-btn" disabled onclick="submitRegistration()">SUBMIT &amp; CONFIRM REGISTRATION</button>
 
 <!-- EDIT MODAL -->
 <div class="modal-bg" id="edit-modal">
@@ -187,8 +189,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
     <div class="modal-handle"></div>
     <div class="modal-title">EDIT DETAILS<button class="modal-close" onclick="closeEdit()">&#x2715;</button></div>
     <div class="field-group"><label class="field-label">TEAM NAME</label><input type="text" class="field-input" id="edit-team" inputmode="text"/></div>
-    <div class="field-group"><label class="field-label">GUILD</label><input type="text" class="field-input" id="edit-guild" inputmode="text"/></div>
+    <!-- Guild field — hidden for Mac mode -->
+    <div class="field-group" id="edit-guild-group"><label class="field-label">GUILD</label><input type="text" class="field-input" id="edit-guild" inputmode="text"/></div>
     <div class="field-group"><label class="field-label">IGL CONTACT</label><input type="tel" class="field-input" id="edit-contact" inputmode="numeric" maxlength="10"/></div>
+    <!-- Mac mode IGL IGN field -->
+    <div class="field-group" id="edit-iglign-group" style="display:none;"><label class="field-label">IGL GAME NAME (IGN)</label><input type="text" class="field-input" id="edit-iglign" inputmode="text"/></div>
+    <!-- Player rows — hidden for Mac mode -->
     <div id="edit-players-wrap"></div>
     <button class="save-btn" onclick="saveEdit()">SAVE CHANGES</button>
   </div>
@@ -199,7 +205,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
 import{getAuth,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-import{getFirestore,collection,addDoc,updateDoc,doc,getDoc,serverTimestamp,getDocs,query,where,increment}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import{getFirestore,collection,addDoc,updateDoc,setDoc,doc,getDoc,serverTimestamp,increment}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
@@ -213,7 +219,7 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 const IMGBB_KEY='405018efab5e2bd5e75f4dd0040a41c3';
-let UPI_ID = ''; // Will be loaded from Firebase settings/global
+let UPI_ID='';
 
 let currentUser=null;
 let regData=JSON.parse(sessionStorage.getItem('regData')||'{}');
@@ -221,26 +227,22 @@ let matchData=JSON.parse(sessionStorage.getItem('matchData')||'{}');
 let ssUrl='';
 let invId='NH'+Date.now().toString().slice(-6);
 
+// Detect Mac mode once
+const isMacMode = (str) => {
+  const s = (str||'').toLowerCase();
+  return s.includes('4v4 mac') || s.includes('4v4mac') || s.includes('mac');
+};
+
 onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = 'index.html';
-    return;
-  }
-  currentUser = user;
+  if (!user) { window.location.href='index.html'; return; }
+  currentUser=user;
 
   // Fetch UPI ID from Firebase settings
   try {
-    const settingsSnap = await getDoc(doc(db, 'settings', 'global'));
-    if (settingsSnap.exists()) {
-      UPI_ID = settingsSnap.data().upiId || '';
-    }
-  } catch (e) {
-    console.error('Failed to load UPI ID from settings');
-  }
-
-  if (!UPI_ID) {
-    UPI_ID = 'NOT_CONFIGURED@upi'; // Fallback
-  }
+    const settingsSnap=await getDoc(doc(db,'settings','global'));
+    if(settingsSnap.exists()) UPI_ID=settingsSnap.data().upiId||'';
+  } catch(e) { console.error('Failed to load UPI settings'); }
+  if(!UPI_ID) UPI_ID='NOT_CONFIGURED@upi';
 
   renderInvoice();
   generateQR();
@@ -252,42 +254,59 @@ function renderInvoice(){
   document.getElementById('inv-time').textContent=matchData.time||'TBA';
   document.getElementById('inv-mode').textContent=matchData.mode||'BR · SQUAD';
   document.getElementById('inv-prize').textContent=matchData.prize||'TBA';
-  document.getElementById('inv-guild').textContent=regData.guild||'—';
   document.getElementById('inv-team').textContent=regData.teamName||'—';
   document.getElementById('inv-contact').textContent=regData.iglContact||'—';
-  document.getElementById('inv-entry').textContent=(matchData.entry||0)+'₹';
+  document.getElementById('inv-entry').textContent='₹'+(matchData.entry||0);
   document.getElementById('qr-amount').textContent='₹'+(matchData.entry||0);
   document.getElementById('upi-id-display').textContent=UPI_ID;
 
-  const pl = document.getElementById('inv-players');
-  const modeLower = (matchData.mode || '').toLowerCase();
-  let playersToShow = regData.players || [];
+  const macMode=isMacMode(matchData.mode||regData.mode);
 
-  // Filter players based on mode for cleaner invoice
-  if (modeLower.includes('1v1') || modeLower.includes('1 vs 1')) {
-    playersToShow = playersToShow.filter(p => p.slot === 1);
-  } else if (modeLower.includes('2v2') || modeLower.includes('2 vs 2')) {
-    playersToShow = playersToShow.filter(p => p.slot === 1 || p.slot === 2);
-  } 
-  // 4v4 and default: show all players (including subs)
+  if(macMode){
+    // Mac mode: hide guild row, hide squad roster, show IGL IGN
+    document.getElementById('inv-guild-row').style.display='none';
+    document.getElementById('inv-squad-section').style.display='none';
+    document.getElementById('inv-iglign-row').style.display='flex';
+    document.getElementById('inv-iglign').textContent=regData.iglIgn||'—';
+  } else {
+    // Normal mode: show guild, squad, hide IGL IGN row
+    document.getElementById('inv-guild-row').style.display='flex';
+    document.getElementById('inv-squad-section').style.display='block';
+    document.getElementById('inv-iglign-row').style.display='none';
+    document.getElementById('inv-guild').textContent=regData.guild||'—';
 
-  pl.innerHTML = playersToShow.map(p => `
-    <div class="player-item">
-      <div class="player-num">${p.slot}</div>
-      <div>
-        <div class="player-ign">${p.ign || '—'} ${p.role ? `<span style="font-size:8px;color:var(--blue);">[${p.role}]</span>` : ''}</div>
-        <div class="player-uid">UID: ${p.uid || '—'}</div>
+    // Render players
+    const pl=document.getElementById('inv-players');
+    const modeLower=(matchData.mode||'').toLowerCase();
+    let playersToShow=regData.players||[];
+
+    if(modeLower.includes('1v1')||modeLower.includes('1 vs 1')){
+      playersToShow=playersToShow.filter(p=>p.slot===1);
+    } else if(modeLower.includes('2v2')||modeLower.includes('2 vs 2')){
+      playersToShow=playersToShow.filter(p=>p.slot===1||p.slot===2);
+    }
+
+    pl.innerHTML=playersToShow.map(p=>`
+      <div class="player-item">
+        <div class="player-num">${p.slot}</div>
+        <div>
+          <div class="player-ign">${p.ign||'—'} ${p.role?`<span style="font-size:8px;color:var(--blue);">[${p.role}]</span>`:''}</div>
+          <div class="player-uid">UID: ${p.uid||'—'}</div>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  }
 }
 
 function generateQR(){
   const amt=matchData.entry||0;
-  const upiStr=`upi://pay?pa=${UPI_ID}&pn=NH+ESPORTS&am=${amt}&cu=INR&tn=${encodeURIComponent(invId)}`;
+  const upiStr=`upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=NH+ESPORTS&am=${amt}&cu=INR&tn=${encodeURIComponent(invId)}`;
   document.getElementById('qr-container').innerHTML='';
-  try{new QRCode(document.getElementById('qr-container'),{text:upiStr,width:180,height:180,colorDark:'#0a0a1a',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});}
-  catch(e){document.getElementById('qr-container').innerHTML=`<div style="width:180px;height:180px;background:#f4f6fb;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:9px;color:#4a5280;text-align:center;padding:10px;">QR GENERATION<br/>FAILED<br/><br/>PAY TO:<br/>${UPI_ID}</div>`;}
+  try{
+    new QRCode(document.getElementById('qr-container'),{text:upiStr,width:180,height:180,colorDark:'#0a0a1a',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+  } catch(e){
+    document.getElementById('qr-container').innerHTML=`<div style="width:180px;height:180px;background:#f4f6fb;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:9px;color:#4a5280;text-align:center;padding:10px;">QR GENERATION<br/>FAILED<br/><br/>PAY TO:<br/>${UPI_ID}</div>`;
+  }
 }
 
 window.handleFile=async(file)=>{
@@ -307,29 +326,66 @@ window.handleFile=async(file)=>{
       document.getElementById('upload-text').textContent='UPLOADED SUCCESSFULLY';
       document.getElementById('submit-btn').disabled=false;
       showToast('SCREENSHOT UPLOADED');
-    }else throw new Error('fail');
-  }catch(e){document.getElementById('upload-text').textContent='UPLOAD FAILED. TRY AGAIN.';showToast('UPLOAD FAILED');}
+    } else throw new Error('fail');
+  } catch(e){
+    document.getElementById('upload-text').textContent='UPLOAD FAILED. TRY AGAIN.';
+    showToast('UPLOAD FAILED');
+  }
 };
 
 window.openEdit=()=>{
+  const macMode=isMacMode(matchData.mode||regData.mode);
   document.getElementById('edit-team').value=regData.teamName||'';
-  document.getElementById('edit-guild').value=regData.guild||'';
   document.getElementById('edit-contact').value=regData.iglContact||'';
-  const pw=document.getElementById('edit-players-wrap');
-  pw.innerHTML=(regData.players||[]).map(p=>`<div style="background:#f4f6fb;border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid #d0d8f0;"><div style="font-family:'Orbitron',sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;color:#1a6fff;margin-bottom:10px;">PLAYER ${p.slot} ${p.role?'['+p.role+']':''}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input" id="ep${p.slot}ign" value="${p.ign||''}" inputmode="text" style="font-size:11px;padding:9px 10px;"/></div><div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input" id="ep${p.slot}uid" value="${p.uid||''}" inputmode="numeric" style="font-size:11px;padding:9px 10px;"/></div></div></div>`).join('');
+
+  if(macMode){
+    // Mac mode: show IGL IGN field, hide guild + players
+    document.getElementById('edit-guild-group').style.display='none';
+    document.getElementById('edit-iglign-group').style.display='block';
+    document.getElementById('edit-iglign').value=regData.iglIgn||'';
+    document.getElementById('edit-players-wrap').innerHTML='';
+  } else {
+    // Normal mode
+    document.getElementById('edit-guild-group').style.display='block';
+    document.getElementById('edit-iglign-group').style.display='none';
+    document.getElementById('edit-guild').value=regData.guild||'';
+    const pw=document.getElementById('edit-players-wrap');
+    pw.innerHTML=(regData.players||[]).map(p=>`
+      <div style="background:#f4f6fb;border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid #d0d8f0;">
+        <div style="font-family:'Orbitron',sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;color:#1a6fff;margin-bottom:10px;">PLAYER ${p.slot} ${p.role?'['+p.role+']':''}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div>
+            <div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div>
+            <input type="text" class="field-input" id="ep${p.slot}ign" value="${p.ign||''}" inputmode="text" style="font-size:11px;padding:9px 10px;"/>
+          </div>
+          <div>
+            <div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div>
+            <input type="text" class="field-input" id="ep${p.slot}uid" value="${p.uid||''}" inputmode="numeric" style="font-size:11px;padding:9px 10px;"/>
+          </div>
+        </div>
+      </div>`).join('');
+  }
   document.getElementById('edit-modal').classList.add('open');
 };
+
 window.closeEdit=()=>document.getElementById('edit-modal').classList.remove('open');
+
 window.saveEdit=()=>{
+  const macMode=isMacMode(matchData.mode||regData.mode);
   regData.teamName=document.getElementById('edit-team').value.trim()||regData.teamName;
-  regData.guild=document.getElementById('edit-guild').value.trim()||regData.guild;
   regData.iglContact=document.getElementById('edit-contact').value.trim()||regData.iglContact;
-  (regData.players||[]).forEach(p=>{
-    const ign=document.getElementById(`ep${p.slot}ign`);
-    const uid=document.getElementById(`ep${p.slot}uid`);
-    if(ign)p.ign=ign.value.trim()||p.ign;
-    if(uid)p.uid=uid.value.trim()||p.uid;
-  });
+
+  if(macMode){
+    regData.iglIgn=document.getElementById('edit-iglign').value.trim()||regData.iglIgn;
+  } else {
+    regData.guild=document.getElementById('edit-guild').value.trim()||regData.guild;
+    (regData.players||[]).forEach(p=>{
+      const ign=document.getElementById(`ep${p.slot}ign`);
+      const uid=document.getElementById(`ep${p.slot}uid`);
+      if(ign)p.ign=ign.value.trim()||p.ign;
+      if(uid)p.uid=uid.value.trim()||p.uid;
+    });
+  }
   sessionStorage.setItem('regData',JSON.stringify(regData));
   renderInvoice();
   closeEdit();
@@ -340,26 +396,66 @@ window.submitRegistration=async()=>{
   if(!ssUrl){showToast('UPLOAD PAYMENT SCREENSHOT FIRST');return;}
   const btn=document.getElementById('submit-btn');
   btn.textContent='SUBMITTING...';btn.disabled=true;
+
   try{
+    const macMode=isMacMode(matchData.mode||regData.mode);
+
+    // Build the registration document cleanly
     const regDoc={
-      invId,matchId:regData.matchId,matchName:matchData.name||'',
-      userId:currentUser.uid,userEmail:currentUser.email,
-      guild:regData.guild,teamName:regData.teamName,iglContact:regData.iglContact,
-      players:regData.players,entryFee:matchData.entry||0,
-      screenshotUrl:ssUrl,status:'verifying',
-      registeredAt:serverTimestamp()
+      invId,
+      matchId: regData.matchId,
+      matchName: matchData.name||'',
+      mode: matchData.mode||'',
+      userId: currentUser.uid,
+      userEmail: currentUser.email,
+      teamName: regData.teamName||'',
+      iglContact: regData.iglContact||'',
+      entryFee: matchData.entry||0,
+      screenshotUrl: ssUrl,
+      status: 'verifying',
+      registeredAt: serverTimestamp()
     };
+
+    if(macMode){
+      // Mac mode specific fields
+      regDoc.iglIgn = regData.iglIgn||'';
+      regDoc.guild = '';
+      regDoc.players = [];
+    } else {
+      // Normal mode
+      regDoc.guild = regData.guild||'';
+      regDoc.players = regData.players||[];
+    }
+
+    // Write registration to Firestore
     const docRef=await addDoc(collection(db,'registrations'),regDoc);
-    // Increment filled slots
-    try{await updateDoc(doc(db,'matches',regData.matchId),{filledSlots:increment(1)});}catch(e){}
-    // Get slot number
-    const snap=await getDocs(query(collection(db,'registrations'),where('matchId','==',regData.matchId)));
-    const slotNum=snap.size;
-    sessionStorage.setItem('successData',JSON.stringify({...regDoc,docId:docRef.id,slotNum}));
+
+    // Increment filledSlots on match (rule allows users to +1 only)
+    try{
+      await updateDoc(doc(db,'matches',regData.matchId),{filledSlots:increment(1)});
+    } catch(e){ console.warn('filledSlots update failed:',e); }
+
+    // Get slot number using slotCounts collection (avoids cross-user registrations query)
+    let slotNum=1;
+    try{
+      const slotRef=doc(db,'slotCounts',regData.matchId);
+      const slotSnap=await getDoc(slotRef);
+      if(slotSnap.exists()){
+        slotNum=slotSnap.data().count+1;
+        await updateDoc(slotRef,{count:increment(1)});
+      } else {
+        slotNum=1;
+        await setDoc(slotRef,{count:1});
+      }
+    } catch(e){ console.warn('slotCount error:',e); slotNum='—'; }
+
+    sessionStorage.setItem('successData',JSON.stringify({...regDoc,docId:docRef.id,slotNum,registeredAt:null}));
     sessionStorage.setItem('matchData',JSON.stringify(matchData));
     window.location.href='success.html';
-  }catch(e){
-    btn.textContent='SUBMIT & CONFIRM REGISTRATION';btn.disabled=false;
+  } catch(e){
+    console.error('Submit error:',e);
+    btn.textContent='SUBMIT & CONFIRM REGISTRATION';
+    btn.disabled=false;
     showToast('SUBMISSION FAILED. TRY AGAIN.');
   }
 };
