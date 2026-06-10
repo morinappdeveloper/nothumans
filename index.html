@@ -13,22 +13,14 @@ body{user-select:none;-webkit-user-select:none;font-family:'Rajdhani',sans-serif
 input,textarea{user-select:text;-webkit-user-select:text;}
 :focus{outline:none;}
 button,a,.card,.item{cursor:pointer;}
-
 :root{
-  --blue:#1a6fff;
-  --blue-dark:#0d4fd4;
-  --blue-light:#4d8fff;
-  --blue-pale:#e8f0ff;
-  --black:#0a0a1a;
-  --white:#ffffff;
-  --gray:#f4f6fb;
-  --gray2:#e8ecf5;
-  --text:#0a0a1a;
-  --text2:#4a5280;
-  --border:#d0d8f0;
+  --blue:#1a6fff;--blue-dark:#0d4fd4;--blue-light:#4d8fff;--blue-pale:#e8f0ff;
+  --black:#0a0a1a;--white:#ffffff;--gray:#f4f6fb;--gray2:#e8ecf5;
+  --text:#0a0a1a;--text2:#4a5280;--border:#d0d8f0;
+  --green:#00c853;--orange:#ff6b00;
 }
 
-/* ── LOADER ── */
+/* LOADER */
 #loader{position:fixed;inset:0;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;}
 .loader-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(36px,10vw,72px);letter-spacing:-2px;display:flex;align-items:center;gap:4px;}
 .loader-logo .s-letter{display:inline-block;opacity:0;transform:translateY(20px) scale(0.8);animation:sReveal 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.1s forwards;}
@@ -41,7 +33,7 @@ button,a,.card,.item{cursor:pointer;}
 @keyframes fadeSlide{from{opacity:0;transform:translateX(10px);}to{opacity:1;transform:translateX(0);}}
 @keyframes barFill{from{width:0;}to{width:100%;}}
 
-/* ── NAVBAR ── */
+/* NAVBAR */
 nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1.5px solid var(--border);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;}
 .nav-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;letter-spacing:1px;color:var(--black);text-decoration:none;display:flex;align-items:center;gap:2px;}
 .nav-logo .era{color:var(--blue);}
@@ -51,7 +43,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
 .menu-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;}
 .user-avatar{width:30px;height:30px;border-radius:50%;background:var(--blue);display:none;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;font-family:'Orbitron',sans-serif;}
 
-/* ── SIDEBAR ── */
+/* SIDEBAR */
 .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.25s;}
 .sidebar-overlay.open{opacity:1;pointer-events:all;}
 .sidebar{position:fixed;right:0;top:0;bottom:0;width:280px;background:#fff;border-left:1.5px solid var(--border);z-index:201;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;padding:24px 20px;}
@@ -61,7 +53,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
 .sidebar-link:hover{color:var(--blue);}
 .sidebar-link svg{flex-shrink:0;}
 
-/* ── HERO ── */
+/* HERO */
 .hero{position:relative;min-height:50vw;max-height:380px;overflow:hidden;background:#0a0a1a;display:flex;align-items:flex-end;}
 .hero-bg{position:absolute;inset:0;object-fit:cover;width:100%;height:100%;opacity:0.6;transition:opacity 0.5s;}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,26,0.2) 0%,rgba(10,10,26,0.85) 100%);}
@@ -71,12 +63,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
 .hero-title span{color:var(--blue);}
 .hero-sub{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:4px;color:rgba(255,255,255,0.5);margin-top:6px;text-transform:uppercase;}
 
-/* ── MATCHES SECTION ── */
+/* SECTION */
 .section{padding:20px 16px;}
 .section-title{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--text2);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
 
-/* ── MATCH CARD ── */
+/* MATCH CARD */
 .match-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;transition:transform 0.2s,box-shadow 0.2s;animation:cardIn 0.5s ease both;}
 .match-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(26,111,255,0.12);}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
@@ -91,31 +83,45 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
 .stat-box{background:var(--gray);border-radius:8px;padding:10px 12px;}
 .stat-label{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:600;letter-spacing:1.5px;color:var(--text2);text-transform:uppercase;margin-bottom:4px;}
 .stat-value{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:800;color:var(--black);}
-.stat-value.green{color:#00c853;}
+.stat-value.green{color:var(--green);}
 .stat-value.blue{color:var(--blue);}
-.slots-bar{height:3px;background:var(--gray2);border-radius:2px;margin-bottom:14px;overflow:hidden;}
-.slots-bar-fill{height:100%;background:var(--blue);border-radius:2px;transition:width 0.8s ease;}
-.register-btn{width:100%;background:var(--blue);color:#fff;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;padding:14px;border:none;border-radius:8px;transition:background 0.2s,transform 0.1s;text-transform:uppercase;}
+
+/* ── SLOT PROGRESS BAR (shown above register button) ── */
+.slot-progress{margin-bottom:12px;}
+.slot-progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.slot-progress-label{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:1.5px;color:var(--text2);text-transform:uppercase;}
+.slot-progress-count{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;color:var(--black);}
+.slot-progress-count .confirmed{color:var(--green);}
+.slot-progress-count .total{color:var(--text2);}
+.slot-bar-track{height:6px;background:var(--gray2);border-radius:3px;overflow:hidden;}
+.slot-bar-fill{height:100%;border-radius:3px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1);}
+
+/* REGISTER BUTTON STATES */
+.register-btn{width:100%;background:var(--blue);color:#fff;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;padding:14px;border:none;border-radius:8px;transition:background 0.2s,transform 0.1s;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px;}
 .register-btn:hover{background:var(--blue-dark);}
 .register-btn:active{transform:scale(0.98);}
-.register-btn.registered{background:var(--gray2);color:var(--text2);pointer-events:none;}
-.register-btn.status-verifying{background:var(--gray2);color:var(--text2);pointer-events:none;}
-.register-btn.closed{background:#fee;color:#c00;pointer-events:none;}
+.register-btn:disabled,.register-btn[disabled]{pointer-events:none;}
+/* confirmed — green */
+.register-btn.state-confirmed{background:rgba(0,200,83,0.12);color:var(--green);border:1.5px solid rgba(0,200,83,0.4);}
+/* verifying — orange */
+.register-btn.state-verifying{background:rgba(255,107,0,0.1);color:var(--orange);border:1.5px solid rgba(255,107,0,0.35);}
+/* full / closed — muted */
+.register-btn.state-closed{background:var(--gray2);color:var(--text2);}
 
-/* ── WINNER CARD ── */
+/* WINNER CARD */
 .winner-card{background:linear-gradient(135deg,#0a0a1a 0%,#0d1a40 100%);border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid var(--blue);position:relative;overflow:hidden;}
 .winner-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(26,111,255,0.3),transparent);border-radius:50%;}
 .winner-tag{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:8px;}
 .winner-name{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:#fff;letter-spacing:1px;}
 .winner-sub{font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
 
-/* ── EMPTY STATE ── */
+/* EMPTY STATE */
 .empty-state{text-align:center;padding:60px 20px;}
 .empty-icon{margin:0 auto 20px;}
 .empty-title{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--text2);margin-bottom:8px;}
 .empty-sub{font-size:13px;color:var(--text2);opacity:0.6;}
 
-/* ── BOTTOM SHEET (LOGIN) ── */
+/* LOGIN SHEET */
 .sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;opacity:0;pointer-events:none;transition:opacity 0.25s;}
 .sheet-overlay.open{opacity:1;pointer-events:all;}
 .bottom-sheet{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;z-index:301;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);padding:0 24px 40px;max-height:70vh;overflow-y:auto;}
@@ -127,10 +133,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
 .google-btn:hover{border-color:var(--blue);background:var(--blue-pale);}
 .sheet-note{text-align:center;font-size:11px;color:var(--text2);opacity:0.6;}
 
-/* ── TOAST ── */
+/* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:#fff;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:600;letter-spacing:1px;padding:12px 20px;border-radius:8px;z-index:999;opacity:0;transition:all 0.3s;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+@keyframes spin{to{transform:rotate(360deg);}}
 @media(max-width:400px){.hero-title{font-size:28px;}}
 </style>
 </head>
@@ -146,21 +153,21 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
   <div class="loader-bar"><div class="loader-bar-fill"></div></div>
 </div>
 
-<!-- SIDEBAR OVERLAY -->
+<!-- SIDEBAR -->
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="sidebar" id="sidebar">
   <button class="sidebar-close" onclick="closeSidebar()">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
-  <a href="https://instagram.com/@morinffx_" class="sidebar-link">
+  <a href="https://instagram.com/@morinffx_" class="sidebar-link" id="link-instagram">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
     INSTAGRAM
   </a>
-  <a href="https://discord.gg/nF2CfDkPFR" class="sidebar-link">
+  <a href="https://discord.gg/nF2CfDkPFR" class="sidebar-link" id="link-discord">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.101 18.08.11 18.1.128 18.115a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
     DISCORD
   </a>
-  <a href="https://chat.whatsapp.com/JI86hMP3Kfk7x6gzDNVxMn" class="sidebar-link">
+  <a href="https://chat.whatsapp.com/JI86hMP3Kfk7x6gzDNVxMn" class="sidebar-link" id="link-whatsapp">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
     WHATSAPP
   </a>
@@ -200,11 +207,14 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
 <div class="section">
   <div class="section-title">ACTIVE TOURNAMENTS</div>
   <div id="matches-container">
-    <div style="text-align:center;padding:40px;"><div style="width:32px;height:32px;border:3px solid var(--blue);border-top-color:transparent;border-radius:50%;margin:0 auto 12px;animation:spin 0.8s linear infinite;"></div><div style="font-family:'Orbitron',sans-serif;font-size:10px;color:var(--text2);letter-spacing:2px;">LOADING...</div></div>
+    <div style="text-align:center;padding:40px;">
+      <div style="width:32px;height:32px;border:3px solid var(--blue);border-top-color:transparent;border-radius:50%;margin:0 auto 12px;animation:spin 0.8s linear infinite;"></div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:10px;color:var(--text2);letter-spacing:2px;">LOADING...</div>
+    </div>
   </div>
 </div>
 
-<!-- LOGIN BOTTOM SHEET -->
+<!-- LOGIN SHEET -->
 <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
 <div class="bottom-sheet" id="bottom-sheet">
   <div class="sheet-handle"></div>
@@ -217,31 +227,56 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
   <div class="sheet-note">Your data is secure and only used for registration.</div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
-
-<style>@keyframes spin{to{transform:rotate(360deg);}}</style>
 
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
 import{getAuth,signInWithPopup,GoogleAuthProvider,onAuthStateChanged,signOut}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-import{getFirestore,collection,getDocs,query,orderBy,doc,getDoc}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import{getFirestore,collection,getDocs,query,orderBy,doc,getDoc,where,onSnapshot}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
-  authDomain: "nothumans-7e285.firebaseapp.com",
-  projectId: "nothumans-7e285",
-  storageBucket: "nothumans-7e285.firebasestorage.app",
-  messagingSenderId: "409725804600",
-  appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+const firebaseConfig={
+  apiKey:"AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+  authDomain:"nothumans-7e285.firebaseapp.com",
+  projectId:"nothumans-7e285",
+  storageBucket:"nothumans-7e285.firebasestorage.app",
+  messagingSenderId:"409725804600",
+  appId:"1:409725804600:web:ec0344bf1ac49a55edc6cd"
 };
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 const provider=new GoogleAuthProvider();
+
 let currentUser=null;
 let pendingMatchId=null;
-let registeredMatches={};
+
+// confirmedSlots[matchId] = number of admin-confirmed registrations
+let confirmedSlots={};
+// userRegs[matchId] = {status, docId} — only for the current logged-in user
+let userRegs={};
+
+// Realtime listener handle for live progress bar updates
+let slotCountsUnsub = null;
+
+// Setup realtime listener for slotCounts so that when admin confirms slots,
+// the progress bars on public site update IMMEDIATELY without refresh
+function setupSlotCountsListener() {
+  if (slotCountsUnsub) slotCountsUnsub();
+  slotCountsUnsub = onSnapshot(collection(db, 'slotCounts'), (snapshot) => {
+    confirmedSlots = {};
+    snapshot.forEach((d) => {
+      const val = d.data().confirmed;
+      if (typeof val === 'number') confirmedSlots[d.id] = val;
+    });
+    // Live update: refresh matches UI with new confirmed counts (progress bar moves immediately)
+    const c = document.getElementById('matches-container');
+    if (c) {
+      loadMatches();
+    }
+  }, (err) => {
+    console.warn('slotCounts realtime listener error:', err);
+  });
+}
 
 // Hide loader
 setTimeout(()=>{
@@ -251,7 +286,7 @@ setTimeout(()=>{
 },2000);
 
 // Auth state
-onAuthStateChanged(auth,user=>{
+onAuthStateChanged(auth,async user=>{
   currentUser=user;
   const lb=document.getElementById('logout-btn');
   const av=document.getElementById('user-avatar');
@@ -259,103 +294,81 @@ onAuthStateChanged(auth,user=>{
     lb.style.display='block';
     av.style.display='flex';
     av.textContent=user.displayName?user.displayName[0].toUpperCase():'U';
-    loadRegistrations(user.uid);
   }else{
     lb.style.display='none';
     av.style.display='none';
-    // Still load confirmed slots for slot bar display, just no user-specific status
-    loadConfirmedSlots().then(loadMatches);
+    userRegs={};
   }
+  await loadData(user);
 });
 
-// Load dynamic social links from Firebase settings
-async function loadSocialLinks() {
-  try {
-    const snap = await getDoc(doc(db, 'settings', 'global'));
-    if (snap.exists()) {
-      const data = snap.data();
-
-      // Instagram
-      const igLink = document.querySelector('#sidebar a[href*="instagram"]');
-      if (igLink && data.instagram) {
-        let url = data.instagram.trim();
-        if (!url.startsWith('http')) {
-          url = 'https://instagram.com/' + url.replace('@', '');
-        }
-        igLink.href = url;
+// Load social links from settings
+async function loadSocialLinks(){
+  try{
+    const snap=await getDoc(doc(db,'settings','global'));
+    if(snap.exists()){
+      const d=snap.data();
+      if(d.instagram){
+        let u=d.instagram.trim();
+        if(!u.startsWith('http')) u='https://instagram.com/'+u.replace('@','');
+        document.getElementById('link-instagram').href=u;
       }
-
-      // Discord
-      const dcLink = document.querySelector('#sidebar a[href*="discord"]');
-      if (dcLink && data.discord) {
-        dcLink.href = data.discord.trim();
-      }
-
-      // WhatsApp
-      const waLink = document.querySelector('#sidebar a[href*="whatsapp"]');
-      if (waLink && data.whatsapp) {
-        let url = data.whatsapp.trim();
-        if (!url.startsWith('http')) {
-          // Create wa.me link from phone number
-          const phone = url.replace(/\D/g, '');
-          url = `https://wa.me/${phone}`;
-        }
-        waLink.href = url;
+      if(d.discord) document.getElementById('link-discord').href=d.discord.trim();
+      if(d.whatsapp){
+        let u=d.whatsapp.trim();
+        if(!u.startsWith('http')) u='https://wa.me/'+u.replace(/\D/g,'');
+        document.getElementById('link-whatsapp').href=u;
       }
     }
-  } catch (e) {
-    console.log('Could not load social links from settings');
-  }
+  }catch(e){}
 }
-
-// Load social links on page load
 loadSocialLinks();
+setupSlotCountsListener();
 
-// Load confirmed slot counts across all matches (no auth needed)
-async function loadConfirmedSlots(){
+// Main data load — registrations + matches
+async function loadData(user){
+  confirmedSlots={};
+  userRegs={};
+
   try{
-    const snap=await getDocs(collection(db,'registrations'));
-    confirmedSlots={};
-    snap.forEach(d=>{
-      const data=d.data();
-      if(data.status==='confirmed'){
-        confirmedSlots[data.matchId]=(confirmedSlots[data.matchId]||0)+1;
-      }
-    });
-  }catch(e){}
+    if(user){
+      // Load THIS user's own registrations (rules allow own-data reads)
+      try{
+        const regSnap=await getDocs(query(collection(db,'registrations'),where('userId','==',user.uid)));
+        regSnap.forEach(d=>{
+          const data=d.data();
+          if(!userRegs[data.matchId] || data.status!=='rejected'){
+            userRegs[data.matchId]={status:data.status||'verifying',docId:d.id};
+          }
+        });
+      }catch(e){ console.warn('User regs load failed',e); }
+    }
+
+    // Initial load of confirmed slot counts (listener will keep it live-updated after)
+    try{
+      const scSnap=await getDocs(collection(db,'slotCounts'));
+      scSnap.forEach(d=>{
+        const val=d.data().confirmed;
+        if(typeof val==='number') confirmedSlots[d.id]=val;
+      });
+    }catch(e){ console.warn('slotCounts read failed',e); }
+
+  }catch(e){ console.warn('loadData error',e); }
+
+  await loadMatches();
 }
 
-// Per-match confirmed slot counts from registrations collection
-let confirmedSlots={};
-
-async function loadRegistrations(uid){
-  try{
-    const snap=await getDocs(collection(db,'registrations'));
-    registeredMatches={};
-    confirmedSlots={};
-    snap.forEach(d=>{
-      const data=d.data();
-      // Track THIS user's status per match
-      if(data.userId===uid) registeredMatches[data.matchId]=data.status||'registered';
-      // Count ONLY confirmed registrations per match for slot progress
-      if(data.status==='confirmed'){
-        confirmedSlots[data.matchId]=(confirmedSlots[data.matchId]||0)+1;
-      }
-    });
-  }catch(e){}
-  loadMatches();
-}
-
-// Load matches
 async function loadMatches(){
   try{
     const snap=await getDocs(query(collection(db,'matches'),orderBy('createdAt','desc')));
     const matches=[];
     snap.forEach(d=>matches.push({id:d.id,...d.data()}));
-    // Load hero from banners
-    try{const hSnap=await getDoc(doc(db,'banners','hero'));if(hSnap.exists()){const hd=hSnap.data();updateHero(hd);}}catch(e){}
+    try{
+      const hSnap=await getDoc(doc(db,'banners','hero'));
+      if(hSnap.exists()) updateHero(hSnap.data());
+    }catch(e){}
     renderMatches(matches);
-  }catch(e){renderMatches([]);}
+  }catch(e){ renderMatches([]); }
 }
 
 function updateHero(data){
@@ -375,105 +388,135 @@ function updateHero(data){
 function renderMatches(matches){
   const c=document.getElementById('matches-container');
   if(!matches.length){
-    c.innerHTML=`<div class="empty-state"><svg class="empty-icon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><div class="empty-title">NO MATCHES HOSTED</div><div class="empty-sub">Check back soon for upcoming tournaments</div></div>`;
+    c.innerHTML=`<div class="empty-state">
+      <svg class="empty-icon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <div class="empty-title">NO MATCHES HOSTED</div>
+      <div class="empty-sub">Check back soon for upcoming tournaments</div>
+    </div>`;
     return;
   }
+
   const winners=matches.filter(m=>m.status==='completed'&&m.winner);
   const active=matches.filter(m=>m.status!=='completed');
   let html='';
+
   if(winners.length){
     html+=`<div class="section-title" style="font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:#4a5280;display:flex;align-items:center;gap:10px;margin-bottom:16px;">TOURNAMENT RESULTS<div style="flex:1;height:1px;background:#d0d8f0;"></div></div>`;
     winners.forEach(m=>{
       html+=`<div class="winner-card"><div class="winner-tag">CHAMPION - ${m.name}</div><div class="winner-name">${m.winner}</div><div class="winner-sub">${m.winnerSub||'TOURNAMENT WINNER'}</div></div>`;
     });
   }
+
   if(active.length){
     html+=`<div class="section-title" style="font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:#4a5280;display:flex;align-items:center;gap:10px;margin-bottom:16px;">LIVE TOURNAMENTS<div style="flex:1;height:1px;background:#d0d8f0;"></div></div>`;
   }
-  active.forEach((m,i)=>{
-    const slots=parseInt(m.slots)||12;
-    // Only confirmed registrations count toward slot progress
-    const filled=confirmedSlots[m.id]||0;
-    const pct=Math.min(100,Math.round(filled/slots*100));
-    const isFull=filled>=slots;
-    const userStatus=registeredMatches[m.id]; // 'verifying' | 'confirmed' | 'rejected' | undefined
-    const matchStatus=m.status||'open';
 
-    let btnTxt='REGISTER NOW';
-    let btnClass='register-btn';
+  active.forEach((m,i)=>{
+    const totalSlots=parseInt(m.slots)||12;
+    // CONFIRMED slots only (admin-approved registrations)
+    const bookedSlots=confirmedSlots[m.id]||0;
+    const pct=Math.min(100,Math.round(bookedSlots/totalSlots*100));
+    const isFull=bookedSlots>=totalSlots;
+    const matchClosed=(m.status||'open')==='closed';
+
+    // User-specific state for THIS match
+    const userReg=userRegs[m.id]; // {status, docId} or undefined
+    const userStatus=userReg?userReg.status:null; // 'confirmed'|'verifying'|'rejected'|null
+
+    // ── Determine button state ──
+    let btnTxt, btnClass, btnDisabled=true, btnIcon='';
 
     if(userStatus==='confirmed'){
-      // Approved — slot counted, show confirmed state
       btnTxt='SLOT CONFIRMED';
-      btnClass='register-btn registered';
-    }else if(userStatus==='verifying'){
-      // Pending admin approval — slot NOT counted yet
-      btnTxt='STATUS: VERIFYING';
-      btnClass='register-btn status-verifying';
-    }else if(userStatus==='rejected'){
-      // Rejected — allow re-registration, show register button again
-      btnTxt='REGISTER NOW';
+      btnClass='register-btn state-confirmed';
+      btnIcon=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    } else if(userStatus==='verifying'){
+      btnTxt='PAYMENT UNDER REVIEW';
+      btnClass='register-btn state-verifying';
+      btnIcon=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+    } else if(isFull||matchClosed){
+      btnTxt=isFull?'SLOTS FULL':'REGISTRATION CLOSED';
+      btnClass='register-btn state-closed';
+    } else {
+      // userStatus===null or 'rejected' → allow registration
+      btnTxt=userStatus==='rejected'?'RE-REGISTER':'REGISTER NOW';
       btnClass='register-btn';
-    }else if(isFull){
-      btnTxt='SLOTS FULL';
-      btnClass='register-btn closed';
-    }else if(matchStatus==='closed'){
-      btnTxt='REGISTRATION CLOSED';
-      btnClass='register-btn closed';
+      btnDisabled=false;
     }
 
-    // Bar color: green when full, blue otherwise
-    const barColor=isFull?'#00c853':'var(--blue)';
+    // ── Bar color: green when full, blue otherwise ──
+    const barColor=isFull?'#00c853':'#1a6fff';
+    // ── Bar label ──
+    const barLabel=isFull
+      ? `<span style="color:#00c853;font-weight:900;">${bookedSlots}</span>/<span style="color:var(--text2);">${totalSlots}</span> FULL`
+      : `<span style="color:#0a0a1a;font-weight:900;">${bookedSlots}</span>/<span style="color:var(--text2);">${totalSlots}</span> BOOKED`;
 
     html+=`<div class="match-card" style="animation-delay:${i*0.08}s;">
       <div class="match-banner">
         ${m.image?`<img src="${m.image}" alt="${m.name}" loading="lazy"/>`:`<div style="width:100%;height:100%;background:linear-gradient(135deg,#0a0a1a,#0d1a40);"></div>`}
         <div class="match-banner-overlay"></div>
-        <div class="match-time-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${m.time||'TBA'}</div>
+        <div class="match-time-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${m.time||'TBA'}
+        </div>
         <div class="match-mode-badge">${m.mode||'BR · SQUAD'}</div>
       </div>
       <div class="match-body">
         <div class="match-name">${m.name||'TOURNAMENT'}</div>
         <div class="match-stats">
-          <div class="stat-box"><div class="stat-label">SLOTS</div><div class="stat-value green">${filled}/${slots}</div></div>
+          <div class="stat-box"><div class="stat-label">SLOTS</div><div class="stat-value green">${bookedSlots}/${totalSlots}</div></div>
           <div class="stat-box"><div class="stat-label">ENTRY</div><div class="stat-value blue">${m.entry||0}₹</div></div>
-          <div class="stat-box"><div class="stat-label">POOL</div><div class="stat-value">${m.prize||'TBA'}</div></div>
+          <div class="stat-box"><div class="stat-label">PRIZE POOL</div><div class="stat-value">${m.prize||'TBA'}</div></div>
           <div class="stat-box"><div class="stat-label">BOUNTY</div><div class="stat-value">${m.bounty||0}₹</div></div>
         </div>
-        <div class="slots-bar"><div class="slots-bar-fill" style="width:${pct}%;background:${barColor};"></div></div>
-        <button class="${btnClass}" onclick="handleRegister('${m.id}')">${btnTxt}</button>
+
+        <!-- SLOT PROGRESS BAR -->
+        <div class="slot-progress">
+          <div class="slot-progress-header">
+            <span class="slot-progress-label">CONFIRMED SLOTS</span>
+            <span class="slot-progress-count">${barLabel}</span>
+          </div>
+          <div class="slot-bar-track">
+            <div class="slot-bar-fill" style="width:${pct}%;background:${barColor};"></div>
+          </div>
+        </div>
+
+        <button class="${btnClass}" ${btnDisabled?'disabled':''} onclick="handleRegister('${m.id}')">
+          ${btnIcon}${btnTxt}
+        </button>
       </div>
     </div>`;
   });
+
   c.innerHTML=html;
 }
 
 window.handleRegister=(matchId)=>{
-  if(!currentUser){pendingMatchId=matchId;openSheet();return;}
-  const userStatus=registeredMatches[matchId];
-  if(userStatus==='confirmed'){showToast('YOUR SLOT IS CONFIRMED');return;}
-  if(userStatus==='verifying'){showToast('YOUR REGISTRATION IS UNDER REVIEW');return;}
-  // 'rejected' or no registration — allow to register / re-register
+  if(!currentUser){ pendingMatchId=matchId; openSheet(); return; }
+  const reg=userRegs[matchId];
+  if(reg){
+    if(reg.status==='confirmed'){ showToast('✓ YOUR SLOT IS CONFIRMED'); return; }
+    if(reg.status==='verifying'){ showToast('⏳ PAYMENT IS UNDER REVIEW'); return; }
+    // rejected → allow re-registration (fall through)
+  }
   window.location.href=`reg.html?matchId=${matchId}`;
 };
 
 window.googleLogin=async()=>{
   try{
-    const result=await signInWithPopup(auth,provider);
+    await signInWithPopup(auth,provider);
     closeSheet();
     if(pendingMatchId) setTimeout(()=>window.location.href=`reg.html?matchId=${pendingMatchId}`,300);
-  }catch(e){showToast('LOGIN FAILED. TRY AGAIN.');}
+  }catch(e){ showToast('LOGIN FAILED. TRY AGAIN.'); }
 };
 
-window.doLogout=async()=>{await signOut(auth);showToast('LOGGED OUT');};
-window.openSheet=()=>{document.getElementById('sheet-overlay').classList.add('open');document.getElementById('bottom-sheet').classList.add('open');};
-window.closeSheet=()=>{document.getElementById('sheet-overlay').classList.remove('open');document.getElementById('bottom-sheet').classList.remove('open');};
-window.openSidebar=()=>{document.getElementById('sidebar-overlay').classList.add('open');document.getElementById('sidebar').classList.add('open');};
-window.closeSidebar=()=>{document.getElementById('sidebar-overlay').classList.remove('open');document.getElementById('sidebar').classList.remove('open');};
+window.doLogout=async()=>{ await signOut(auth); showToast('LOGGED OUT'); };
+window.openSheet=()=>{ document.getElementById('sheet-overlay').classList.add('open'); document.getElementById('bottom-sheet').classList.add('open'); };
+window.closeSheet=()=>{ document.getElementById('sheet-overlay').classList.remove('open'); document.getElementById('bottom-sheet').classList.remove('open'); };
+window.openSidebar=()=>{ document.getElementById('sidebar-overlay').classList.add('open'); document.getElementById('sidebar').classList.add('open'); };
+window.closeSidebar=()=>{ document.getElementById('sidebar-overlay').classList.remove('open'); document.getElementById('sidebar').classList.remove('open'); };
 
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);}
-
-loadMatches();
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2500); }
 </script>
 </body>
 </html>
