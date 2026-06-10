@@ -94,7 +94,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
   <div style="width:60px;"></div>
 </nav>
 
-<!-- STEPS -->
 <div class="steps">
   <div class="step"><div class="step-num">1</div><div class="step-text">SQUAD INFO</div></div>
   <div class="step-line"></div>
@@ -103,7 +102,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
   <div class="step"><div class="step-num inactive">3</div><div class="step-text inactive">CONFIRMED</div></div>
 </div>
 
-<!-- HEADER -->
 <div class="page-header">
   <div class="page-header-content">
     <div class="match-info-pill" id="match-pill">LOADING MATCH...</div>
@@ -112,7 +110,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
   </div>
 </div>
 
-<!-- MATCH SUMMARY -->
 <div style="margin:16px 16px 0;">
   <div class="match-summary" id="match-summary" style="display:none;">
     <div class="summary-item"><div class="summary-label">MATCH</div><div class="summary-value" id="s-name">—</div></div>
@@ -122,20 +119,23 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
   </div>
 </div>
 
-<!-- TEAM INFO -->
 <div class="form-card" style="animation-delay:0.05s;">
   <div class="form-card-header">
     <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="2.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
     <h2>TEAM INFORMATION</h2>
   </div>
   <div class="form-card-body">
-    <div class="field-group">
+    <div class="field-group" id="guild-group">
       <label class="field-label">GUILD NAME</label>
       <input type="text" class="field-input" id="guild" placeholder="YOUR GUILD" autocomplete="off" inputmode="text"/>
     </div>
     <div class="field-group">
       <label class="field-label">TEAM NAME</label>
       <input type="text" class="field-input" id="teamName" placeholder="YOUR TEAM NAME" autocomplete="off" inputmode="text"/>
+    </div>
+    <div class="field-group" id="mac-ign-group" style="display: none;">
+      <label class="field-label">IGL GAME NAME (IGN)</label>
+      <input type="text" class="field-input" id="macIglIgn" placeholder="IGL IN-GAME NAME" autocomplete="off" inputmode="text"/>
     </div>
     <div class="field-group">
       <label class="field-label">IGL CONTACT (WHATSAPP)</label>
@@ -145,14 +145,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
   </div>
 </div>
 
-<!-- PLAYERS -->
-<div class="form-card" style="animation-delay:0.1s;">
+<div class="form-card" id="players-card" style="animation-delay:0.1s;">
   <div class="form-card-header">
     <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div>
     <h2>PLAYER DETAILS</h2>
   </div>
   <div class="form-card-body">
-    <!-- P1 -->
     <div class="player-block">
       <div class="player-label">PLAYER 1 <span style="color:#1a6fff;">IGL</span><span class="player-opt">REQUIRED</span></div>
       <div class="player-row">
@@ -160,7 +158,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
         <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p1uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-    <!-- P2 -->
     <div class="player-block">
       <div class="player-label">PLAYER 2<span class="player-opt">REQUIRED</span></div>
       <div class="player-row">
@@ -168,7 +165,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
         <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p2uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-    <!-- P3 -->
     <div class="player-block">
       <div class="player-label">PLAYER 3<span class="player-opt">REQUIRED</span></div>
       <div class="player-row">
@@ -176,7 +172,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
         <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p3uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-    <!-- P4 -->
     <div class="player-block">
       <div class="player-label">PLAYER 4<span class="player-opt">REQUIRED</span></div>
       <div class="player-row">
@@ -184,7 +179,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
         <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p4uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-    <!-- P5 EXTRA -->
     <div class="player-block">
       <div class="player-label">PLAYER 5 <span style="color:var(--text2);font-size:7px;">(EXTRA)</span><span class="player-opt">OPTIONAL</span></div>
       <div class="player-row">
@@ -192,7 +186,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
         <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p5uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-    <!-- P6 EXTRA -->
     <div class="player-block">
       <div class="player-label">PLAYER 6 <span style="color:var(--text2);font-size:7px;">(EXTRA)</span><span class="player-opt">OPTIONAL</span></div>
       <div class="player-row">
@@ -200,9 +193,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
         <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p6uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-
-    <button class="submit-btn" id="next-btn" onclick="goToPayment()">PROCEED TO PAYMENT</button>
   </div>
+</div>
+
+<div style="margin: 0 16px;">
+  <button class="submit-btn" id="next-btn" onclick="goToPayment()">PROCEED TO PAYMENT</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -248,8 +243,13 @@ async function loadMatch(){
     document.getElementById('s-entry').textContent=(matchData.entry||0)+'₹';
     document.getElementById('s-prize').textContent=matchData.prize||'TBA';
     const slots=parseInt(matchData.slots)||12;
-    const filled=parseInt(matchData.filledSlots)||0;
-    document.getElementById('s-slots').textContent=(slots-filled)+' LEFT';
+    // Use confirmed from slotCounts (same as public index progress bar) for accurate availability
+    let confirmed=0;
+    try{
+      const scSnap=await getDoc(doc(db,'slotCounts',matchId));
+      if(scSnap.exists()) confirmed = parseInt(scSnap.data().confirmed)||0;
+    }catch(e){}
+    document.getElementById('s-slots').textContent=(slots-confirmed)+' LEFT';
     document.getElementById('match-summary').style.display='grid';
     sessionStorage.setItem('matchData',JSON.stringify(matchData));
 
@@ -263,11 +263,23 @@ loadMatch();
 function setupPlayerFieldsByMode(mode) {
   const modeLower = mode.toLowerCase();
   const playerBlocks = document.querySelectorAll('.player-block');
+  const playersCard = document.getElementById('players-card');
+  const guildGroup = document.getElementById('guild-group');
+  const macIgnGroup = document.getElementById('mac-ign-group');
   
-  // Hide all player blocks first
+  // Reset fields to standard layout first
+  playersCard.style.display = 'block';
+  guildGroup.style.display = 'block';
+  macIgnGroup.style.display = 'none';
   playerBlocks.forEach(block => block.style.display = 'none');
 
-  if (modeLower.includes('1v1') || modeLower.includes('1 vs 1')) {
+  if (modeLower.includes('4v4 mac') || modeLower.includes('4v4mac')) {
+    // 4v4 Mac Mode: Hide standard dynamic individual lists, present structured summary elements
+    playersCard.style.display = 'none';
+    guildGroup.style.display = 'none'; // Guild not requested for Mac mode
+    macIgnGroup.style.display = 'block';
+  }
+  else if (modeLower.includes('1v1') || modeLower.includes('1 vs 1')) {
     // 1v1 Mode
     if (playerBlocks[0]) {
       playerBlocks[0].style.display = 'block';
@@ -286,7 +298,7 @@ function setupPlayerFieldsByMode(mode) {
     }
   } 
   else {
-    // Default 4v4 / Squad mode
+    // Default 4v4 / Squad mode - Includes up to 6 players (4 main + 2 subs)
     for (let i = 0; i < 4; i++) {
       if (playerBlocks[i]) playerBlocks[i].style.display = 'block';
     }
@@ -300,6 +312,8 @@ window.goToPayment=()=>{
   const guild=document.getElementById('guild').value.trim();
   const team=document.getElementById('teamName').value.trim();
   const igl=document.getElementById('iglContact').value.trim();
+  const macIglIgn=document.getElementById('macIglIgn').value.trim();
+  
   const p1ign=document.getElementById('p1ign').value.trim();
   const p1uid=document.getElementById('p1uid').value.trim();
   const p2ign=document.getElementById('p2ign').value.trim();
@@ -311,6 +325,27 @@ window.goToPayment=()=>{
 
   const modeLower = (matchData.mode || '').toLowerCase();
 
+  // Mode validation filters
+  if (modeLower.includes('4v4 mac') || modeLower.includes('4v4mac')) {
+    if(!team){showToast('ENTER TEAM NAME');return;}
+    if(!macIglIgn){showToast('ENTER IGL GAME NAME');return;}
+    if(!igl||igl.length!==10){showToast('ENTER VALID 10-DIGIT CONTACT');return;}
+
+    const regData={
+      matchId,
+      teamName:team,
+      iglContact:igl,
+      iglIgn:macIglIgn,
+      guild:'',
+      players:[],
+      mode: matchData.mode || '4v4 Mac'
+    };
+    sessionStorage.setItem('regData',JSON.stringify(regData));
+    window.location.href=`payment.html?matchId=${matchId}`;
+    return;
+  }
+
+  // Baseline validation rules for remaining regular game formats
   if(!guild){showToast('ENTER GUILD NAME');return;}
   if(!team){showToast('ENTER TEAM NAME');return;}
   if(!p1ign||!p1uid){showToast('PLAYER 1 IGN & UID REQUIRED');return;}
@@ -351,3 +386,4 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 </script>
 </body>
 </html>
+
