@@ -129,7 +129,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
       <label class="field-label">GUILD NAME</label>
       <input type="text" class="field-input" id="guild" placeholder="YOUR GUILD" autocomplete="off" inputmode="text"/>
     </div>
-    <div class="field-group">
+    <div class="field-group" id="team-group">
       <label class="field-label">TEAM NAME</label>
       <input type="text" class="field-input" id="teamName" placeholder="YOUR TEAM NAME" autocomplete="off" inputmode="text"/>
     </div>
@@ -138,7 +138,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
       <input type="text" class="field-input" id="macIglIgn" placeholder="IGL IN-GAME NAME" autocomplete="off" inputmode="text"/>
     </div>
     <div class="field-group">
-      <label class="field-label">IGL CONTACT (WHATSAPP)</label>
+      <label class="field-label" id="contact-label">IGL CONTACT (WHATSAPP)</label>
       <input type="tel" class="field-input" id="iglContact" placeholder="10-DIGIT NUMBER" inputmode="numeric" maxlength="10" pattern="[0-9]*"/>
       <div class="field-hint">Will be used for match room ID delivery</div>
     </div>
@@ -265,12 +265,16 @@ function setupPlayerFieldsByMode(mode) {
   const playerBlocks = document.querySelectorAll('.player-block');
   const playersCard = document.getElementById('players-card');
   const guildGroup = document.getElementById('guild-group');
+  const teamGroup = document.getElementById('team-group');
   const macIgnGroup = document.getElementById('mac-ign-group');
+  const contactLabel = document.getElementById('contact-label');
   
   // Reset fields to standard layout first
   playersCard.style.display = 'block';
   guildGroup.style.display = 'block';
+  teamGroup.style.display = 'block';
   macIgnGroup.style.display = 'none';
+  contactLabel.textContent = 'IGL CONTACT (WHATSAPP)';
   playerBlocks.forEach(block => block.style.display = 'none');
 
   if (modeLower.includes('4v4 mac') || modeLower.includes('4v4mac')) {
@@ -280,11 +284,14 @@ function setupPlayerFieldsByMode(mode) {
     macIgnGroup.style.display = 'block';
   }
   else if (modeLower.includes('1v1') || modeLower.includes('1 vs 1')) {
-    // 1v1 Mode
+    // 1v1 Mode: only player IGN, player UID, and player phone number
+    guildGroup.style.display = 'none';
+    teamGroup.style.display = 'none';
+    contactLabel.textContent = 'CONTACT (WHATSAPP)';
     if (playerBlocks[0]) {
       playerBlocks[0].style.display = 'block';
       playerBlocks[0].querySelector('.player-label').innerHTML = 
-        `PLAYER 1 <span style="color:#1a6fff;">(SOLO)</span><span class="player-opt">REQUIRED</span>`;
+        `PLAYER <span style="color:#1a6fff;">(SOLO)</span><span class="player-opt">REQUIRED</span>`;
     }
   } 
   else if (modeLower.includes('2v2') || modeLower.includes('2 vs 2')) {
@@ -339,6 +346,26 @@ window.goToPayment=()=>{
       guild:'',
       players:[],
       mode: matchData.mode || '4v4 Mac'
+    };
+    sessionStorage.setItem('regData',JSON.stringify(regData));
+    window.location.href=`payment.html?matchId=${matchId}`;
+    return;
+  }
+
+  // 1v1 Mode: only player IGN, player UID, and player phone number — no Guild/Team
+  if (modeLower.includes('1v1') || modeLower.includes('1 vs 1')) {
+    if(!p1ign||!p1uid){showToast('PLAYER IGN & UID REQUIRED');return;}
+    if(!igl||igl.length!==10){showToast('ENTER VALID 10-DIGIT CONTACT');return;}
+
+    const regData={
+      matchId,
+      teamName:'',
+      guild:'',
+      iglContact:igl,
+      players:[
+        {slot:1,ign:p1ign,uid:p1uid,role:'SOLO'}
+      ],
+      mode: matchData.mode || '1v1'
     };
     sessionStorage.setItem('regData',JSON.stringify(regData));
     window.location.href=`payment.html?matchId=${matchId}`;
