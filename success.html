@@ -70,7 +70,7 @@ nav{background:#fff;border-bottom:1.5px solid var(--border);padding:0 20px;heigh
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
   </div>
   <div class="success-tag">REGISTRATION COMPLETE</div>
-  <div class="success-title">SQUAD REGISTERED!</div>
+  <div class="success-title" id="success-title">SQUAD REGISTERED!</div>
   <div class="success-sub">AWAITING PAYMENT VERIFICATION</div>
 </div>
 
@@ -78,7 +78,7 @@ nav{background:#fff;border-bottom:1.5px solid var(--border);padding:0 20px;heigh
 <div class="slot-card">
   <div class="slot-label">YOUR SLOT NUMBER</div>
   <div class="slot-number" id="slot-num">—</div>
-  <div class="slot-unit">SQUAD SLOT</div>
+  <div class="slot-unit" id="slot-unit">SQUAD SLOT</div>
   <div class="status-badge"><div class="blink"></div>STATUS: VERIFYING PAYMENT</div>
 </div>
 
@@ -96,10 +96,11 @@ nav{background:#fff;border-bottom:1.5px solid var(--border);padding:0 20px;heigh
 
 <!-- TEAM INFO -->
 <div class="info-card" style="animation-delay:1.05s;">
-  <div class="info-card-header"><h3>TEAM DETAILS</h3></div>
+  <div class="info-card-header"><h3 id="sc-team-header">TEAM DETAILS</h3></div>
   <div class="info-body">
-    <div class="info-row"><span class="info-key">TEAM NAME</span><span class="info-val" id="sc-team">—</span></div>
-    <!-- Guild row: hidden for Mac mode -->
+    <!-- Team name row: hidden for 1v1 (solo, no team) -->
+    <div class="info-row" id="sc-team-row"><span class="info-key">TEAM NAME</span><span class="info-val" id="sc-team">—</span></div>
+    <!-- Guild row: hidden for Mac mode and 1v1 -->
     <div class="info-row" id="sc-guild-row"><span class="info-key">GUILD</span><span class="info-val" id="sc-guild">—</span></div>
     <!-- IGL IGN row: shown only for Mac mode -->
     <div class="info-row" id="sc-iglign-row" style="display:none;"><span class="info-key">IGL IGN</span><span class="info-val blue" id="sc-iglign">—</span></div>
@@ -109,7 +110,7 @@ nav{background:#fff;border-bottom:1.5px solid var(--border);padding:0 20px;heigh
 
 <!-- SQUAD (hidden for Mac mode) -->
 <div class="info-card" id="sc-squad-card" style="animation-delay:1.1s;">
-  <div class="info-card-header"><h3>SQUAD ROSTER</h3></div>
+  <div class="info-card-header"><h3 id="sc-squad-header">SQUAD ROSTER</h3></div>
   <div class="info-body" id="sc-players"></div>
 </div>
 
@@ -123,12 +124,38 @@ nav{background:#fff;border-bottom:1.5px solid var(--border);padding:0 20px;heigh
 const data = JSON.parse(sessionStorage.getItem('successData') || '{}');
 const match = JSON.parse(sessionStorage.getItem('matchData') || '{}');
 
+const modeStr = (data.mode || match.mode || '').toLowerCase();
+
 const isMacMode = (str) => {
   const s = (str || '').toLowerCase();
   return s.includes('4v4 mac') || s.includes('4v4mac') || s.includes('mac');
 };
+const is1v1Mode = (str) => {
+  const s = (str || '').toLowerCase();
+  return s.includes('1v1') || s.includes('1 vs 1');
+};
+const is2v2Mode = (str) => {
+  const s = (str || '').toLowerCase();
+  return s.includes('2v2') || s.includes('2 vs 2');
+};
 
-const macMode = isMacMode(data.mode || match.mode || '');
+const macMode = isMacMode(modeStr);
+const oneVOne = is1v1Mode(modeStr);
+const twoVTwo = is2v2Mode(modeStr);
+
+// === DYNAMIC "REGISTERED" TITLE BASED ON MODE ===
+// 1v1 -> SLOT REGISTERED, 2v2 -> DUO REGISTERED, 4v4 & 4v4 Mac -> SQUAD REGISTERED
+let registeredLabel = 'SQUAD REGISTERED!';
+let slotUnitLabel = 'SQUAD SLOT';
+if (oneVOne) {
+  registeredLabel = 'SLOT REGISTERED!';
+  slotUnitLabel = 'SOLO SLOT';
+} else if (twoVTwo) {
+  registeredLabel = 'DUO REGISTERED!';
+  slotUnitLabel = 'DUO SLOT';
+}
+document.getElementById('success-title').textContent = registeredLabel;
+document.getElementById('slot-unit').textContent = slotUnitLabel;
 
 // Slot
 document.getElementById('slot-num').textContent = data.slotNum || '—';
@@ -141,21 +168,47 @@ document.getElementById('sc-prize').textContent = match.prize || 'TBA';
 document.getElementById('sc-entry').textContent = '₹' + (data.entryFee || 0);
 
 // Team details
-document.getElementById('sc-team').textContent = data.teamName || '—';
 document.getElementById('sc-regid').textContent = data.invId || '—';
 
 if (macMode) {
-  // Mac mode: show IGL IGN, hide guild and squad
+  // Mac mode: show IGL IGN, hide guild and squad, keep team name
+  document.getElementById('sc-team-row').style.display = 'flex';
+  document.getElementById('sc-team').textContent = data.teamName || '—';
   document.getElementById('sc-guild-row').style.display = 'none';
   document.getElementById('sc-iglign-row').style.display = 'flex';
   document.getElementById('sc-iglign').textContent = data.iglIgn || '—';
   document.getElementById('sc-squad-card').style.display = 'none';
+} else if (oneVOne) {
+  // 1v1: no team name, no guild, no squad card — show single player as PLAYER DETAILS
+  document.getElementById('sc-team-header').textContent = 'PLAYER DETAILS';
+  document.getElementById('sc-team-row').style.display = 'none';
+  document.getElementById('sc-guild-row').style.display = 'none';
+  document.getElementById('sc-iglign-row').style.display = 'none';
+
+  document.getElementById('sc-squad-header').textContent = 'PLAYER INFO';
+  const pWrap = document.getElementById('sc-players');
+  const players = data.players || [];
+  if (players.length > 0) {
+    pWrap.innerHTML = players.map(p => `
+      <div class="player-row">
+        <div class="player-num">${p.slot}</div>
+        <div class="player-info">
+          <div class="ign">${p.ign || '—'} ${p.role ? `<span style="font-size:8px;color:var(--blue);">[${p.role}]</span>` : ''}</div>
+          <div class="uid">UID: ${p.uid || '—'}</div>
+        </div>
+      </div>`).join('');
+  } else {
+    pWrap.innerHTML = '<div style="font-family:\'Orbitron\',sans-serif;font-size:10px;color:var(--text2);text-align:center;padding:12px;">NO PLAYER DATA</div>';
+  }
 } else {
-  // Normal mode: show guild and squad
+  // 2v2 / 4v4 squad modes: show team name, guild and squad roster
+  document.getElementById('sc-team-row').style.display = 'flex';
+  document.getElementById('sc-team').textContent = data.teamName || '—';
   document.getElementById('sc-guild-row').style.display = 'flex';
   document.getElementById('sc-iglign-row').style.display = 'none';
   document.getElementById('sc-guild').textContent = data.guild || '—';
 
+  document.getElementById('sc-squad-header').textContent = twoVTwo ? 'DUO ROSTER' : 'SQUAD ROSTER';
   const pWrap = document.getElementById('sc-players');
   const players = data.players || [];
   if (players.length > 0) {
@@ -175,8 +228,11 @@ if (macMode) {
 // WhatsApp share
 const shareText = macMode
   ? `NOT HUMANS Registration Confirmed!\nTeam: ${data.teamName}\nSlot: #${data.slotNum}\nMatch: ${match.name || data.matchName}\nIGL: ${data.iglIgn || ''}\nReg ID: ${data.invId}`
+  : oneVOne
+  ? `NOT HUMANS Registration Confirmed!\nPlayer: ${(data.players && data.players[0] && data.players[0].ign) || ''}\nSlot: #${data.slotNum}\nMatch: ${match.name || data.matchName}\nReg ID: ${data.invId}`
   : `NOT HUMANS Registration Confirmed!\nTeam: ${data.teamName}\nSlot: #${data.slotNum}\nMatch: ${match.name || data.matchName}\nReg ID: ${data.invId}`;
 document.getElementById('wa-share-btn').href = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 </script>
 </body>
 </html>
+
