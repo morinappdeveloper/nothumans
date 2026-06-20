@@ -284,8 +284,8 @@ function setupPlayerFieldsByMode(mode) {
     macIgnGroup.style.display = 'block';
   }
   else if (modeLower.includes('1v1') || modeLower.includes('1 vs 1')) {
-    // 1v1 Mode: only player IGN, player UID, and player phone number
-    guildGroup.style.display = 'none';
+    // 1v1 Mode: player IGN, player UID, phone number — AND guild name (now required)
+    guildGroup.style.display = 'block';
     teamGroup.style.display = 'none';
     contactLabel.textContent = 'CONTACT (WHATSAPP)';
     if (playerBlocks[0]) {
@@ -295,7 +295,7 @@ function setupPlayerFieldsByMode(mode) {
     }
   } 
   else if (modeLower.includes('2v2') || modeLower.includes('2 vs 2')) {
-    // 2v2 Mode
+    // 2v2 Mode (guild already shown/required by default block above)
     if (playerBlocks[0]) playerBlocks[0].style.display = 'block';
     if (playerBlocks[1]) playerBlocks[1].style.display = 'block';
     
@@ -352,15 +352,16 @@ window.goToPayment=()=>{
     return;
   }
 
-  // 1v1 Mode: only player IGN, player UID, and player phone number — no Guild/Team
+  // 1v1 Mode: player IGN, player UID, phone number — guild name now required
   if (modeLower.includes('1v1') || modeLower.includes('1 vs 1')) {
+    if(!guild){showToast('ENTER GUILD NAME');return;}
     if(!p1ign||!p1uid){showToast('PLAYER IGN & UID REQUIRED');return;}
     if(!igl||igl.length!==10){showToast('ENTER VALID 10-DIGIT CONTACT');return;}
 
     const regData={
       matchId,
       teamName:'',
-      guild:'',
+      guild,
       iglContact:igl,
       players:[
         {slot:1,ign:p1ign,uid:p1uid,role:'SOLO'}
@@ -372,7 +373,7 @@ window.goToPayment=()=>{
     return;
   }
 
-  // Baseline validation rules for remaining regular game formats
+  // Baseline validation rules for remaining regular game formats (2v2, 4v4, etc.)
   if(!guild){showToast('ENTER GUILD NAME');return;}
   if(!team){showToast('ENTER TEAM NAME');return;}
   if(!p1ign||!p1uid){showToast('PLAYER 1 IGN & UID REQUIRED');return;}
