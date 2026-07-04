@@ -3,94 +3,144 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>Register — NOT HUMANS</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<title>Register — NH ESPORTS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet"/>
 <style>
+/* ════════════════════════════════════════
+   NH ESPORTS — GOLD PROTOCOL EDITION
+   ════════════════════════════════════════ */
 *{-webkit-tap-highlight-color:rgba(0,0,0,0);box-sizing:border-box;margin:0;padding:0;}
 button,a,div,span,img,input,textarea,select,label{outline:none;-webkit-tap-highlight-color:transparent;}
 img{-webkit-user-drag:none;-webkit-touch-callout:none;user-select:none;}
-body{user-select:none;-webkit-user-select:none;font-family:'Rajdhani',sans-serif;background:#f4f6fb;color:#0a0a1a;min-height:100vh;padding-bottom:40px;}
+body{user-select:none;-webkit-user-select:none;font-family:'Rajdhani',sans-serif;overflow-x:hidden;}
 input,textarea{user-select:text;-webkit-user-select:text;}
 :focus{outline:none;}
 button,a,.card,.item{cursor:pointer;}
-:root{--blue:#1a6fff;--blue-dark:#0d4fd4;--blue-pale:#e8f0ff;--black:#0a0a1a;--white:#fff;--border:#d0d8f0;--gray:#f4f6fb;--text2:#4a5280;}
+::selection{background:rgba(255,198,26,0.35);color:#fff;}
 
-/* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-bottom:1.5px solid var(--border);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;letter-spacing:1px;color:var(--black);text-decoration:none;}
-.nav-logo span{color:var(--blue);}
-.back-btn{display:flex;align-items:center;gap:6px;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--text2);text-decoration:none;background:none;border:none;}
-.back-btn:hover{color:var(--blue);}
+html,body{background:var(--bg);color:var(--text);min-height:100vh;}
 
-/* PAGE HEADER */
-.page-header{background:linear-gradient(135deg,#0a0a1a,#0d1a40);padding:28px 20px 24px;position:relative;overflow:hidden;}
-.page-header::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(26,111,255,0.05) 30px,rgba(26,111,255,0.05) 31px),repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(26,111,255,0.05) 30px,rgba(26,111,255,0.05) 31px);}
-.page-header-content{position:relative;z-index:1;}
-.match-info-pill{display:inline-flex;align-items:center;background:rgba(26,111,255,0.2);border:1px solid rgba(26,111,255,0.4);color:var(--blue);font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;margin-bottom:10px;}
-.page-header h1{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:#fff;letter-spacing:1px;margin-bottom:4px;}
-.page-header p{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.4);}
+:root{
+  --bg:#07080a;--bg2:#0d0e11;--panel:#151619;--panel2:#1c1e22;
+  --line:rgba(255,255,255,0.08);--line-strong:rgba(255,198,26,0.35);
+  --text:#f5f6f8;--text-dim:rgba(245,246,248,0.58);--text-faint:rgba(245,246,248,0.34);
+  --gold:#ffc61a;--gold2:#ff9d00;--gold-soft:rgba(255,198,26,0.14);
+  --green:#2fe28a;--green-soft:rgba(47,226,138,0.14);
+  --amber:#ff9d2e;--amber-soft:rgba(255,157,46,0.14);
+  --red:#ff3d4d;--red-soft:rgba(255,61,77,0.14);
+  --violet:var(--gold);--blue:var(--gold);--blue-dark:var(--gold2);--black:#000;--text2:var(--text-dim);--cyan:var(--green);--orange:var(--amber);
+}
 
-/* FORM CARD */
-.form-card{background:#fff;border-radius:16px;border:1.5px solid var(--border);margin:16px;overflow:hidden;animation:slideUp 0.4s ease both;}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-.form-card-header{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--gray);display:flex;align-items:center;gap:10px;}
-.form-card-header h2{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;color:var(--black);}
-.card-icon{width:28px;height:28px;background:var(--blue-pale);border-radius:6px;display:flex;align-items:center;justify-content:center;}
-.form-card-body{padding:16px 18px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes ringSpin{to{transform:rotate(360deg);}}
 
-/* FORM FIELDS */
-.field-group{margin-bottom:14px;}
-.field-label{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text2);text-transform:uppercase;margin-bottom:6px;display:block;}
-.field-input{width:100%;background:var(--gray);border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:600;color:var(--black);transition:border-color 0.2s;-webkit-appearance:none;}
-.field-input:focus{border-color:var(--blue);background:#fff;}
-.field-input::placeholder{color:#b0b8d0;font-weight:500;}
-.field-input[inputmode="numeric"]{letter-spacing:2px;}
-.field-hint{font-size:10px;color:var(--text2);opacity:0.6;margin-top:4px;font-family:'Rajdhani',sans-serif;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,198,26,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,0.03) 1px,transparent 1px);background-size:36px 36px;}
+#signal-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.5;}
 
-/* PLAYER BLOCK */
-.player-block{background:var(--gray);border-radius:10px;padding:14px;margin-bottom:12px;border:1.5px solid var(--border);transition:border-color 0.2s;}
-.player-block:focus-within{border-color:var(--blue);}
-.player-label{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;color:var(--blue);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
-.player-opt{font-size:8px;color:var(--text2);opacity:0.7;font-weight:600;}
-.player-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.player-row .field-input{font-size:11px;}
+/* ── NAVBAR ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(7,8,10,0.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:0 18px;height:58px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Orbitron',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;text-decoration:none;color:var(--text);display:flex;align-items:center;gap:8px;text-transform:uppercase;}
+.nav-mark{width:26px;height:26px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%);font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;color:#0a0a0a;}
+.nav-logo .era{color:var(--gold);}
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--text-dim);font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-decoration:none;text-transform:uppercase;}
+.back-btn:hover{color:var(--gold);}
+.back-btn svg{transition:transform 0.25s ease;}
+.back-btn:hover svg{transform:translateX(-4px);}
 
-/* SUBMIT BTN */
-.submit-btn{width:100%;background:var(--blue);color:#fff;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;letter-spacing:2px;padding:16px;border:none;border-radius:10px;transition:all 0.2s;margin:4px 0;}
-.submit-btn:hover{background:var(--blue-dark);transform:translateY(-1px);}
+/* ── STEPS ── */
+.steps{display:flex;align-items:center;justify-content:center;gap:8px;padding:24px 16px 8px;}
+.step{display:flex;flex-direction:column;align-items:center;gap:7px;}
+.step-num{width:28px;height:28px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0a0a0a;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%);}
+.step-num.inactive{background:transparent;color:var(--text-faint);border:1px solid var(--line-strong);clip-path:none;}
+.step-num.done{background:linear-gradient(135deg,var(--green),#1fb56d);}
+.step-text{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;}
+.step-text.inactive{color:var(--text-faint);}
+.step-line{width:34px;height:1px;background:var(--line-strong);}
+
+/* ── PAGE HEADER ── */
+.page-header{padding:10px 16px 20px;}
+.match-info-pill{display:inline-flex;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--gold);background:var(--gold-soft);border:1px solid var(--line-strong);padding:5px 12px;margin-bottom:12px;text-transform:uppercase;clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 8px);}
+.page-header h1{font-family:'Orbitron',sans-serif;font-size:23px;font-weight:800;text-transform:uppercase;color:var(--text);}
+.page-header p{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;color:var(--text-dim);letter-spacing:1.5px;margin-top:7px;text-transform:uppercase;}
+
+/* ── MATCH SUMMARY ── */
+.match-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.summary-item{background:var(--panel);border:1px solid var(--line);padding:12px 13px;}
+.summary-label{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;}
+.summary-value{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;color:var(--text);}
+.summary-value.blue{color:var(--gold);}
+
+/* ── FORM CARD ── */
+.form-card{background:var(--panel);border:1px solid var(--line);margin:18px 16px 0;animation:cardIn 0.5s ease both;}
+.form-card-header{padding:15px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;}
+.card-icon{width:28px;height:28px;background:var(--gold-soft);border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.form-card-header h2{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;color:var(--text);text-transform:uppercase;}
+.form-card-body{padding:18px 16px;}
+.field-group{margin-bottom:18px;}
+.field-group:last-child{margin-bottom:0;}
+.field-label{display:block;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-dim);margin-bottom:7px;text-transform:uppercase;}
+.field-input{width:100%;background:var(--panel2);border:1px solid var(--line-strong);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;padding:13px 14px;transition:border-color 0.25s,box-shadow 0.25s;}
+.field-input::placeholder{color:var(--text-faint);}
+.field-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,198,26,0.15);}
+.field-hint{font-family:'Rajdhani',sans-serif;font-size:10px;color:var(--text-faint);margin-top:6px;letter-spacing:0.3px;}
+
+/* ── PLAYER BLOCKS ── */
+.player-block{background:var(--panel2);border:1px solid var(--line);padding:14px;margin-bottom:11px;transition:border-color 0.25s;}
+.player-block:last-child{margin-bottom:0;}
+.player-label{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--text);margin-bottom:11px;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.player-opt{margin-left:auto;font-size:8px;color:var(--text-faint);font-weight:600;letter-spacing:1px;}
+.player-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+/* ── SUBMIT BUTTON ── */
+.submit-btn{width:100%;color:#0a0a0a;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px;padding:16px;border:none;transition:all 0.2s;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--gold),var(--gold2));clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);}
+.submit-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
 .submit-btn:active{transform:scale(0.98);}
-.submit-btn:disabled{background:var(--border);color:var(--text2);pointer-events:none;}
 
-/* MATCH SUMMARY */
-.match-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.summary-item{background:var(--gray);border-radius:8px;padding:10px 12px;border:1px solid var(--border);}
-.summary-label{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:600;letter-spacing:1px;color:var(--text2);margin-bottom:3px;}
-.summary-value{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:800;color:var(--black);}
-.summary-value.blue{color:var(--blue);}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--panel2);border:1px solid var(--line-strong);border-left:3px solid var(--gold);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.5px;padding:13px 20px;z-index:500;opacity:0;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);max-width:88vw;text-transform:uppercase;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 
-/* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:#fff;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:600;letter-spacing:1px;padding:12px 20px;border-radius:8px;z-index:999;opacity:0;transition:all 0.3s;white-space:nowrap;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-/* PROGRESS STEPS */
-.steps{display:flex;align-items:center;padding:16px 20px;gap:0;}
-.step{display:flex;align-items:center;gap:6px;flex:1;}
-.step-num{width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.step-num.inactive{background:var(--border);color:var(--text2);}
-.step-text{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;color:var(--black);}
-.step-text.inactive{color:var(--text2);}
-.step-line{flex:1;height:2px;background:var(--border);margin:0 6px;}
-.step-line.active{background:var(--blue);}
+@media(min-width:640px){
+  .form-card{max-width:640px;margin-left:auto;margin-right:auto;}
+  .page-header,.match-summary,.steps,.submit-btn{max-width:640px;}
+  .page-header{margin:0 auto;}
+  div[style*="margin:0 16px"]{max-width:640px;margin-left:auto !important;margin-right:auto !important;}
+  div[style*="margin: 16px"]{max-width:640px;margin-left:auto !important;margin-right:auto !important;}
+}
 </style>
 </head>
 <body>
+<script>
+(function(){
+  const canvas=document.createElement('canvas');canvas.id='signal-canvas';document.body.insertBefore(canvas,document.body.firstChild);
+  const ctx=canvas.getContext('2d');
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  const dots=[];const DOT_COUNT=window.innerWidth<500?24:40;
+  for(let i=0;i<DOT_COUNT;i++){dots.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:0.6+Math.random()*1.1,phase:Math.random()*Math.PI*2,speed:0.008+Math.random()*0.015});}
+  function tick(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(const d of dots){
+      d.phase+=d.speed;
+      const a=0.05+Math.abs(Math.sin(d.phase))*0.13;
+      ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,198,26,${a})`;ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
 
 <nav>
   <a href="index.html" class="back-btn">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     BACK
   </a>
-  <a href="index.html" class="nav-logo">NH <span>ESPORTS</span></a>
+  <a href="index.html" class="nav-logo"><span class="nav-mark">NH</span>NH <span class="era">ESPORTS</span></a>
   <div style="width:60px;"></div>
 </nav>
 
@@ -103,14 +153,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
 </div>
 
 <div class="page-header">
-  <div class="page-header-content">
-    <div class="match-info-pill" id="match-pill">LOADING MATCH...</div>
-    <h1>SQUAD REGISTRATION</h1>
-    <p>FILL IN YOUR TEAM DETAILS BELOW</p>
-  </div>
+  <div class="match-info-pill" id="match-pill">LOADING MATCH...</div>
+  <h1>SQUAD REGISTRATION</h1>
+  <p>FILL IN YOUR TEAM DETAILS BELOW</p>
 </div>
 
-<div style="margin:16px 16px 0;">
+<div style="margin:0 16px;">
   <div class="match-summary" id="match-summary" style="display:none;">
     <div class="summary-item"><div class="summary-label">MATCH</div><div class="summary-value" id="s-name">—</div></div>
     <div class="summary-item"><div class="summary-label">ENTRY</div><div class="summary-value blue" id="s-entry">—</div></div>
@@ -121,7 +169,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
 
 <div class="form-card" style="animation-delay:0.05s;">
   <div class="form-card-header">
-    <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="2.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+    <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffc61a" stroke-width="2.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
     <h2>TEAM INFORMATION</h2>
   </div>
   <div class="form-card-body">
@@ -147,56 +195,56 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop
 
 <div class="form-card" id="players-card" style="animation-delay:0.1s;">
   <div class="form-card-header">
-    <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a6fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div>
+    <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffc61a" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div>
     <h2>PLAYER DETAILS</h2>
   </div>
   <div class="form-card-body">
-    <div class="player-block">
-      <div class="player-label">PLAYER 1 <span style="color:#1a6fff;">IGL</span><span class="player-opt">REQUIRED</span></div>
+    <div class="player-block" style="display:block;">
+      <div class="player-label">PLAYER 1 <span style="color:var(--gold);">IGL</span><span class="player-opt">REQUIRED</span></div>
       <div class="player-row">
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p1ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p1uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">IGN</div><input type="text" class="field-input ign" id="p1ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">UID</div><input type="text" class="field-input uid" id="p1uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-    <div class="player-block">
+    <div class="player-block" style="display:block;">
       <div class="player-label">PLAYER 2<span class="player-opt">REQUIRED</span></div>
       <div class="player-row">
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p2ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p2uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">IGN</div><input type="text" class="field-input ign" id="p2ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">UID</div><input type="text" class="field-input uid" id="p2uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-    <div class="player-block">
+    <div class="player-block" style="display:block;">
       <div class="player-label">PLAYER 3<span class="player-opt">REQUIRED</span></div>
       <div class="player-row">
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p3ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p3uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">IGN</div><input type="text" class="field-input ign" id="p3ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">UID</div><input type="text" class="field-input uid" id="p3uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-    <div class="player-block">
+    <div class="player-block" style="display:block;">
       <div class="player-label">PLAYER 4<span class="player-opt">REQUIRED</span></div>
       <div class="player-row">
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p4ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p4uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">IGN</div><input type="text" class="field-input ign" id="p4ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">UID</div><input type="text" class="field-input uid" id="p4uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-    <div class="player-block">
-      <div class="player-label">PLAYER 5 <span style="color:var(--text2);font-size:7px;">(EXTRA)</span><span class="player-opt">OPTIONAL</span></div>
+    <div class="player-block" style="display:block;">
+      <div class="player-label">PLAYER 5 <span style="color:var(--text-faint);font-size:8px;">(EXTRA)</span><span class="player-opt">OPTIONAL</span></div>
       <div class="player-row">
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p5ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p5uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">IGN</div><input type="text" class="field-input ign" id="p5ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">UID</div><input type="text" class="field-input uid" id="p5uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
-    <div class="player-block">
-      <div class="player-label">PLAYER 6 <span style="color:var(--text2);font-size:7px;">(EXTRA)</span><span class="player-opt">OPTIONAL</span></div>
+    <div class="player-block" style="display:block;">
+      <div class="player-label">PLAYER 6 <span style="color:var(--text-faint);font-size:8px;">(EXTRA)</span><span class="player-opt">OPTIONAL</span></div>
       <div class="player-row">
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">IGN</div><input type="text" class="field-input ign" id="p6ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
-        <div><div style="font-family:'Orbitron',sans-serif;font-size:8px;color:#4a5280;margin-bottom:4px;letter-spacing:1px;">UID</div><input type="text" class="field-input uid" id="p6uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">IGN</div><input type="text" class="field-input ign" id="p6ign" placeholder="IN-GAME NAME" inputmode="text" autocomplete="off"/></div>
+        <div><div class="field-label" style="margin-bottom:5px;">UID</div><input type="text" class="field-input uid" id="p6uid" placeholder="PLAYER UID" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/></div>
       </div>
     </div>
   </div>
 </div>
 
-<div style="margin: 0 16px;">
+<div style="margin: 16px;">
   <button class="submit-btn" id="next-btn" onclick="goToPayment()">PROCEED TO PAYMENT</button>
 </div>
 
@@ -225,13 +273,11 @@ let matchData={};
 
 onAuthStateChanged(auth,user=>{if(!user){window.location.href='index.html';}});
 
-// UID inputs: numeric only
 document.querySelectorAll('.uid').forEach(inp=>{
   inp.addEventListener('input',()=>{inp.value=inp.value.replace(/\D/g,'');});
 });
 document.getElementById('iglContact').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'');if(this.value.length>10)this.value=this.value.slice(0,10);});
 
-// Load match info
 async function loadMatch(){
   if(!matchId){window.location.href='index.html';return;}
   try{
@@ -243,7 +289,6 @@ async function loadMatch(){
     document.getElementById('s-entry').textContent=(matchData.entry||0)+'₹';
     document.getElementById('s-prize').textContent=matchData.prize||'TBA';
     const slots=parseInt(matchData.slots)||12;
-    // Use confirmed from slotCounts (same as public index progress bar) for accurate availability
     let confirmed=0;
     try{
       const scSnap=await getDoc(doc(db,'slotCounts',matchId));
@@ -253,13 +298,11 @@ async function loadMatch(){
     document.getElementById('match-summary').style.display='grid';
     sessionStorage.setItem('matchData',JSON.stringify(matchData));
 
-    // === DYNAMIC PLAYER FIELDS BASED ON MODE ===
     setupPlayerFieldsByMode(matchData.mode || '');
   }catch(e){console.log(e);}
 }
 loadMatch();
 
-// Dynamic player fields based on match mode
 function setupPlayerFieldsByMode(mode) {
   const modeLower = mode.toLowerCase();
   const playerBlocks = document.querySelectorAll('.player-block');
@@ -268,8 +311,7 @@ function setupPlayerFieldsByMode(mode) {
   const teamGroup = document.getElementById('team-group');
   const macIgnGroup = document.getElementById('mac-ign-group');
   const contactLabel = document.getElementById('contact-label');
-  
-  // Reset fields to standard layout first
+
   playersCard.style.display = 'block';
   guildGroup.style.display = 'block';
   teamGroup.style.display = 'block';
@@ -278,38 +320,33 @@ function setupPlayerFieldsByMode(mode) {
   playerBlocks.forEach(block => block.style.display = 'none');
 
   if (modeLower.includes('4v4 mac') || modeLower.includes('4v4mac')) {
-    // 4v4 Mac Mode: Hide standard dynamic individual lists, present structured summary elements
     playersCard.style.display = 'none';
-    guildGroup.style.display = 'none'; // Guild not requested for Mac mode
+    guildGroup.style.display = 'none';
     macIgnGroup.style.display = 'block';
   }
   else if (modeLower.includes('1v1') || modeLower.includes('1 vs 1')) {
-    // 1v1 Mode: player IGN, player UID, phone number — AND guild name (now required)
     guildGroup.style.display = 'block';
     teamGroup.style.display = 'none';
     contactLabel.textContent = 'CONTACT (WHATSAPP)';
     if (playerBlocks[0]) {
       playerBlocks[0].style.display = 'block';
-      playerBlocks[0].querySelector('.player-label').innerHTML = 
-        `PLAYER <span style="color:#1a6fff;">(SOLO)</span><span class="player-opt">REQUIRED</span>`;
+      playerBlocks[0].querySelector('.player-label').innerHTML =
+        `PLAYER <span style="color:#ffc61a;">(SOLO)</span><span class="player-opt">REQUIRED</span>`;
     }
-  } 
+  }
   else if (modeLower.includes('2v2') || modeLower.includes('2 vs 2')) {
-    // 2v2 Mode (guild already shown/required by default block above)
     if (playerBlocks[0]) playerBlocks[0].style.display = 'block';
     if (playerBlocks[1]) playerBlocks[1].style.display = 'block';
-    
+
     if (playerBlocks[0]) {
-      playerBlocks[0].querySelector('.player-label').innerHTML = 
-        `PLAYER 1 <span style="color:#1a6fff;">IGL</span><span class="player-opt">REQUIRED</span>`;
+      playerBlocks[0].querySelector('.player-label').innerHTML =
+        `PLAYER 1 <span style="color:#ffc61a;">IGL</span><span class="player-opt">REQUIRED</span>`;
     }
-  } 
+  }
   else {
-    // Default 4v4 / Squad mode - Includes up to 6 players (4 main + 2 subs)
     for (let i = 0; i < 4; i++) {
       if (playerBlocks[i]) playerBlocks[i].style.display = 'block';
     }
-    // Show optional subs (P5 & P6)
     if (playerBlocks[4]) playerBlocks[4].style.display = 'block';
     if (playerBlocks[5]) playerBlocks[5].style.display = 'block';
   }
@@ -320,7 +357,7 @@ window.goToPayment=()=>{
   const team=document.getElementById('teamName').value.trim();
   const igl=document.getElementById('iglContact').value.trim();
   const macIglIgn=document.getElementById('macIglIgn').value.trim();
-  
+
   const p1ign=document.getElementById('p1ign').value.trim();
   const p1uid=document.getElementById('p1uid').value.trim();
   const p2ign=document.getElementById('p2ign').value.trim();
@@ -332,7 +369,6 @@ window.goToPayment=()=>{
 
   const modeLower = (matchData.mode || '').toLowerCase();
 
-  // Mode validation filters
   if (modeLower.includes('4v4 mac') || modeLower.includes('4v4mac')) {
     if(!team){showToast('ENTER TEAM NAME');return;}
     if(!macIglIgn){showToast('ENTER IGL GAME NAME');return;}
@@ -352,7 +388,6 @@ window.goToPayment=()=>{
     return;
   }
 
-  // 1v1 Mode: player IGN, player UID, phone number — guild name now required
   if (modeLower.includes('1v1') || modeLower.includes('1 vs 1')) {
     if(!guild){showToast('ENTER GUILD NAME');return;}
     if(!p1ign||!p1uid){showToast('PLAYER IGN & UID REQUIRED');return;}
@@ -373,18 +408,15 @@ window.goToPayment=()=>{
     return;
   }
 
-  // Baseline validation rules for remaining regular game formats (2v2, 4v4, etc.)
   if(!guild){showToast('ENTER GUILD NAME');return;}
   if(!team){showToast('ENTER TEAM NAME');return;}
   if(!p1ign||!p1uid){showToast('PLAYER 1 IGN & UID REQUIRED');return;}
   if(!igl||igl.length!==10){showToast('ENTER VALID 10-DIGIT CONTACT');return;}
 
-  // Mode-based validation
   if (modeLower.includes('2v2') || modeLower.includes('2 vs 2')) {
     if(!p2ign||!p2uid){showToast('PLAYER 2 IGN & UID REQUIRED');return;}
-  } 
+  }
   else if (!modeLower.includes('1v1') && !modeLower.includes('1 vs 1')) {
-    // Default 4v4 mode - require P2, P3, P4
     if(!p2ign||!p2uid){showToast('PLAYER 2 IGN & UID REQUIRED');return;}
     if(!p3ign||!p3uid){showToast('PLAYER 3 IGN & UID REQUIRED');return;}
     if(!p4ign||!p4uid){showToast('PLAYER 4 IGN & UID REQUIRED');return;}
@@ -414,4 +446,3 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 </script>
 </body>
 </html>
-
