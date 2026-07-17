@@ -137,6 +137,23 @@ nav{position:sticky;top:0;z-index:100;background:rgba(7,8,10,0.9);backdrop-filte
   <div class="status-badge"><div class="blink"></div>STATUS: VERIFYING PAYMENT</div>
 </div>
 
+<!-- VERIFICATION CODE CARD -->
+<div class="info-card" style="animation-delay:0.85s; border:2px solid var(--gold); background:#111214;">
+  <div class="info-card-header" style="background:var(--gold-soft);border-bottom:1px solid var(--gold);">
+    <h3 style="color:#0a0a0a; display:flex; align-items:center; gap:8px;">
+      <span>🔐 PAYMENT VERIFICATION CODE</span>
+    </h3>
+  </div>
+  <div class="info-body" style="padding:18px 16px; text-align:center;">
+    <div style="font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; color:var(--text-dim); margin-bottom:10px;">TAP CODE TO COPY + OPEN ADMIN WHATSAPP</div>
+    <div id="verify-code-display" onclick="copyVerifyCodeAndContact()"
+         style="font-family:'Orbitron',sans-serif; font-size: clamp(22px,7vw,32px); font-weight:900; letter-spacing:5px; color:var(--gold); background:#0a0b0e; border:3px solid var(--gold); border-radius:14px; padding:16px 28px; margin:0 auto; display:inline-block; cursor:pointer; user-select:all; box-shadow:0 4px 20px rgba(255,198,26,0.25); transition:transform .1s, box-shadow .2s;">
+      ———
+    </div>
+    <div style="margin-top:10px; font-size:10px; color:#777; letter-spacing:1px;">SENDS CODE + NAME, TEAM, CONTACT, PRICE, TOURNAMENT &amp; PAYMENT SCREENSHOT LINK</div>
+  </div>
+</div>
+
 <!-- MATCH INFO -->
 <div class="info-card" style="animation-delay:1s;">
   <div class="info-card-header"><h3>TOURNAMENT DETAILS</h3></div>
@@ -219,6 +236,13 @@ document.getElementById('sc-entry').textContent = '₹' + (data.entryFee || 0);
 
 document.getElementById('sc-regid').textContent = data.invId || '—';
 
+const vcodeEl = document.getElementById('verify-code-display');
+if(vcodeEl){
+  vcodeEl.textContent = data.verifyCode || 'NH-XXXXX';
+  // store for copy fn
+  vcodeEl.dataset.code = data.verifyCode || '';
+}
+
 if (macMode) {
   document.getElementById('sc-team-row').style.display = 'flex';
   document.getElementById('sc-team').textContent = data.teamName || '—';
@@ -277,6 +301,133 @@ const shareText = macMode
   ? `NH ESPORTS Registration Confirmed!\nPlayer: ${(data.players && data.players[0] && data.players[0].ign) || ''}\nSlot: #${data.slotNum}\nMatch: ${match.name || data.matchName}\nReg ID: ${data.invId}`
   : `NH ESPORTS Registration Confirmed!\nTeam: ${data.teamName}\nSlot: #${data.slotNum}\nMatch: ${match.name || data.matchName}\nReg ID: ${data.invId}`;
 document.getElementById('wa-share-btn').href = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+</script>
+
+<!-- Firebase + Verify Code WA Logic -->
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import{getFirestore,doc,getDoc}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+  authDomain: "nothumans-7e285.firebaseapp.com",
+  projectId: "nothumans-7e285",
+  storageBucket: "nothumans-7e285.firebasestorage.app",
+  messagingSenderId: "409725804600",
+  appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+
+let ADMIN_WA = '919876543210'; // fallback
+
+async function loadAdminWA(){
+  try{
+    const snap=await getDoc(doc(db,'settings','global'));
+    if(snap.exists()){
+      const d=snap.data();
+      if(d.adminWhatsapp) ADMIN_WA = d.adminWhatsapp;
+      else if(d.whatsapp) ADMIN_WA = d.whatsapp;
+    }
+  }catch(e){}
+}
+loadAdminWA();
+
+function buildVerifyMessage(){
+  const d = JSON.parse(sessionStorage.getItem('successData') || '{}');
+  const m = JSON.parse(sessionStorage.getItem('matchData') || '{}');
+
+  const name = (d.players && d.players[0] && d.players[0].ign) || d.iglIgn || d.teamName || '—';
+  const team = d.teamName || d.iglIgn || '—';
+  const contact = d.iglContact || '—';
+  const price = '₹' + (d.entryFee || 0);
+  const ttName = d.matchName || m.name || '—';
+  const ss = d.screenshotUrl || '';
+  const code = d.verifyCode || '';
+
+  let msg = `NH ESPORTS — PAYMENT VERIFICATION\n\n`;
+  msg += `CODE: ${code}\n`;
+  msg += `NAME: ${name}\n`;
+  msg += `TEAM NAME: ${team}\n`;
+  msg += `CONTACT: ${contact}\n`;
+  msg += `PRICE: ${price}\n`;
+  msg += `TT NAME: ${ttName}\n`;
+  if(ss) msg += `PAYMENT SS LINK: ${ss}\n`;
+  return msg;
+}
+
+window.copyVerifyCodeAndContact = async function(){
+  const el = document.getElementById('verify-code-display');
+  const code = (el && el.dataset.code) || el.textContent.trim();
+  if(!code || code==='———' || code==='NH-XXXXX'){ alert('No verification code found'); return; }
+
+  const fullMsg = buildVerifyMessage();
+
+  // Copy full details to clipboard
+  try{
+    await navigator.clipboard.writeText(fullMsg);
+    const orig = el.style.boxShadow;
+    el.style.boxShadow = '0 0 0 6px rgba(47,226,138,0.4)';
+    setTimeout(()=>{ el.style.boxShadow=orig||'0 4px 20px rgba(255,198,26,0.25)'; }, 1200);
+  }catch(e){
+    // fallback
+    const ta=document.createElement('textarea');ta.value=fullMsg;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+  }
+  
+  // Open WhatsApp with full verification details as message
+  let num = (ADMIN_WA || '919876543210').replace(/\D/g,'');
+  if(num.length===10) num = '91' + num; // support without 91
+  else if(!num.startsWith('91') && num.length>10) num = '91' + num.slice(-10);
+  const waUrl = `https://wa.me/${num}?text=${encodeURIComponent(fullMsg)}`;
+  window.open(waUrl, '_blank');
+};
+</script>
+
+<!-- MAINTENANCE OVERLAY (same theme as website) -->
+<div id="maintenance-overlay" style="display:none; position:fixed; inset:0; background:#07080a; z-index:99999; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:24px;">
+  <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(255,198,26,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,198,26,0.035) 1px, transparent 1px); background-size:36px 36px; pointer-events:none;"></div>
+  <div style="position:relative; max-width:440px; z-index:1;">
+    <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:24px;">
+      <div style="width:38px;height:38px;background:linear-gradient(135deg,#ffc61a,#ff9d00);display:flex;align-items:center;justify-content:center;clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%);font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;color:#0a0a0a;">NH</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px;color:#f5f6f8;">ESPORTS</div>
+    </div>
+    <div style="font-family:'Orbitron',sans-serif; font-size:28px; font-weight:900; color:#ffc61a; letter-spacing:2.5px; margin-bottom:16px;">WEBSITE UNDER<br>MAINTENANCE</div>
+    <div id="maint-reason-text" style="font-family:'Rajdhani',sans-serif; font-size:16px; line-height:1.6; color:#f5f6f8; margin-bottom:32px; max-width:380px; margin-left:auto; margin-right:auto;"></div>
+    <div style="font-size:12px; color:#666; letter-spacing:1.5px; font-family:'Rajdhani',sans-serif;">Please check back later • Admin can disable this from panel</div>
+  </div>
+</div>
+
+<script>
+(async function checkMaintenanceOnSuccess() {
+  try {
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js');
+    const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js');
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+      authDomain: "nothumans-7e285.firebaseapp.com",
+      projectId: "nothumans-7e285",
+      storageBucket: "nothumans-7e285.firebasestorage.app",
+      messagingSenderId: "409725804600",
+      appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    const snap = await getDoc(doc(db, 'settings', 'global'));
+    if (snap.exists()) {
+      const d = snap.data();
+      if (d.maintenanceMode) {
+        const ov = document.getElementById('maintenance-overlay');
+        if (ov) {
+          ov.style.display = 'flex';
+          const reasonEl = document.getElementById('maint-reason-text');
+          if (reasonEl) reasonEl.textContent = d.maintenanceReason || 'We are performing updates to the tournament system. We will be back online shortly.';
+        }
+      }
+    }
+  } catch(e) {}
+})();
 </script>
 </body>
 </html>
