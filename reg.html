@@ -444,5 +444,52 @@ window.goToPayment=()=>{
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);}
 </script>
+
+<!-- MAINTENANCE OVERLAY (same theme as website) -->
+<div id="maintenance-overlay" style="display:none; position:fixed; inset:0; background:#07080a; z-index:99999; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:24px;">
+  <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(255,198,26,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,198,26,0.035) 1px, transparent 1px); background-size:36px 36px; pointer-events:none;"></div>
+  <div style="position:relative; max-width:440px; z-index:1;">
+    <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:24px;">
+      <div style="width:38px;height:38px;background:linear-gradient(135deg,#ffc61a,#ff9d00);display:flex;align-items:center;justify-content:center;clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%);font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;color:#0a0a0a;">NH</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px;color:#f5f6f8;">ESPORTS</div>
+    </div>
+    <div style="font-family:'Orbitron',sans-serif; font-size:28px; font-weight:900; color:#ffc61a; letter-spacing:2.5px; margin-bottom:16px;">WEBSITE UNDER<br>MAINTENANCE</div>
+    <div id="maint-reason-text" style="font-family:'Rajdhani',sans-serif; font-size:16px; line-height:1.6; color:#f5f6f8; margin-bottom:32px; max-width:380px; margin-left:auto; margin-right:auto;"></div>
+    <div style="font-size:12px; color:#666; letter-spacing:1.5px; font-family:'Rajdhani',sans-serif;">Please check back later • Admin can disable this from panel</div>
+  </div>
+</div>
+
+<script>
+(async function checkMaintenanceOnReg() {
+  try {
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js');
+    const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js');
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+      authDomain: "nothumans-7e285.firebaseapp.com",
+      projectId: "nothumans-7e285",
+      storageBucket: "nothumans-7e285.firebasestorage.app",
+      messagingSenderId: "409725804600",
+      appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    const snap = await getDoc(doc(db, 'settings', 'global'));
+    if (snap.exists()) {
+      const d = snap.data();
+      if (d.maintenanceMode) {
+        const ov = document.getElementById('maintenance-overlay');
+        if (ov) {
+          ov.style.display = 'flex';
+          const reasonEl = document.getElementById('maint-reason-text');
+          if (reasonEl) reasonEl.textContent = d.maintenanceReason || 'We are performing updates to the tournament system. We will be back online shortly.';
+        }
+      }
+    }
+  } catch(e) {}
+})();
+</script>
 </body>
 </html>
