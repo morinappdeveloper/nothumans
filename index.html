@@ -261,6 +261,7 @@ button svg, a svg, .menu-btn svg, .sidebar-close svg, .register-btn svg, .google
   <a href="https://instagram.com/@morinffx_" class="sidebar-link" id="link-instagram">INSTAGRAM</a>
   <a href="https://discord.gg/nF2CfDkPFR" class="sidebar-link" id="link-discord">DISCORD</a>
   <a href="https://chat.whatsapp.com/JI86hMP3Kfk7x6gzDNVxMn" class="sidebar-link" id="link-whatsapp">WHATSAPP</a>
+  <a href="verify.html" class="sidebar-link" style="color:#ffc61a; border-bottom:1px solid rgba(255,198,26,0.25);">PAYMENTS VERIFICATION</a>
 </div>
 
 <!-- NAV -->
@@ -382,7 +383,26 @@ async function loadSocialLinks(){
     }
   }catch(e){}
 }
+
+async function checkMaintenance(){
+  try{
+    const snap=await getDoc(doc(db,'settings','global'));
+    if(snap.exists()){
+      const d=snap.data();
+      if(d.maintenanceMode){
+        const ov=document.getElementById('maintenance-overlay');
+        if(ov){
+          ov.style.display='flex';
+          const reasonEl=document.getElementById('maint-reason-text');
+          if(reasonEl) reasonEl.textContent = d.maintenanceReason || 'We are performing updates to the tournament system. We will be back online shortly. Thank you for your patience!';
+        }
+      }
+    }
+  }catch(e){}
+}
+
 loadSocialLinks();
+checkMaintenance();
 setupSlotCountsListener();
 
 async function loadData(user){
@@ -559,6 +579,32 @@ window.closeSidebar=()=>{ document.getElementById('sidebar-overlay').classList.r
 
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2500); }
 </script>
+
+<!-- MAINTENANCE OVERLAY (controlled from admin) - Full theme match -->
+<div id="maintenance-overlay" style="display:none; position:fixed; inset:0; background:#07080a; z-index:99999; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:24px;">
+  <!-- Subtle grid like website -->
+  <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(255,198,26,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,198,26,0.035) 1px, transparent 1px); background-size:36px 36px; pointer-events:none;"></div>
+  
+  <div style="position:relative; max-width:440px; z-index:1;">
+    <!-- Logo -->
+    <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:24px;">
+      <div style="width:38px;height:38px;background:linear-gradient(135deg,#ffc61a,#ff9d00);display:flex;align-items:center;justify-content:center;clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%);font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;color:#0a0a0a;">NH</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px;color:#f5f6f8;">ESPORTS</div>
+    </div>
+
+    <div style="font-family:'Orbitron',sans-serif; font-size:28px; font-weight:900; color:#ffc61a; letter-spacing:2.5px; margin-bottom:16px; text-shadow:0 2px 20px rgba(255,198,26,0.3);">
+      WEBSITE UNDER<br>MAINTENANCE
+    </div>
+    
+    <div id="maint-reason-text" style="font-family:'Rajdhani',sans-serif; font-size:16px; line-height:1.6; color:#f5f6f8; margin-bottom:32px; max-width:380px; margin-left:auto; margin-right:auto;">
+      <!-- Reason injected here by JS -->
+    </div>
+
+    <div style="font-size:12px; color:#666; letter-spacing:1.5px; font-family:'Rajdhani',sans-serif;">
+      Please check back later • Admin can disable this from panel
+    </div>
+  </div>
+</div>
 </body>
 </html>
 
