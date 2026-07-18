@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>Verify Payment — NH ESPORTS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{-webkit-tap-highlight-color:rgba(0,0,0,0);box-sizing:border-box;margin:0;padding:0;}
+button,a,div,span,img,input,textarea,select,label{outline:none;-webkit-tap-highlight-color:transparent;}
+img{-webkit-user-drag:none;-webkit-touch-callout:none;user-select:none;}
+body{user-select:none;-webkit-user-select:none;font-family:'Rajdhani',sans-serif;overflow-x:hidden;background:#07080a;color:#f5f6f8;}
+:root{
+  --bg:#07080a;--bg2:#0d0e11;--panel:#151619;--panel2:#1c1e22;
+  --line:rgba(255,255,255,0.08);--line-strong:rgba(255,198,26,0.35);
+  --text:#f5f6f8;--text-dim:rgba(245,246,248,0.58);--text-faint:rgba(245,246,248,0.34);
+  --gold:#ffc61a;--gold2:#ff9d00;--gold-soft:rgba(255,198,26,0.14);
+  --green:#2fe28a;--green-soft:rgba(47,226,138,0.14);
+  --amber:#ff9d2e;--amber-soft:rgba(255,157,46,0.14);
+  --red:#ff3d4d;--red-soft:rgba(255,61,77,0.14);
+}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,198,26,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,0.03) 1px,transparent 1px);background-size:36px 36px;}
+nav{position:sticky;top:0;z-index:100;background:rgba(7,8,10,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:0 18px;height:58px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Orbitron',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;text-decoration:none;color:var(--text);display:flex;align-items:center;gap:8px;text-transform:uppercase;}
+.nav-mark{width:26px;height:26px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%);font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;color:#0a0a0a;}
+.page-header{padding:28px 18px 18px;text-align:center;border-bottom:1px solid var(--line);}
+.page-title{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;letter-spacing:1px;color:var(--text);}
+.page-sub{font-size:12px;color:var(--text-dim);margin-top:6px;}
+.verify-card{background:var(--panel);border:1px solid var(--line);margin:12px 16px;border-radius:14px;overflow:hidden;}
+.verify-head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:#111214;}
+.verify-head h4{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:800;color:var(--gold);}
+.code-box{font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;letter-spacing:5px;color:var(--gold);background:#0a0b0e;border:2px solid var(--gold);border-radius:10px;padding:12px 20px;margin:12px auto;text-align:center;cursor:pointer;box-shadow:0 0 0 4px rgba(255,198,26,0.1);transition:all .2s;}
+.code-box:active{transform:scale(0.985);box-shadow:0 0 0 8px rgba(47,226,138,0.3);}
+.copy-btn{width:100%;margin:0 16px 16px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0a0a0a;border:none;font-family:'Orbitron',sans-serif;font-weight:800;font-size:12px;padding:14px 0;border-radius:10px;text-transform:uppercase;letter-spacing:1.5px;cursor:pointer;}
+.copy-btn:active{filter:brightness(0.95);}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-dim);}
+.empty-icon{width:64px;height:64px;margin:0 auto 16px;opacity:0.6;}
+.empty-title{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:800;color:var(--text);margin-bottom:8px;}
+.login-card{max-width:340px;margin:40px auto;background:var(--panel);border:1px solid var(--line-strong);border-radius:16px;padding:28px;text-align:center;}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#fff;color:#111;border:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;padding:14px;border-radius:10px;margin-top:16px;cursor:pointer;}
+.google-btn svg{width:18px;height:18px;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111;border:1px solid var(--gold);color:#fff;padding:10px 18px;border-radius:8px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:999;}
+.toast.show{opacity:1;}
+@media(max-width:480px){.code-box{font-size:22px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><div class="nav-mark">NH</div> ESPORTS</a>
+  <a href="index.html" style="color:var(--text-dim);font-size:12px;text-decoration:none;font-weight:700;">← BACK TO HOME</a>
+</nav>
+
+<div class="page-header">
+  <div class="page-title">PAYMENT VERIFICATION</div>
+  <div class="page-sub">If you missed sending the code from success page — view &amp; resend here</div>
+</div>
+
+<div id="login-section" style="display:none;">
+  <div class="login-card">
+    <div style="font-family:'Orbitron',sans-serif;font-size:14px;font-weight:800;letter-spacing:1px;margin-bottom:8px;">SIGN IN REQUIRED</div>
+    <div style="font-size:12px;color:var(--text-dim);">Sign in with Google to see your pending payment verifications</div>
+    <button class="google-btn" onclick="googleLogin()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.51h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.34z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      CONTINUE WITH GOOGLE
+    </button>
+    <div style="font-size:10px;color:#555;margin-top:14px;">Your data is secure • Only used for verification</div>
+  </div>
+</div>
+
+<div id="main-section" style="display:none;">
+  <div style="padding:0 16px 8px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--text-dim);">YOUR PENDING VERIFICATIONS</div>
+    <button onclick="loadPending()" style="background:none;border:1px solid var(--line);color:var(--text-dim);font-size:10px;padding:6px 12px;border-radius:6px;font-family:'Rajdhani',sans-serif;">REFRESH</button>
+  </div>
+  
+  <div id="pending-list"></div>
+  
+  <div id="empty-state" class="empty-state" style="display:none;">
+    <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="#ffc61a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/><circle cx="12" cy="12" r="10"/></svg>
+    <div class="empty-title">NO PENDING UNVERIFIED REGISTRATIONS</div>
+    <div style="font-size:12px;max-width:260px;margin:0 auto;">All your payments have been verified by admin or you have no active registrations awaiting confirmation.</div>
+    <a href="index.html" style="display:inline-block;margin-top:20px;color:var(--gold);font-weight:700;font-size:12px;text-decoration:none;">BACK TO TOURNAMENTS →</a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import{getAuth,signInWithPopup,GoogleAuthProvider,onAuthStateChanged,signOut}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+import{getFirestore,collection,query,where,getDocs,doc,getDoc}from'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+  authDomain: "nothumans-7e285.firebaseapp.com",
+  projectId: "nothumans-7e285",
+  storageBucket: "nothumans-7e285.firebasestorage.app",
+  messagingSenderId: "409725804600",
+  appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let currentUser=null;
+let ADMIN_WA='919876543210';
+
+async function loadAdminWA(){
+  try{
+    const snap=await getDoc(doc(db,'settings','global'));
+    if(snap.exists()){
+      const d=snap.data();
+      if(d.adminWhatsapp) ADMIN_WA=d.adminWhatsapp;
+      else if(d.whatsapp) ADMIN_WA=d.whatsapp;
+    }
+  }catch(e){}
+}
+loadAdminWA();
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+window.googleLogin=async()=>{
+  const provider=new GoogleAuthProvider();
+  try{ await signInWithPopup(auth,provider); }catch(e){ showToast('GOOGLE LOGIN FAILED'); }
+};
+
+onAuthStateChanged(auth, user=>{
+  currentUser=user;
+  if(user){
+    document.getElementById('login-section').style.display='none';
+    document.getElementById('main-section').style.display='block';
+    loadPending();
+  }else{
+    document.getElementById('login-section').style.display='block';
+    document.getElementById('main-section').style.display='none';
+  }
+});
+
+let pendingRegsMap={};
+
+async function loadPending(){
+  if(!currentUser) return;
+  const container=document.getElementById('pending-list');
+  container.innerHTML='<div style="text-align:center;padding:30px 12px;color:var(--text-dim);font-size:12px;">LOADING YOUR PENDING REGISTRATIONS...</div>';
+  
+  try{
+    const q=query(collection(db,'registrations'), where('userId','==',currentUser.uid), where('status','==','verifying'));
+    const snap=await getDocs(q);
+    const list=[];
+    pendingRegsMap={};
+    snap.forEach(d=>{ const r={id:d.id, ...d.data()}; list.push(r); pendingRegsMap[d.id]=r; });
+    
+    if(list.length===0){
+      container.innerHTML='';
+      document.getElementById('empty-state').style.display='block';
+      return;
+    }
+    document.getElementById('empty-state').style.display='none';
+    
+    container.innerHTML = list.map(reg => {
+      const code = reg.verifyCode || 'NH-XXXXX';
+      const when = reg.registeredAt ? new Date(reg.registeredAt.toDate ? reg.registeredAt.toDate() : Date.now()).toLocaleDateString() : '';
+      return `
+        <div class="verify-card">
+          <div class="verify-head">
+            <div>
+              <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;color:#fff;">${reg.matchName || 'TOURNAMENT'}</div>
+              <div style="font-size:10px;color:var(--text-dim);">${reg.mode || ''} • ₹${reg.entryFee||0} • ${when}</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:9px;color:#888;">REG ID</div>
+              <div style="font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;color:var(--gold);">${reg.invId || reg.id.slice(0,8)}</div>
+            </div>
+          </div>
+          
+          <div style="padding:16px 16px 8px;">
+            <div style="font-size:10px;color:var(--text-dim);letter-spacing:1px;margin-bottom:4px;">TEAM / PLAYER</div>
+            <div style="font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:14px;">${reg.teamName || reg.iglIgn || '—'}</div>
+            
+            <div style="font-size:10px;color:var(--text-dim);letter-spacing:1.5px;margin-bottom:6px;text-align:center;">YOUR VERIFICATION CODE</div>
+            <div class="code-box" onclick="copyCodeAndWA('${reg.id}', this)">${code}</div>
+            
+            <button class="copy-btn" onclick="copyCodeAndWA('${reg.id}', this)">📋 COPY DETAILS &amp; OPEN ADMIN WHATSAPP</button>
+            
+            <div style="font-size:9px;color:#555;text-align:center;margin-top:4px;">Sends code + name, team, contact, price, tournament &amp; payment SS link</div>
+          </div>
+        </div>`;
+    }).join('');
+  }catch(e){
+    console.error(e);
+    container.innerHTML='<div style="padding:30px;text-align:center;color:#f55;">Failed to load. Try refresh.</div>';
+  }
+}
+
+function buildVerifyMessage(reg){
+  const name = (reg.players && reg.players[0] && reg.players[0].ign) || reg.iglIgn || reg.teamName || '—';
+  const team = reg.teamName || reg.iglIgn || '—';
+  const contact = reg.iglContact || '—';
+  const price = '₹' + (reg.entryFee || 0);
+  const ttName = reg.matchName || '—';
+  const ss = reg.screenshotUrl || '';
+  const code = reg.verifyCode || '';
+
+  let msg = `NH ESPORTS — PAYMENT VERIFICATION\n\n`;
+  msg += `CODE: ${code}\n`;
+  msg += `NAME: ${name}\n`;
+  msg += `TEAM NAME: ${team}\n`;
+  msg += `CONTACT: ${contact}\n`;
+  msg += `PRICE: ${price}\n`;
+  msg += `TT NAME: ${ttName}\n`;
+  if(ss) msg += `PAYMENT SS LINK: ${ss}\n`;
+  return msg;
+}
+
+window.copyCodeAndWA = async function(regId, el){
+  const reg = pendingRegsMap[regId];
+  if(!reg || !reg.verifyCode) return;
+  const fullMsg = buildVerifyMessage(reg);
+
+  try{
+    await navigator.clipboard.writeText(fullMsg);
+    if(el.classList.contains('code-box')){
+      const oShadow=el.style.boxShadow;
+      el.style.boxShadow='0 0 0 8px rgba(47,226,138,0.45)';
+      setTimeout(()=>{el.style.boxShadow=oShadow;},900);
+    }else{
+      const old=el.textContent;
+      el.textContent='✅ COPIED!';
+      setTimeout(()=>{el.textContent=old;},1400);
+    }
+  }catch(err){
+    const ta=document.createElement('textarea');ta.value=fullMsg;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+  }
+  
+  // open WA
+  let num=(ADMIN_WA||'919876543210').replace(/\D/g,'');
+  if(num.length===10) num='91'+num;
+  else if(num.length>10 && !num.startsWith('91')) num='91'+num.slice(-10);
+  const url=`https://wa.me/${num}?text=${encodeURIComponent(fullMsg)}`;
+  window.open(url,'_blank');
+  showToast('Details copied • WhatsApp opened');
+};
+</script>
+
+<!-- MAINTENANCE OVERLAY (same theme as website) -->
+<div id="maintenance-overlay" style="display:none; position:fixed; inset:0; background:#07080a; z-index:99999; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:24px;">
+  <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(255,198,26,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,198,26,0.035) 1px, transparent 1px); background-size:36px 36px; pointer-events:none;"></div>
+  <div style="position:relative; max-width:440px; z-index:1;">
+    <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:24px;">
+      <div style="width:38px;height:38px;background:linear-gradient(135deg,#ffc61a,#ff9d00);display:flex;align-items:center;justify-content:center;clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%);font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;color:#0a0a0a;">NH</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px;color:#f5f6f8;">ESPORTS</div>
+    </div>
+    <div style="font-family:'Orbitron',sans-serif; font-size:28px; font-weight:900; color:#ffc61a; letter-spacing:2.5px; margin-bottom:16px;">WEBSITE UNDER<br>MAINTENANCE</div>
+    <div id="maint-reason-text" style="font-family:'Rajdhani',sans-serif; font-size:16px; line-height:1.6; color:#f5f6f8; margin-bottom:32px; max-width:380px; margin-left:auto; margin-right:auto;"></div>
+    <div style="font-size:12px; color:#666; letter-spacing:1.5px; font-family:'Rajdhani',sans-serif;">Please check back later • Admin can disable this from panel</div>
+  </div>
+</div>
+
+<script>
+(async function checkMaintenanceOnVerify() {
+  try {
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js');
+    const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js');
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+      authDomain: "nothumans-7e285.firebaseapp.com",
+      projectId: "nothumans-7e285",
+      storageBucket: "nothumans-7e285.firebasestorage.app",
+      messagingSenderId: "409725804600",
+      appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    const snap = await getDoc(doc(db, 'settings', 'global'));
+    if (snap.exists()) {
+      const d = snap.data();
+      if (d.maintenanceMode) {
+        const ov = document.getElementById('maintenance-overlay');
+        if (ov) {
+          ov.style.display = 'flex';
+          const reasonEl = document.getElementById('maint-reason-text');
+          if (reasonEl) reasonEl.textContent = d.maintenanceReason || 'We are performing updates to the tournament system. We will be back online shortly.';
+        }
+      }
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>
