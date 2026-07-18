@@ -78,6 +78,28 @@ body::before{
 .cut-tl-br{clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);}
 .cut-sm{clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);}
 
+/* ── WATER WAVE IMAGE LOADER ── */
+.wave-loader{position:absolute;inset:0;overflow:hidden;background:#0e0f10;z-index:2;transition:opacity 0.35s ease;}
+.wave-loader.hide{opacity:0;pointer-events:none;}
+.wave-loader .wave-fill{position:absolute;left:-30%;width:160%;aspect-ratio:1/1;top:100%;border-radius:44%;background:rgba(255,198,26,0.30);animation:waveSpin 4.2s linear infinite;}
+.wave-loader .wave-fill.wave2{background:rgba(255,198,26,0.16);animation-duration:6.2s;animation-direction:reverse;}
+.wave-loader .wave-pct{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;color:#ffc61a;letter-spacing:1px;text-shadow:0 2px 8px rgba(0,0,0,0.6);}
+@keyframes waveSpin{from{transform:translateX(0) rotate(0deg);}to{transform:translateX(0) rotate(360deg);}}
+img.wave-target{opacity:0;transition:opacity 0.4s ease;}
+img.wave-target.loaded{opacity:1;}
+
+/* ── SCHEDULED SLOT COUNTDOWN ── */
+.countdown-lock{background:linear-gradient(135deg,rgba(255,198,26,0.08),rgba(255,157,0,0.03));border:1px solid var(--line-strong);padding:14px 12px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden;}
+.countdown-lock::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,198,26,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,0.04) 1px,transparent 1px);background-size:14px 14px;pointer-events:none;}
+.countdown-lock-label{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:800;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;}
+.countdown-lock-label svg{animation:blink 1.6s ease-in-out infinite;}
+.countdown-timer{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;}
+.cd-unit{display:flex;flex-direction:column;align-items:center;min-width:38px;}
+.cd-num{font-family:'Orbitron',sans-serif;font-size:19px;font-weight:900;color:var(--text);line-height:1;}
+.cd-lbl{font-family:'Rajdhani',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;color:var(--text-faint);margin-top:3px;text-transform:uppercase;}
+.cd-sep{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:900;color:var(--gold);opacity:0.5;margin-bottom:12px;}
+.countdown-opens-at{position:relative;font-family:'Rajdhani',sans-serif;font-size:9px;color:var(--text-faint);margin-top:10px;letter-spacing:0.5px;}
+
 /* ── LOADER ── */
 #loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;}
 #loader::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,198,26,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,0.05) 1px,transparent 1px);background-size:30px 30px;}
@@ -282,7 +304,8 @@ button svg, a svg, .menu-btn svg, .sidebar-close svg, .register-btn svg, .google
 
 <!-- HERO -->
 <div class="hero" id="hero-section">
-  <img class="hero-bg" id="hero-bg-img" src="" alt="" style="display:none;"/>
+  <div class="wave-loader hide" id="hero-wave-loader"><div class="wave-fill"></div><div class="wave-fill wave2"></div><div class="wave-pct">0%</div></div>
+  <img class="hero-bg wave-target" id="hero-bg-img" src="" alt="" style="display:none;"/>
   <div class="hero-streak"></div>
   <div class="hero-overlay"></div>
   <div style="position:absolute;inset:0;" id="hero-bg-default"></div>
@@ -341,6 +364,7 @@ let currentUser=null;
 let pendingMatchId=null;
 let confirmedSlots={};
 let userRegs={};
+let lastMatchesData=[];
 let slotCountsUnsub=null;
 
 function setupSlotCountsListener(){
@@ -443,8 +467,10 @@ async function loadMatches(){
 function updateHero(data){
   if(data.bgImage){
     const img=document.getElementById('hero-bg-img');
-    img.src=data.bgImage;img.style.display='block';
+    const loader=document.getElementById('hero-wave-loader');
+    img.style.display='block';
     document.getElementById('hero-bg-default').style.opacity='0.3';
+    loadImageWithWave(img, loader, data.bgImage);
   }
   if(data.tag) document.getElementById('hero-tag').textContent=data.tag;
   if(data.title){
@@ -454,7 +480,64 @@ function updateHero(data){
   if(data.subtitle) document.getElementById('hero-sub').textContent=data.subtitle;
 }
 
+// ── WATER WAVE IMAGE LOADER ──
+// Streams an image's bytes (when possible) so we can show a rising
+// "water wave" placeholder tied to real download progress, and only
+// reveal the <img> once it has loaded 100% — never a half-loaded image.
+function loadImageWithWave(imgEl, loaderEl, url){
+  if(!url){ if(loaderEl) loaderEl.classList.add('hide'); return; }
+  imgEl.classList.remove('loaded');
+  if(loaderEl) loaderEl.classList.remove('hide');
+  const fills = loaderEl ? loaderEl.querySelectorAll('.wave-fill') : [];
+  const pctEl = loaderEl ? loaderEl.querySelector('.wave-pct') : null;
+
+  const setLevel=(pct)=>{
+    fills.forEach(f=>{ f.style.top=(100-pct)+'%'; });
+    if(pctEl) pctEl.textContent=pct+'%';
+  };
+  setLevel(0);
+
+  const finish=(src)=>{
+    imgEl.onload=()=>{
+      imgEl.classList.add('loaded');
+      if(loaderEl){ loaderEl.classList.add('hide'); setTimeout(()=>{ if(loaderEl.parentNode) loaderEl.remove(); },450); }
+    };
+    imgEl.onerror=()=>{
+      if(loaderEl){ loaderEl.classList.add('hide'); setTimeout(()=>{ if(loaderEl.parentNode) loaderEl.remove(); },450); }
+    };
+    imgEl.src=src;
+  };
+
+  if(window.fetch){
+    fetch(url).then(res=>{
+      const total=parseInt(res.headers.get('content-length')||'0',10);
+      if(!res.body||!total) return res.blob().then(b=>finish(URL.createObjectURL(b)));
+      let loaded=0; const reader=res.body.getReader(); const chunks=[];
+      const pump=()=>reader.read().then(({done,value})=>{
+        if(done){ finish(URL.createObjectURL(new Blob(chunks))); return; }
+        chunks.push(value); loaded+=value.length;
+        setLevel(Math.min(100,Math.round(loaded/total*100)));
+        return pump();
+      });
+      return pump();
+    }).catch(()=>finish(url));
+  } else {
+    finish(url);
+  }
+}
+
+function initWaveImages(container){
+  container.querySelectorAll('img.wave-target[data-src]').forEach(img=>{
+    const url=img.getAttribute('data-src');
+    img.removeAttribute('data-src');
+    const loader = img.previousElementSibling && img.previousElementSibling.classList.contains('wave-loader')
+      ? img.previousElementSibling : null;
+    loadImageWithWave(img, loader, url);
+  });
+}
+
 function renderMatches(matches){
+  lastMatchesData=matches;
   const c=document.getElementById('matches-container');
   if(!matches.length){
     c.innerHTML=`<div class="empty-state">
@@ -490,9 +573,16 @@ function renderMatches(matches){
     const userReg=userRegs[m.id];
     const userStatus=userReg?userReg.status:null;
 
+    const now=Date.now();
+    const openAtTime=m.slotOpenEnabled&&m.slotOpenAt?new Date(m.slotOpenAt).getTime():null;
+    const isScheduledLocked = openAtTime && openAtTime>now && !userStatus;
+
     let btnTxt,btnClass,btnDisabled=true,btnIcon='';
 
-    if(userStatus==='confirmed'){
+    if(isScheduledLocked){
+      btnTxt='LOCKED — NOT YET OPEN';
+      btnClass='register-btn state-closed';
+    } else if(userStatus==='confirmed'){
       btnTxt='SLOT CONFIRMED';
       btnClass='register-btn state-confirmed';
       btnIcon=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
@@ -516,7 +606,7 @@ function renderMatches(matches){
 
     html+=`<div class="match-card" style="animation-delay:${i*0.08}s;">
       <div class="match-banner">
-        ${m.image?`<img src="${m.image}" alt="${m.name}" loading="lazy"/>`:`<div style="width:100%;height:100%;background:linear-gradient(135deg,#2b1e00,#161616);"></div>`}
+        ${m.image?`<div class="wave-loader"><div class="wave-fill"></div><div class="wave-fill wave2"></div><div class="wave-pct">0%</div></div><img class="wave-target" data-src="${m.image}" alt="${m.name}"/>`:`<div style="width:100%;height:100%;background:linear-gradient(135deg,#2b1e00,#161616);"></div>`}
         <div class="match-banner-overlay"></div>
         <div class="match-time-badge">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -543,6 +633,22 @@ function renderMatches(matches){
           </div>
         </div>
 
+        ${isScheduledLocked?`<div class="countdown-lock" data-open-at="${m.slotOpenAt}">
+          <div class="countdown-lock-label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            SLOTS OPEN IN
+          </div>
+          <div class="countdown-timer">
+            <div class="cd-unit"><span class="cd-num" data-unit="d">00</span><span class="cd-lbl">DAYS</span></div>
+            <div class="cd-sep">:</div>
+            <div class="cd-unit"><span class="cd-num" data-unit="h">00</span><span class="cd-lbl">HRS</span></div>
+            <div class="cd-sep">:</div>
+            <div class="cd-unit"><span class="cd-num" data-unit="m">00</span><span class="cd-lbl">MIN</span></div>
+            <div class="cd-sep">:</div>
+            <div class="cd-unit"><span class="cd-num" data-unit="s">00</span><span class="cd-lbl">SEC</span></div>
+          </div>
+        </div>`:''}
+
         <button class="${btnClass}" ${btnDisabled?'disabled':''} onclick="handleRegister('${m.id}')">
           ${btnIcon}${btnTxt}
         </button>
@@ -551,6 +657,47 @@ function renderMatches(matches){
   });
 
   c.innerHTML=html;
+  initWaveImages(c);
+  tickCountdowns();
+}
+
+// ── SCHEDULED SLOT-OPEN COUNTDOWN ──
+// Ticks every second; once any locked match's open time is reached,
+// re-renders the match list so its slot auto-unlocks with no page reload.
+let countdownReloadPending=false;
+function tickCountdowns(){
+  const nodes=document.querySelectorAll('.countdown-lock[data-open-at]');
+  if(!nodes.length) return;
+  const now=Date.now();
+  let anyExpired=false;
+
+  nodes.forEach(el=>{
+    const openAt=new Date(el.getAttribute('data-open-at')).getTime();
+    let remaining=openAt-now;
+    if(remaining<=0){ anyExpired=true; remaining=0; }
+    const d=Math.floor(remaining/86400000);
+    const h=Math.floor((remaining%86400000)/3600000);
+    const m=Math.floor((remaining%3600000)/60000);
+    const s=Math.floor((remaining%60000)/1000);
+    const pad=n=>String(n).padStart(2,'0');
+    const dEl=el.querySelector('[data-unit="d"]');
+    const hEl=el.querySelector('[data-unit="h"]');
+    const mEl=el.querySelector('[data-unit="m"]');
+    const sEl=el.querySelector('[data-unit="s"]');
+    if(dEl) dEl.textContent=pad(d);
+    if(hEl) hEl.textContent=pad(h);
+    if(mEl) mEl.textContent=pad(m);
+    if(sEl) sEl.textContent=pad(s);
+  });
+
+  if(anyExpired && !countdownReloadPending){
+    countdownReloadPending=true;
+    setTimeout(()=>{ countdownReloadPending=false; renderMatches(lastMatchesData); },600);
+  }
+}
+
+if(!window.__nhCountdownInterval){
+  window.__nhCountdownInterval=setInterval(tickCountdowns,1000);
 }
 
 window.handleRegister=(matchId)=>{
@@ -559,6 +706,11 @@ window.handleRegister=(matchId)=>{
   if(reg){
     if(reg.status==='confirmed'){ showToast('✓ YOUR SLOT IS CONFIRMED'); return; }
     if(reg.status==='verifying'){ showToast('⏳ PAYMENT IS UNDER REVIEW'); return; }
+  }
+  const m=(lastMatchesData||[]).find(x=>x.id===matchId);
+  if(m && m.slotOpenEnabled && m.slotOpenAt && new Date(m.slotOpenAt).getTime()>Date.now()){
+    showToast('⏳ SLOTS ARE NOT OPEN YET');
+    return;
   }
   window.location.href=`reg.html?matchId=${matchId}`;
 };
