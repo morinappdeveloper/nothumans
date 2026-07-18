@@ -284,6 +284,13 @@ async function loadMatch(){
     const snap=await getDoc(doc(db,'matches',matchId));
     if(!snap.exists()){window.location.href='index.html';return;}
     matchData={id:matchId,...snap.data()};
+
+    if(matchData.slotOpenEnabled && matchData.slotOpenAt && new Date(matchData.slotOpenAt).getTime()>Date.now()){
+      showToast('⏳ SLOTS ARE NOT OPEN YET');
+      setTimeout(()=>{ window.location.href='index.html'; },1200);
+      return;
+    }
+
     document.getElementById('match-pill').textContent=matchData.name||'TOURNAMENT';
     document.getElementById('s-name').textContent=matchData.name||'—';
     document.getElementById('s-entry').textContent=(matchData.entry||0)+'₹';
@@ -493,3 +500,4 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 </script>
 </body>
 </html>
+
