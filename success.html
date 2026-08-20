@@ -225,6 +225,43 @@ svg *{transform-box:fill-box}
 const D=JSON.parse(sessionStorage.getItem('successData')||'{}');
 const M=JSON.parse(sessionStorage.getItem('matchData')||'{}');
 window._D=D;window._M=M;
+
+/** Automated background confirmation email — fires once per registration code */
+(function sendConfirmationEmail(){
+  try{
+    const GAS_URL='https://script.google.com/macros/s/AKfycbzicyD-vKTM8zWVP5JWIkc9PtqK7NKryFej415ZQYf5LQpCAFHxdLnoDcY_eEm9hFZY/exec';
+    const code=D.verifyCode||D.invId||'';
+    const email=D.userEmail||'';
+    if(!email||!code) return; // need both to send
+
+    const flagKey='nh_email_sent_'+code;
+    if(sessionStorage.getItem(flagKey)==='1') return; // already sent this session
+
+    const payload={
+      email:email,
+      registrationCode:code,
+      matchName:M.name||D.matchName||'',
+      matchTime:M.time||'',
+      matchMode:M.mode||D.mode||'',
+      teamName:D.teamName||'',
+      slotNumber:D.slotNum||'',
+      contact:D.iglContact||D.contact||D.whatsapp||''
+    };
+
+    fetch(GAS_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload)
+    }).then(function(){
+      try{ sessionStorage.setItem(flagKey,'1'); }catch(e){}
+    }).catch(function(err){
+      console.error('NH confirmation email dispatch failed:',err);
+    });
+  }catch(e){
+    console.error('NH confirmation email dispatch failed:',e);
+  }
+})();
 const mode=(D.mode||M.mode||'').toLowerCase();
 const one=mode.includes('1v1'),two=mode.includes('2v2'),mac=mode.includes('mac');
 document.getElementById('title').textContent=one?'Slot registered':two?'Duo registered':'Squad registered';
