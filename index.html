@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>NotHumans — Esports Tournament Arena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+button,a,div,span,img,input,textarea,select,label,li,ul,section,article,nav,header,footer,aside{outline:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
+img{-webkit-user-drag:none;-webkit-touch-callout:none;user-select:none;}
+body{user-select:none;-webkit-user-select:none;font-family:'Rajdhani',sans-serif;overflow-x:hidden;background:var(--bg);color:var(--text);min-height:100vh;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+input,textarea{user-select:text;-webkit-user-select:text;}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+button,a{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+button{-webkit-appearance:none;appearance:none;background:none;border:0;}
+::selection{background:rgba(255,198,26,0.35);color:#fff;}
+:root{
+  --bg:#0c0604;--bg2:#140a06;--panel:rgba(28,14,8,0.72);
+  --line:rgba(255,180,60,0.18);--line-strong:rgba(255,198,26,0.45);
+  --text:#fff8f0;--text-dim:rgba(255,248,240,0.62);--text-faint:rgba(255,248,240,0.36);
+  --gold:#ffc61a;--gold2:#ff9d00;--orange:#ff6b1a;--red:#ff3d2e;--crimson:#c41e3a;
+  --blue-smoke:rgba(80,140,255,0.22);--green:#2fe28a;
+  --glass:rgba(255,255,255,0.06);--glass-border:rgba(255,210,120,0.22);
+  --ease:cubic-bezier(0.22,1,0.36,1);--ease-soft:cubic-bezier(0.16,1,0.3,1);
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}
+  .sidebar,
+  .sidebar-overlay{
+    transition-duration:0.22s!important;
+    transition-timing-function:ease-out!important;
+  }
+  .ticker-track{
+    animation-duration:40s!important;
+    animation-iteration-count:infinite!important;
+  }
+}
+#page-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--bg);overflow:hidden;}
+#page-bg img{width:100%;height:100%;object-fit:cover;opacity:0;filter:contrast(1.05) brightness(0.35) saturate(1.1);transition:opacity 0.8s var(--ease);}
+#page-bg img.loaded{opacity:0.28;}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,198,26,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,0.03) 1px,transparent 1px);background-size:36px 36px;}
+.wave-loader{position:absolute;inset:0;overflow:hidden;background:#120806;z-index:2;transition:opacity 0.4s var(--ease);display:flex;align-items:center;justify-content:center;}
+.wave-loader.hide{opacity:0;pointer-events:none;}
+.wave-loader .wave-fill{position:absolute;left:-30%;width:160%;aspect-ratio:1/1;top:100%;border-radius:44%;background:rgba(255,198,26,0.28);animation:waveSpin 4.2s linear infinite;transition:top 0.5s var(--ease-soft);}
+.wave-loader .wave-fill.wave2{background:rgba(255,157,0,0.14);animation-duration:6.2s;animation-direction:reverse;}
+.wave-loader .wave-pct{position:relative;z-index:2;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;color:var(--gold);letter-spacing:1px;text-shadow:0 2px 8px rgba(0,0,0,0.6);}
+@keyframes waveSpin{from{transform:translateX(0) rotate(0deg);}to{transform:translateX(0) rotate(360deg);}}
+img.wave-target{opacity:0;}
+img.wave-target.loaded{opacity:1;transition:opacity 0.5s var(--ease);}
+#loader{position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .7s var(--ease),visibility .7s var(--ease);overflow:hidden;}
+.nh-intro-backdrop{position:absolute;inset:0;width:100%;height:100%;background:
+radial-gradient(circle at 50% 44%,rgba(255,157,0,.10),transparent 34%),
+radial-gradient(circle at 50% 62%,rgba(196,30,58,.08),transparent 52%),
+linear-gradient(135deg,rgba(18,9,5,.98),rgba(7,4,3,.98));
+z-index:0;pointer-events:none;transition:background 1.05s var(--ease),filter 1.05s var(--ease);}
+.nh-intro-wrap{z-index:1;}
+#loader{transition:opacity .7s var(--ease),visibility .7s var(--ease),background 1.05s var(--ease);}
+#loader.intro-dark{background:#050303;}
+#loader.intro-dark::before{background:radial-gradient(circle at 50% 50%,rgba(255,157,0,.055),transparent 34%),radial-gradient(circle at 50% 58%,rgba(196,30,58,.045),transparent 52%);}
+#loader.intro-dark .nh-intro-backdrop{background:radial-gradient(circle at 50% 50%,rgba(255,157,0,.045),transparent 32%),linear-gradient(135deg,rgba(9,5,3,.99),rgba(2,2,2,1));filter:brightness(.72);}
+#loader.done{opacity:0;visibility:hidden;pointer-events:none;}
+.nh-intro-wrap{width:min(92vmin,820px);aspect-ratio:1/1;position:relative;display:grid;place-items:center;filter:drop-shadow(0 0 28px rgba(255,157,0,.10));transform-origin:50% 50%;will-change:transform,filter;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.nh-intro-wrap.intro-finish-scale{transition:transform 1.05s var(--ease-soft),filter 1.05s var(--ease);transform:scale(1.12);filter:drop-shadow(0 0 48px rgba(255,157,0,.28));}
+#loader.intro-finish{background:#030202;transition:background .85s var(--ease),opacity .7s var(--ease),visibility .7s var(--ease);}
+#loader.intro-finish .nh-intro-backdrop{filter:brightness(.42);transition:filter .85s var(--ease);}
+#loader.intro-finish .nh-intro-wrap{filter:drop-shadow(0 0 56px rgba(255,198,26,.30));}
+#loader::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 44%,rgba(255,157,0,.13),transparent 38%),radial-gradient(circle at 50% 58%,rgba(196,30,58,.10),transparent 55%),linear-gradient(rgba(255,198,26,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,.035) 1px,transparent 1px);background-size:auto,auto,36px 36px,36px 36px;}
+.nh-intro-wrap svg{width:100%;height:100%;display:block;}
+.nh-intro-wrap .piece{fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:0;}
+.nh-intro-wrap #logo-fill{fill:url(#nhLogoFill);fill-rule:evenodd;opacity:0;}
+.nh-intro-wrap #slash-wide,.nh-intro-wrap #slash-core,.nh-intro-wrap #slash-edge,.nh-intro-wrap #slash-spark,.nh-intro-wrap #sword,.nh-intro-wrap #flash{opacity:0;}
+#intro-prog{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(36vw,220px);height:2px;background:rgba(255,198,26,.16);overflow:hidden;opacity:.85;box-shadow:0 0 14px rgba(255,157,0,.12);}
+#intro-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--orange),var(--gold));box-shadow:0 0 10px rgba(255,198,26,.45);transition:width 0.25s var(--ease-soft);}
+#loader-status-wrap{position:fixed;left:50%;bottom:38px;transform:translateX(-50%);text-align:center;pointer-events:none;text-shadow:0 2px 12px rgba(0,0,0,.75);}
+#loader-status-wrap .loader-status{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;color:#fff;text-transform:uppercase;min-height:16px;}
+#loader-status-wrap .loader-detail{font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:.4px;color:rgba(255,255,255,.55);min-height:14px;margin-top:2px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(12,6,4,0.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);-webkit-tap-highlight-color:transparent;}
+.nav-logo img{width:42px;height:42px;object-fit:contain;display:block;border-radius:50%;background:#fff;}
+.nav-word{font-family:'Orbitron',sans-serif;font-weight:800;font-size:15px;letter-spacing:1.5px;}
+.nav-word span{color:var(--gold);}
+.menu-btn{width:40px;height:40px;background:none;border:none;display:flex;align-items:center;justify-content:center;color:var(--text);-webkit-tap-highlight-color:transparent;}
+.menu-btn svg{transition:transform 0.3s var(--ease-soft);}
+.menu-btn:active svg{transform:scale(0.9);}
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.42s var(--ease);}
+.sidebar-overlay.open{opacity:1;pointer-events:all;}
+.sidebar{
+  position:fixed;top:0;right:0;bottom:0;width:min(300px,88vw);z-index:201;
+  background:rgba(18,10,6,0.55);
+  backdrop-filter:blur(40px) saturate(1.4);
+  -webkit-backdrop-filter:blur(40px) saturate(1.4);
+  border-left:1px solid rgba(255,255,255,0.12);
+  box-shadow:-12px 0 40px rgba(0,0,0,0.35);
+  transform:translate3d(100%,0,0);
+  transition:transform 0.42s var(--ease);
+  display:flex;flex-direction:column;padding:24px 20px;
+  will-change:transform;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.sidebar.open{transform:translate3d(0,0,0);}
+.sidebar-close{width:36px;height:36px;background:none;border:none;color:var(--text);margin-bottom:32px;align-self:flex-end;transition:transform 0.3s var(--ease-soft);-webkit-tap-highlight-color:transparent;}
+.sidebar-close:active{transform:rotate(90deg);}
+.sidebar-link{display:flex;align-items:center;gap:12px;padding:16px 0;border-bottom:1px solid var(--line);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;color:var(--text-dim);text-decoration:none;text-transform:uppercase;transition:color 0.25s var(--ease),transform 0.25s var(--ease-soft);-webkit-tap-highlight-color:transparent;}
+.sidebar-link::before{content:'';width:6px;height:6px;background:var(--gold);clip-path:polygon(0 0,100% 50%,0 100%);transition:transform 0.25s var(--ease);}
+.sidebar-link:hover{color:var(--text);transform:translateX(4px);}
+.sidebar-link:hover::before{transform:translateX(2px);}
+.reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity .8s var(--ease),transform .8s var(--ease);will-change:opacity,transform;}
+.reveal-delay-1{transition-delay:.08s}.reveal-delay-2{transition-delay:.16s}.reveal-delay-3{transition-delay:.24s}
+.reveal.in-view{opacity:1;transform:none;}
+.pipe-step,.stat-item,.tour-block{opacity:0;transform:translate3d(0,22px,0);transition:opacity .75s var(--ease),transform .75s var(--ease);will-change:opacity,transform;}
+.pipe-step.in-view,.stat-item.in-view,.tour-block.in-view{opacity:1;transform:none;}
+
+.hero{position:relative;min-height:100vh;min-height:100dvh;display:flex;align-items:flex-end;overflow:hidden;background:var(--bg2);z-index:1;}
+.hero-bg-wrap{position:absolute;inset:0;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%;filter:contrast(1.08) brightness(0.85) saturate(1.1);transform:scale(1.02);}
+.hero-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(to bottom,rgba(12,6,4,0.15) 0%,rgba(12,6,4,0.28) 35%,rgba(12,6,4,0.72) 72%,rgba(12,6,4,0.95) 100%),
+    linear-gradient(120deg,rgba(255,157,0,0.12),transparent 55%);
+}
+.hero-content{position:relative;z-index:2;padding:0 22px 48px;width:100%;max-width:1100px;margin:0 auto;}
+.hero-live{display:inline-flex;align-items:center;gap:8px;background:rgba(255,61,46,0.18);border:1px solid rgba(255,61,46,0.45);color:#ff8a7a;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;padding:7px 14px;margin-bottom:18px;text-transform:uppercase;clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 8px);}
+.hero-live-dot{width:7px;height:7px;border-radius:50%;background:#ff3d2e;box-shadow:0 0 0 0 rgba(255,61,46,0.5);animation:pulseDot 1.6s ease infinite;}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(255,61,46,0.45);}50%{box-shadow:0 0 0 5px rgba(255,61,46,0);}}
+@keyframes softPulse{0%,100%{opacity:0.55;}50%{opacity:1;}}
+@keyframes floatY{0%,100%{transform:translate3d(0,0,0);}50%{transform:translate3d(0,-5px,0);}}
+.hero-status{animation:floatY 5.5s ease-in-out infinite;will-change:transform;}
+.hero-status:hover{animation:none;}
+@media (prefers-reduced-motion: reduce){.hero-status{animation:none;}}
+
+.hero-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(36px,9.5vw,72px);line-height:0.98;letter-spacing:-1px;text-transform:uppercase;color:var(--text);text-shadow:0 4px 40px rgba(0,0,0,0.55);margin-bottom:12px;}
+.hero-title em{font-style:normal;color:var(--gold);text-shadow:0 0 32px rgba(255,198,26,0.45);}
+.hero-sub{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:28px;}
+.hero-status{display:inline-flex;align-items:center;gap:16px;background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-border);padding:14px 18px;max-width:100%;box-shadow:0 12px 40px rgba(0,0,0,0.35);transform:perspective(800px) rotateY(-2deg);transition:transform 0.4s var(--ease);}
+.hero-status:hover{transform:perspective(800px) rotateY(0deg);}
+.hero-trophy{width:44px;height:44px;flex-shrink:0;}
+.hero-trophy path,.hero-trophy circle,.hero-trophy line{stroke:var(--gold);stroke-width:1.6;fill:none;stroke-dasharray:120;stroke-dashoffset:120;animation:drawStroke 1.8s ease 0.6s forwards;}
+@keyframes drawStroke{to{stroke-dashoffset:0;}}
+.hero-status-text{display:flex;flex-direction:column;gap:2px;}
+.hero-status-label{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;}
+.hero-status-value{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:800;color:var(--text);letter-spacing:0.5px;}
+.ticker{background:linear-gradient(90deg,rgba(255,157,0,0.12),rgba(255,61,46,0.08));border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;height:42px;display:block;position:relative;z-index:1;}
+.ticker.hidden{display:none;}
+.ticker-track{
+  display:inline-flex;
+  flex-wrap:nowrap;
+  flex-shrink:0;
+  width:max-content;
+  max-width:none;
+  white-space:nowrap;
+  align-items:center;
+  height:42px;
+  animation:tickerMoveLeft 28s linear infinite;
+  will-change:transform;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.ticker-track.dir-right{animation-name:tickerMoveRight;}
+.ticker-item{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;color:var(--text-dim);padding:0 36px;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;flex-shrink:0;white-space:nowrap;}
+.ticker-item::before{content:'';width:5px;height:5px;background:var(--gold);border-radius:50%;flex-shrink:0;}
+@keyframes tickerMoveLeft{from{transform:translate3d(0,0,0);}to{transform:translate3d(-50%,0,0);}}
+@keyframes tickerMoveRight{from{transform:translate3d(-50%,0,0);}to{transform:translate3d(0,0,0);}}
+.section{padding:72px 20px;position:relative;max-width:1100px;margin:0 auto;z-index:1;}
+.section-label{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.section-label::before{content:'';width:18px;height:2px;background:var(--gold);}
+.section-h{font-family:'Orbitron',sans-serif;font-size:clamp(26px,5.5vw,40px);font-weight:900;letter-spacing:-0.5px;line-height:1.1;text-transform:uppercase;color:var(--text);margin-bottom:36px;}
+.pipeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;}
+.pipe-step{background:var(--panel);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line);padding:22px 18px;position:relative;overflow:hidden;transition:border-color 0.3s var(--ease),transform 0.3s var(--ease);}
+.pipe-step:hover{border-color:var(--line-strong);transform:translateY(-3px);}
+.pipe-num{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;color:transparent;-webkit-text-stroke:1.5px var(--gold);opacity:0.55;margin-bottom:12px;line-height:1;}
+.pipe-title{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:800;letter-spacing:1px;color:var(--text);text-transform:uppercase;margin-bottom:6px;}
+.pipe-desc{font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--text-dim);line-height:1.45;}
+.pipe-underline{position:absolute;bottom:0;left:0;height:3px;width:100%;background:linear-gradient(90deg,var(--gold),var(--orange));}
+.stats-band{margin:20px 0 0;padding:56px 20px;background:linear-gradient(135deg,rgba(255,157,0,0.14),rgba(196,30,58,0.18),rgba(80,140,255,0.08));border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden;z-index:1;}
+.stats-band::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,198,26,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,0.04) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;max-width:900px;margin:0 auto;position:relative;z-index:1;}
+@media(min-width:700px){.stats-grid{grid-template-columns:repeat(4,1fr);}}
+.stat-item{text-align:center;}
+.stat-num{font-family:'Orbitron',sans-serif;font-size:clamp(32px,7vw,48px);font-weight:900;color:var(--gold);line-height:1;margin-bottom:6px;}
+.stat-label{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;}
+.rail-wrap{position:relative;margin-top:8px;}
+.rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 4px 20px;scrollbar-width:none;-ms-overflow-style:none;cursor:grab;scroll-behavior:smooth;}
+.rail::-webkit-scrollbar{display:none;}
+.rail.dragging{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto;}
+.rail-card{flex:0 0 min(280px,78vw);scroll-snap-align:start;background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);transition:border-color .3s var(--ease),transform .3s var(--ease),box-shadow .3s var(--ease);padding:24px 20px;}
+.rail-card:hover{border-color:var(--line-strong);}
+.rail-quote{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;line-height:1.5;color:var(--text);margin-bottom:18px;min-height:72px;}
+.rail-meta{display:flex;align-items:center;gap:10px;}
+.rail-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--orange));display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:800;font-size:12px;color:#1a0a00;}
+.rail-name{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--text);letter-spacing:0.5px;}
+.rail-role{font-family:'Rajdhani',sans-serif;font-size:11px;color:var(--text-faint);letter-spacing:0.5px;}
+.rail-nav{display:flex;gap:10px;margin-top:8px;justify-content:flex-end;}
+.rail-btn{width:40px;height:40px;border:1px solid var(--line-strong);background:var(--panel);color:var(--gold);display:flex;align-items:center;justify-content:center;transition:background 0.25s var(--ease),transform 0.25s var(--ease-soft);-webkit-tap-highlight-color:transparent;}
+.rail-btn:active{background:rgba(255,198,26,0.12);transform:scale(0.95);}
+.cta-band{margin:40px 0 0;padding:80px 24px;background:linear-gradient(135deg,#ff9d00 0%,#ff6b1a 40%,#c41e3a 100%);position:relative;overflow:hidden;text-align:center;z-index:1;}
+.cta-band::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(255,255,255,0.18),transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(80,140,255,0.15),transparent 45%);pointer-events:none;}
+.cta-inner{position:relative;z-index:1;max-width:640px;margin:0 auto;}
+.cta-title{font-family:'Orbitron',sans-serif;font-size:clamp(28px,6vw,44px);font-weight:900;color:#1a0a00;letter-spacing:-0.5px;text-transform:uppercase;margin-bottom:14px;line-height:1.05;}
+.cta-sub{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:rgba(26,10,0,0.75);margin-bottom:28px;letter-spacing:0.5px;}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:#1a0a00;color:var(--gold);font-family:'Orbitron',sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;padding:16px 28px;border:none;text-transform:uppercase;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);transition:transform 0.25s var(--ease),filter 0.25s var(--ease);-webkit-tap-highlight-color:transparent;}
+.cta-btn:active{transform:translateY(-2px);filter:brightness(1.1);}
+
+.tournaments-section{padding:40px 0 8px;position:relative;z-index:1;width:100%;max-width:none;margin:0;border:none;}
+.tournaments-section .section-label,
+.tournaments-section .section-h{padding:0 20px;max-width:1100px;margin-left:auto;margin-right:auto;}
+.tournaments-section .section-h{margin-bottom:28px;}
+#matches-container{display:flex;flex-direction:column;gap:0;width:100%;max-width:none;border:none;padding:0;margin:0;}
+
+.tour-block{
+  position:relative;
+  width:100%;
+  max-width:100%;
+  margin:0;
+  box-sizing:border-box;
+  border-style:solid;
+  border-left-width:0;
+  border-right-width:0;
+  border-top-width:1px;
+  border-bottom-width:1px;
+  border-left-color:transparent;
+  border-right-color:transparent;
+  border-top-color:rgba(255,255,255,0.12);
+  border-bottom-color:rgba(255,255,255,0.08);
+  border-radius:0;
+  background:rgba(255,255,255,0.04);
+  backdrop-filter:blur(28px) saturate(1.35);
+  -webkit-backdrop-filter:blur(28px) saturate(1.35);
+  padding:0 0 32px;
+  overflow:hidden;
+  transition:opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.tour-block + .tour-block{
+  margin-top:0;
+  border-top-width:0;
+}
+
+.tour-media{
+  position:relative;z-index:1;width:100%;aspect-ratio:16/8;overflow:hidden;
+  background:transparent;
+}
+@media(min-width:700px){.tour-media{aspect-ratio:21/8;max-height:320px;}}
+.tour-media img{
+  width:100%;height:100%;object-fit:cover;object-position:center;
+  filter:contrast(1.06) saturate(1.08);
+}
+.tour-media-overlay{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(12,6,4,0.55) 0%,transparent 35%,rgba(12,6,4,0.75) 100%);
+}
+.tour-media-overlay::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--orange),transparent);
+}
+
+.tour-schedule{margin:0 0 16px;padding:14px 16px;border:1px solid rgba(255,198,26,.28);background:rgba(255,198,26,.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.tour-schedule-label{font-family:Orbitron,sans-serif;font-size:9px;font-weight:800;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-bottom:7px;}
+.tour-countdown{font-family:Orbitron,sans-serif;font-size:clamp(18px,4vw,26px);font-weight:900;letter-spacing:1px;color:var(--text);font-variant-numeric:tabular-nums;}
+.tour-countdown-sub{font-family:Rajdhani,sans-serif;font-size:11px;color:var(--text-dim);margin-top:4px;letter-spacing:.5px;}
+.visit-btn.schedule-locked{opacity:.72;cursor:not-allowed;}
+.tour-body{position:relative;z-index:1;padding:18px 20px 0;max-width:1100px;margin:0 auto;}
+.tour-kicker{
+  display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;
+  color:var(--gold);text-transform:uppercase;margin-bottom:10px;
+}
+.tour-kicker .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);}
+.tour-title{
+  font-family:'Orbitron',sans-serif;font-size:clamp(22px,5vw,34px);font-weight:900;
+  letter-spacing:-0.3px;line-height:1.1;color:var(--text);text-transform:uppercase;margin-bottom:8px;
+  text-shadow:0 2px 18px rgba(0,0,0,0.55);
+}
+.tour-subtitle{
+  font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;letter-spacing:0.5px;
+  color:var(--text-dim);margin-bottom:16px;line-height:1.45;
+}
+.tour-meta{display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:16px;}
+.tour-meta-item{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--text);
+  display:flex;align-items:baseline;gap:6px;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);padding:8px 12px;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.tour-meta-item .lbl{
+  font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;
+  color:var(--text-faint);text-transform:uppercase;
+}
+.tour-meta-item .val{color:var(--text);}
+.tour-meta-item .val.gold{color:var(--gold);}
+.tour-meta-item .val.green{color:var(--green);}
+.tour-progress{margin-bottom:16px;max-width:420px;}
+.tour-progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.tour-progress-label{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;}
+.tour-progress-count{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:var(--text);}
+.tour-bar-track{height:5px;background:rgba(255,255,255,0.08);overflow:hidden;border:1px solid var(--line);}
+.tour-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width 0.8s var(--ease);}
+.visit-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  color:#1a0a00;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px;
+  padding:14px 22px;border:none;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--gold),var(--orange));
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  transition:filter 0.25s var(--ease),transform 0.25s var(--ease);margin-top:4px;-webkit-tap-highlight-color:transparent;
+}
+.visit-btn:active{filter:brightness(1.08);transform:translateY(-1px);}
+.visit-btn.closed{
+  background:rgba(255,255,255,0.06);color:var(--text-faint);border:1px solid var(--line);
+  clip-path:none;pointer-events:none;
+}
+.visit-btn.status-locked{
+  background:rgba(255,255,255,0.06);color:var(--text-faint);border:1px solid var(--line);
+  clip-path:none;pointer-events:auto;cursor:pointer;
+}
+.visit-btn.status-locked:active{filter:brightness(1.15);transform:none;}
+.winner-card{
+  width:100%;border-top:1px solid rgba(47,226,138,0.35);border-bottom:1px solid rgba(47,226,138,0.15);
+  border-left:none;border-right:none;
+  background:rgba(47,226,138,0.06);
+  backdrop-filter:blur(24px) saturate(1.3);
+  -webkit-backdrop-filter:blur(24px) saturate(1.3);
+  padding:22px 20px;position:relative;
+}
+.winner-card .winner-inner{max-width:1100px;margin:0 auto;}
+.winner-tag{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:8px;}
+.winner-name{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:800;color:var(--text);text-transform:uppercase;}
+.winner-sub{font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;color:var(--text-dim);margin-top:5px;text-transform:uppercase;}
+.empty-tournaments{text-align:center;padding:48px 20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.empty-tournaments .et-title{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:800;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;margin-top:12px;}
+.empty-tournaments .et-sub{font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--text-faint);margin-top:6px;}
+.section-title{
+  font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;
+  color:var(--text);text-transform:uppercase;margin:20px auto 12px;display:flex;align-items:center;gap:10px;
+  max-width:1100px;padding:0 20px;
+}
+.section-title::before{content:'';width:4px;height:14px;background:var(--gold);}
+.section-title::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.announcements-section{padding:28px 0 8px;position:relative;z-index:1;width:100%;}
+.announcements-section .section-label,
+.announcements-section .section-h{padding:0 20px;max-width:1100px;margin-left:auto;margin-right:auto;}
+.announcements-section .section-h{margin-bottom:18px;}
+#announcements-container{display:flex;flex-direction:column;gap:12px;padding:0 16px;max-width:1100px;margin:0 auto;}
+.pub-ann{
+  border-radius:14px;padding:18px 18px 16px;border:1px solid rgba(255,198,26,0.28);
+  background:rgba(20,10,6,0.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.35);
+}
+.pub-ann .pub-ann-blocks{display:flex;flex-direction:column;gap:8px;}
+.pub-ann a{text-decoration:none;}
+
+footer{padding:40px 20px;border-top:1px solid var(--line);min-height:80px;position:relative;z-index:1;}
+#main-ui{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.7s var(--ease),visibility 0.7s var(--ease);}
+#main-ui.ready{opacity:1;visibility:visible;pointer-events:auto;}
+#maintenance-overlay{display:none;position:fixed;inset:0;background:#0c0604;z-index:99998;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px;}
+
+.auth-sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:90000;opacity:0;pointer-events:none;transition:opacity .3s var(--ease);}
+.auth-sheet-bg.open{opacity:1;pointer-events:all;}
+.auth-sheet{position:fixed;left:0;right:0;bottom:0;z-index:90001;background:#140a06;border-radius:22px 22px 0 0;border-top:1px solid rgba(255,198,26,0.28);padding:12px 20px 28px;transform:translateY(110%);transition:transform .42s var(--ease);max-width:520px;margin:0 auto;box-shadow:0 -20px 60px rgba(0,0,0,0.5);}
+.auth-sheet.open{transform:translateY(0);}
+.auth-sheet-handle{width:40px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin:4px auto 18px;}
+.auth-sheet-title{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:900;letter-spacing:1px;text-align:center;margin-bottom:6px;}
+.auth-sheet-title span{color:var(--gold);}
+.auth-sheet-sub{font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-bottom:20px;line-height:1.4;}
+.auth-google-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;background:#fff;color:#1a1a1a;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;letter-spacing:1px;padding:15px 18px;border:none;border-radius:12px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.auth-google-btn:disabled{opacity:0.6;}
+.auth-sheet-err{font-family:'Orbitron',sans-serif;font-size:10px;color:#ff6b6b;text-align:center;margin-top:12px;letter-spacing:1px;display:none;}
+.auth-sheet-cancel{display:block;width:100%;margin-top:12px;background:none;border:1px solid var(--line);color:var(--text-dim);font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;padding:12px;border-radius:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+
+.nh-user-status{margin:0 0 24px;padding:14px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.nh-user-head{display:flex;align-items:center;gap:10px;min-width:0}.nh-user-avatar,.nh-google-dot{width:42px;height:42px;border-radius:50%;flex:none}.nh-user-avatar{object-fit:cover;background:rgba(255,198,26,.1);border:1px solid rgba(255,198,26,.35)}.nh-google-dot{display:grid;place-items:center;background:#fff;color:#4285f4;font-family:Arial,sans-serif;font-weight:900;font-size:19px;border:1px solid rgba(255,255,255,.7)}.nh-user-copy{min-width:0;flex:1}.nh-user-name{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;letter-spacing:1px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nh-user-state{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-dim);margin-top:3px;text-transform:uppercase}.nh-user-state.logged{color:var(--green)}.nh-user-actions{display:flex;gap:7px;margin-top:10px}.nh-user-btn{flex:1;border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--text-dim);border-radius:8px;padding:8px 7px;font-family:'Orbitron',sans-serif;font-size:8px;font-weight:800;letter-spacing:.8px;cursor:pointer}.nh-user-btn:hover{border-color:var(--gold);color:var(--gold)}.nh-user-btn.google{background:linear-gradient(135deg,var(--gold),var(--orange));border-color:transparent;color:#1a0a00}.nh-user-btn:disabled{opacity:.55;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="page-bg">
+  <div class="wave-loader hide" id="page-bg-loader"><div class="wave-fill"></div><div class="wave-fill wave2"></div><div class="wave-pct">0%</div></div>
+  <img class="wave-target" id="page-bg-img" alt="" decoding="async"/>
+</div>
+
+<div id="loader">
+  <div class="nh-intro-backdrop" aria-hidden="true"></div>
+  <div class="nh-intro-wrap" id="wrap">
+    <svg shape-rendering="geometricPrecision" viewBox="0 0 1254 1254" role="img" aria-label="NH MAC TT slash buildup">
+      <defs>
+        <linearGradient id="bladeShine" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#9aa0a6"/>
+          <stop offset="35%" stop-color="#ffffff"/>
+          <stop offset="55%" stop-color="#d7dbe0"/>
+          <stop offset="100%" stop-color="#f5f7fa"/>
+        </linearGradient>
+        <linearGradient id="slashFade" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fff" stop-opacity="0"/>
+          <stop offset="18%" stop-color="#fff" stop-opacity="1"/>
+          <stop offset="82%" stop-color="#fff" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="nhLogoFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffd84a"/>
+          <stop offset="45%" stop-color="#ffc61a"/>
+          <stop offset="100%" stop-color="#ff8f00"/>
+        </linearGradient>
+
+        <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="7" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="hardGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="14" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <g id="stage">
+        <g id="lines"></g>
+        <path id="logo-fill" d="M 849.9 241.7 L 686.6 358.4 L 685.0 547.8 L 627.8 580.5 L 569.0 547.8 L 568.2 359.2 L 404.9 242.5 L 483.3 386.2 L 482.5 716.0 L 354.3 595.2 L 482.5 867.8 L 531.5 923.4 L 569.0 988.7 L 569.9 628.6 L 626.2 661.3 L 685.0 629.4 L 685.0 988.7 L 724.2 923.4 L 773.1 864.6 L 770.7 387.0 Z M 218.8 322.5 L 260.4 391.9 L 260.4 720.1 L 320.8 778.9 L 320.0 520.1 L 461.3 658.8 L 462.1 519.2 L 326.6 403.3 Z M 1036.0 322.5 L 1005.0 343.7 L 953.6 386.2 L 846.6 498.8 L 791.9 458.8 L 791.9 566.6 L 847.4 618.0 L 934.0 522.5 L 934.0 778.9 L 995.2 718.4 L 996.0 391.9 Z M 627.0 112.7 L 603.3 197.6 L 581.3 264.5 L 569.9 285.7 L 545.4 305.3 L 579.6 329.0 L 599.2 348.6 L 618.0 385.3 L 627.8 422.9 L 636.0 388.6 L 658.8 346.2 L 678.4 326.6 L 708.6 304.5 L 687.4 285.7 L 671.9 258.0 Z"/>
+      </g>
+      <g id="fx" pointer-events="none">
+        <path id="slash-wide" filter="url(#hardGlow)" d="M -40 70 L 220 20 L 1320 1080 L 1180 1230 L -90 210 Z" fill="url(#slashFade)" opacity="0"/>
+        <path id="slash-core" d="M 30 110 L 180 55 L 1288 1110 L 1220 1188 Z" fill="#fff"/>
+        <path id="slash-edge" d="M 90 95 L 160 68 L 1270 1132 L 1248 1162 Z" fill="#fff"/>
+        <g id="slash-spark" fill="#fff">
+          <polygon points="610,590 690,575 720,605 640,618"/>
+          <polygon points="560,640 590,628 604,668 572,676"/>
+          <polygon points="740,540 768,528 780,558 752,566"/>
+          <polygon points="500,700 528,690 538,722 510,730"/>
+          <polygon points="800,500 834,486 846,518 814,528"/>
+        </g>
+        <g id="sword" transform="translate(627 627)">
+          <g id="sword-draw" transform="rotate(38) translate(-520 -18)">
+            <polygon points="0,12 10,4 22,8 22,28 10,32 0,24" fill="#fff"/>
+            <polygon points="20,10 118,10 124,16 118,26 20,26" fill="#dfe3e8"/>
+            <polygon points="28,13 110,13 110,15 28,15" fill="#fff"/>
+            <polygon points="28,21 110,21 110,23 28,23" fill="#9aa0a8"/>
+            <polygon points="110,0 168,8 168,34 110,42 102,21" fill="#fff"/>
+            <polygon points="118,8 160,12 160,30 118,34" fill="#c8ccd2"/>
+            <polygon points="166,11 520,18 538,21 520,25 166,31" fill="url(#bladeShine)"/>
+            <polygon points="166,19 512,21 520,21 512,23 166,23" fill="#fff"/>
+            <polygon points="518,16 562,21 518,26" fill="#fff"/>
+          </g>
+        </g>
+        <circle id="flash" cx="627" cy="627" r="90" fill="#fff"/>
+      </g>
+    </svg>
+  </div>
+  <div id="intro-prog" aria-hidden="true"><i></i></div>
+  <div id="loader-status-wrap">
+    <div class="loader-status" id="loader-status">CONNECTING DATABASE</div>
+    <div class="loader-detail" id="loader-detail">Opening secure channel</div>
+    <div style="font-family:'Orbitron',sans-serif;font-size:13px;font-weight:900;color:#fff;margin-top:2px" id="loader-pct">0<span style="color:#fff">%</span></div>
+  </div>
+</div>
+
+<div id="main-ui">
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar" aria-label="Menu">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Close menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <div class="nh-user-status" id="nh-user-status"><div class="nh-user-head"><div class="nh-google-dot" id="nh-user-fallback">G</div><img class="nh-user-avatar" id="nh-user-avatar" src="" alt="Google profile" style="display:none" referrerpolicy="no-referrer"/><div class="nh-user-copy"><div class="nh-user-name" id="nh-user-name">NOT LOGGED IN</div><div class="nh-user-state" id="nh-user-state">GOOGLE ACCOUNT</div></div></div><div class="nh-user-actions"><button class="nh-user-btn google" id="nh-login-btn" type="button" onclick="NHLogin()">LOGIN WITH GOOGLE</button><button class="nh-user-btn" id="nh-logout-btn" type="button" onclick="NHLogout()" style="display:none">LOGOUT</button></div></div>
+  <div id="sidebar-links">
+    <a href="#hero" class="sidebar-link" onclick="closeSidebar()">Home</a>
+    <a href="#tournaments" class="sidebar-link" onclick="closeSidebar()">Tournaments</a>
+    <a href="verify.html" class="sidebar-link" onclick="closeSidebar()">VERIFY</a>
+    <a href="rules.html" class="sidebar-link" onclick="closeSidebar()">RULES</a>
+    <a href="#pipeline" class="sidebar-link" onclick="closeSidebar()">How it works</a>
+  </div>
+</aside>
+
+<nav>
+  <a href="#hero" class="nav-logo">
+    <img src="nh.png" alt="NOT HUMANS" width="42" height="42" onerror="this.style.display='none'"/>
+    <div class="nav-word">NOT HUMANS <span>ESPORTS</span></div>
+  </a>
+  <button class="menu-btn" onclick="openSidebar()" aria-label="Open menu">
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+      <rect width="22" height="2.2" rx="1" fill="currentColor"/>
+      <rect y="6.9" width="16" height="2.2" rx="1" fill="currentColor"/>
+      <rect y="13.8" width="10" height="2.2" rx="1" fill="var(--gold)"/>
+    </svg>
+  </button>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-bg-wrap">
+    <div class="wave-loader" id="hero-wave-loader"><div class="wave-fill"></div><div class="wave-fill wave2"></div><div class="wave-pct">0%</div></div>
+    <img class="hero-bg wave-target" id="hero-bg-img" alt="" decoding="async"/>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-live reveal"><span class="hero-live-dot"></span><span id="hero-live-text">LIVE · TOURNAMENT</span></div>
+    <h1 class="hero-title reveal reveal-delay-1" id="hero-title">BATTLE FOR<br><em id="hero-highlight">THE CROWN</em></h1>
+    <p class="hero-sub reveal reveal-delay-2" id="hero-sub">NOT HUMANS · ELITE TOURNAMENT ARENA</p>
+    <div class="hero-status reveal reveal-delay-3">
+      <svg class="hero-trophy" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M14 10h20v8c0 6-4.5 10-10 10s-10-4-10-10V10z"/><path d="M14 12H8c0 5 3 8 6 9"/><path d="M34 12h6c0 5-3 8-6 9"/><line x1="24" y1="28" x2="24" y2="34"/><path d="M16 38h16v4H16z"/><circle cx="24" cy="18" r="3"/>
+      </svg>
+      <div class="hero-status-text">
+        <span class="hero-status-label" id="hero-status-label">Current title match</span>
+        <span class="hero-status-value" id="hero-status-value">—</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker-track">
+  <span class="ticker-item">Season registration opens soon</span><span class="ticker-item">Grand Final energy is live</span><span class="ticker-item">New squad verification system active</span><span class="ticker-item">Community Discord is growing</span><span class="ticker-item">Weekly bounty matches every Friday</span>
+  <span class="ticker-item">Season registration opens soon</span><span class="ticker-item">Grand Final energy is live</span><span class="ticker-item">New squad verification system active</span><span class="ticker-item">Community Discord is growing</span><span class="ticker-item">Weekly bounty matches every Friday</span>
+</div></div>
+
+<section class="announcements-section" id="announcements" style="display:none;">
+  <div class="section-label reveal">Broadcast</div>
+  <h2 class="section-h reveal reveal-delay-1">Announcements</h2>
+  <div id="announcements-container"></div>
+</section>
+
+<section class="tournaments-section" id="tournaments">
+  <div class="section-label reveal">Live arena</div>
+  <h2 class="section-h reveal reveal-delay-1">Active tournaments</h2>
+  <div id="matches-container">
+    <div class="empty-tournaments" id="matches-loading">
+      <div style="width:28px;height:28px;border:3px solid var(--gold);border-top-color:transparent;border-radius:50%;margin:0 auto;animation:spin 0.8s linear infinite;"></div>
+      <div class="et-title" style="margin-top:14px;">Loading tournaments…</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pipeline">
+  <div class="section-label reveal">The pipeline</div>
+  <h2 class="section-h reveal reveal-delay-1">How a NOT HUMANS tournament run works</h2>
+  <div class="pipeline">
+    <div class="pipe-step reveal"><div class="pipe-num">01</div><div class="pipe-title">Register</div><div class="pipe-desc">Pick your match, lock your squad, and submit entry through the portal.</div><div class="pipe-underline"></div></div>
+    <div class="pipe-step reveal reveal-delay-1"><div class="pipe-num">02</div><div class="pipe-title">Verify</div><div class="pipe-desc">Payment and roster checks run. Confirmed slots light up in real time.</div><div class="pipe-underline"></div></div>
+    <div class="pipe-step reveal reveal-delay-2"><div class="pipe-num">03</div><div class="pipe-title">Schedule</div><div class="pipe-desc">Lobby times, room codes, and stream links drop before the window opens.</div><div class="pipe-underline"></div></div>
+    <div class="pipe-step reveal reveal-delay-3"><div class="pipe-num">04</div><div class="pipe-title">Live matches</div><div class="pipe-desc">Compete under official rules. Spectators and hosts stay on the same feed.</div><div class="pipe-underline"></div></div>
+    <div class="pipe-step reveal"><div class="pipe-num">05</div><div class="pipe-title">Standings</div><div class="pipe-desc">Points, kills, and placement update live on the tournament board.</div><div class="pipe-underline"></div></div>
+    <div class="pipe-step reveal reveal-delay-1"><div class="pipe-num">06</div><div class="pipe-title">Trophy</div><div class="pipe-desc">Champions are crowned. Rewards and season ranks get locked in.</div><div class="pipe-underline"></div></div>
+  </div>
+</section>
+
+<section class="stats-band" id="stats">
+  <div class="stats-grid">
+    <div class="stat-item reveal"><div class="stat-num" data-count="1280">0</div><div class="stat-label">Teams registered</div></div>
+    <div class="stat-item reveal reveal-delay-1"><div class="stat-num" data-count="7">0</div><div class="stat-label">Seasons run</div></div>
+    <div class="stat-item reveal reveal-delay-2"><div class="stat-num" data-count="90">0</div><div class="stat-label">Days per season</div></div>
+    <div class="stat-item reveal reveal-delay-3"><div class="stat-num" data-count="2400">0</div><div class="stat-label">Community members</div></div>
+  </div>
+</section>
+
+<section class="section" id="community">
+  <div class="section-label reveal">Community voices</div>
+  <h2 class="section-h reveal reveal-delay-1">What captains are saying</h2>
+  <div class="rail-wrap">
+    <div class="rail" id="rail" role="list">
+      <article class="rail-card" role="listitem"><p class="rail-quote">"The verification flow is clean. We locked slots in under ten minutes and the lobby codes arrived on time."</p><div class="rail-meta"><div class="rail-avatar">RK</div><div><div class="rail-name">RAVI K.</div><div class="rail-role">Squad captain · Season 6</div></div></div></article>
+      <article class="rail-card" role="listitem"><p class="rail-quote">"Standings update live. No more guessing placement mid-match. That alone changed how we play."</p><div class="rail-meta"><div class="rail-avatar">AN</div><div><div class="rail-name">ARJUN N.</div><div class="rail-role">IGL · Apex Wolves</div></div></div></article>
+      <article class="rail-card" role="listitem"><p class="rail-quote">"Fair rules, clear prize split, and hosts who actually answer. Feels like a real league, not a random room."</p><div class="rail-meta"><div class="rail-avatar">SM</div><div><div class="rail-name">SNEHA M.</div><div class="rail-role">Manager · Night Shift</div></div></div></article>
+      <article class="rail-card" role="listitem"><p class="rail-quote">"Grand Final energy was unreal. From registration to trophy photo it stayed organized the whole way."</p><div class="rail-meta"><div class="rail-avatar">VK</div><div><div class="rail-name">VIKRAM K.</div><div class="rail-role">Captain · Iron Legion</div></div></div></article>
+      <article class="rail-card" role="listitem"><p class="rail-quote">"Bounty nights keep the roster sharp between seasons. Perfect practice under real pressure."</p><div class="rail-meta"><div class="rail-avatar">DP</div><div><div class="rail-name">DEV P.</div><div class="rail-role">Fragger · Pulse Unit</div></div></div></article>
+    </div>
+    <div class="rail-nav">
+      <button class="rail-btn" id="rail-prev" aria-label="Previous"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="rail-btn" id="rail-next" aria-label="Next"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band" id="cta">
+  <div class="cta-inner">
+    <h2 class="cta-title reveal">Ready for the next season?</h2>
+    <p class="cta-sub reveal reveal-delay-1">Lock your squad, clear verification, and step into the lobby when the window opens.</p>
+    <button class="cta-btn reveal reveal-delay-2" onclick="document.getElementById('pipeline').scrollIntoView({behavior:'smooth'})">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      JOIN THE ARENA
+    </button>
+  </div>
+</section>
+<footer id="footer" aria-label="Footer"></footer>
+</div>
+
+<div id="maintenance-overlay">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,198,26,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,0.035) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;"></div>
+  <div style="position:relative;max-width:440px;z-index:1;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px;">
+      <img src="nh.png" alt="NOT HUMANS" style="width:60px;height:60px;object-fit:contain;" onerror="this.style.display='none'"/>
+      <div style="font-family:'Orbitron',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px;color:#f5f6f8;">NOT HUMANS ESPORTS</div>
+    </div>
+    <div style="font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;color:#ffc61a;letter-spacing:2.5px;margin-bottom:16px;">WEBSITE UNDER<br>MAINTENANCE</div>
+    <div id="maint-reason-text" style="font-family:'Rajdhani',sans-serif;font-size:16px;line-height:1.6;color:#f5f6f8;margin-bottom:32px;">We are performing updates. Back soon.</div>
+  </div>
+</div>
+
+<div class="auth-sheet-bg" id="auth-sheet-bg" onclick="closeAuthSheet()"></div>
+<div class="auth-sheet" id="auth-sheet" role="dialog" aria-label="Sign in">
+  <div class="auth-sheet-handle"></div>
+  <div class="auth-sheet-title">SIGN IN TO <span>REGISTER</span></div>
+  <div class="auth-sheet-sub">Use your Google account to join this tournament. One account = one player profile.</div>
+  <button type="button" class="auth-google-btn" id="auth-google-btn" onclick="doHomeGoogleLogin()">
+    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3.1l5.7-5.7C34.2 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3.1l5.7-5.7C34.2 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.1 3.2-3.5 5.7-6.5 7.1l6.2 5.2C38.9 37 44 31.5 44 24c0-1.3-.1-2.5-.4-3.5z"/></svg>
+    CONTINUE WITH GOOGLE
+  </button>
+  <div class="auth-sheet-err" id="auth-sheet-err"></div>
+  <button type="button" class="auth-sheet-cancel" onclick="closeAuthSheet()">CANCEL</button>
+</div>
+
+<script>
+/* NH MAC TT Slash Buildup Intro — fully inline in index.html
+   Shows once per browser SESSION (tab). Re-opening the site in the
+   same tab/session skips straight to the loading bar. Closing the
+   tab (or opening a fresh session) makes it play again. */
+(() => {
+  const NH_INTRO_SESSION_KEY = 'nh_intro_seen_v1';
+  try {
+    if (sessionStorage.getItem(NH_INTRO_SESSION_KEY) === '1') {
+      window.nhIntroDone = true;
+      const l = document.getElementById('loader');
+      if (l) l.classList.add('done');
+      document.dispatchEvent(new Event("nhIntroComplete"));
+      return;
+    }
+  } catch(_) {}
+  const PARTS = [
+    "M 849.9 241.7 L 686.6 358.4 L 685.0 547.8 L 627.8 580.5 L 569.0 547.8 L 568.2 359.2 L 404.9 242.5 L 483.3 386.2 L 482.5 716.0 L 354.3 595.2 L 482.5 867.8 L 531.5 923.4 L 569.0 988.7 L 569.9 628.6 L 626.2 661.3 L 685.0 629.4 L 685.0 988.7 L 724.2 923.4 L 773.1 864.6 L 770.7 387.0 Z",
+    "M 218.8 322.5 L 260.4 391.9 L 260.4 720.1 L 320.8 778.9 L 320.0 520.1 L 461.3 658.8 L 462.1 519.2 L 326.6 403.3 Z",
+    "M 1036.0 322.5 L 1005.0 343.7 L 953.6 386.2 L 846.6 498.8 L 791.9 458.8 L 791.9 566.6 L 847.4 618.0 L 934.0 522.5 L 934.0 778.9 L 995.2 718.4 L 996.0 391.9 Z",
+    "M 627.0 112.7 L 603.3 197.6 L 581.3 264.5 L 569.9 285.7 L 545.4 305.3 L 579.6 329.0 L 599.2 348.6 L 618.0 385.3 L 627.8 422.9 L 636.0 388.6 L 658.8 346.2 L 678.4 326.6 L 708.6 304.5 L 687.4 285.7 L 671.9 258.0 Z"
+  ];
+  const ns = "http://www.w3.org/2000/svg";
+  const lines = document.getElementById("lines"), fill = document.getElementById("logo-fill"), stage = document.getElementById("stage"), wrap = document.getElementById("wrap");
+  const prog = document.querySelector("#intro-prog i"), slashWide = document.getElementById("slash-wide"), slashCore = document.getElementById("slash-core"), slashEdge = document.getElementById("slash-edge"), slashSpark = document.getElementById("slash-spark"), sword = document.getElementById("sword"), flash = document.getElementById("flash");
+  const nodes = PARTS.map(d => { const p=document.createElementNS(ns,"path"); p.setAttribute("d",d); p.classList.add("piece"); lines.appendChild(p); const len=Math.max(p.getTotalLength(),1); p.style.strokeDasharray=String(len); p.style.strokeDashoffset=String(len); return {el:p,len}; });
+  const easeOut=t=>1-Math.pow(1-t,3), easeIn=t=>t*t, clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), lerp=(a,b,t)=>a+(b-a)*t;
+  let raf=0;
+  function hideFx(){ [slashWide,slashCore,slashEdge,slashSpark,sword,flash].forEach(el=>{ if(el) el.style.opacity="0"; }); if(sword) sword.setAttribute("transform","translate(627 627)"); if(wrap) wrap.style.transform="none"; if(stage) stage.style.transform="none"; }
+  function play(){
+    if(!fill || !wrap || !lines || !prog){
+      window.nhIntroDone = true;
+      try { sessionStorage.setItem(NH_INTRO_SESSION_KEY, '1'); } catch(_) {}
+      document.dispatchEvent(new Event("nhIntroComplete"));
+      return;
+    }
+    cancelAnimationFrame(raf); fill.style.opacity="0";
+    nodes.forEach(n=>{n.el.style.opacity="0";n.el.style.strokeDashoffset=String(n.len);n.el.style.transform="none";}); hideFx(); prog.style.width="0%";
+    const SLASH0=140, SWING=260, IMPACT=SLASH0+SWING*0.55, SLASH_FADE=360, DRAW0=IMPACT+60, DRAW=2200, FILL=750, TOTAL=DRAW0+DRAW+FILL+80, start=performance.now();
+    function frame(now){
+      const t=now-start; prog.style.width=(clamp(t/TOTAL,0,1)*100).toFixed(1)+"%";
+      if(t>=SLASH0 && t<IMPACT+SLASH_FADE){
+        const swingT=clamp((t-SLASH0)/SWING,0,1), e=easeIn(swingT), x=lerp(-420,420,e), y=lerp(-380,380,e);
+        sword.style.opacity=swingT<0.92?"1":String(1-(swingT-0.92)/0.08); sword.setAttribute("transform",`translate(${627+x} ${627+y})`);
+        const cut=easeOut(clamp((t-SLASH0)/180,0,1)); slashWide.style.opacity=String(0.55*cut); slashCore.style.opacity=String(cut); slashEdge.style.opacity=String(cut);
+      }
+      if(t>=IMPACT){
+        const k=t-IMPACT, flashU=clamp(1-k/160,0,1); flash.style.opacity=String(flashU); flash.setAttribute("r",String(70+(1-flashU)*160)); slashSpark.style.opacity=String(clamp(1-k/280,0,1));
+        if(k>40){const fade=clamp(1-(k-40)/SLASH_FADE,0,1); slashWide.style.opacity=String(0.55*fade); slashCore.style.opacity=String(fade); slashEdge.style.opacity=String(fade); if(k>80)sword.style.opacity=String(clamp(1-(k-80)/160,0,1));}
+        const decay=Math.exp(-k/160), amp=7*decay, sx=Math.sin(k*0.19)*amp, sy=Math.cos(k*0.24)*amp*0.55, rot=Math.sin(k*0.16)*0.35*decay; wrap.style.transform=`translate3d(${sx.toFixed(2)}px,${sy.toFixed(2)}px,0) rotate(${rot.toFixed(3)}deg)`;
+      } else wrap.style.transform="none";
+      if(t>=DRAW0){const drawT=t-DRAW0, shakeLeft=Math.exp(-(t-IMPACT)/160); nodes.forEach((n,i)=>{const stagger=(i/(Math.max(nodes.length-1,1)))*700, u=clamp((drawT-stagger)/(DRAW-500),0,1), e=easeOut(u); n.el.style.opacity=u>0?"1":"0"; n.el.style.strokeDashoffset=String(n.len*(1-e)); if(u>0&&shakeLeft>0.02){const jx=Math.sin((t+i*37)*0.18)*4*shakeLeft,jy=Math.cos((t+i*53)*0.2)*3*shakeLeft;n.el.style.transform=`translate3d(${jx.toFixed(2)}px,${jy.toFixed(2)}px,0)`;}else n.el.style.transform="none";});}
+      const fillAt=DRAW0+DRAW*0.72;
+      if(t>=fillAt){
+        if(!document.getElementById('loader').classList.contains('intro-dark')){
+          document.getElementById('loader').classList.add('intro-dark');
+        }
+        const u=easeOut(clamp((t-fillAt)/FILL,0,1));
+        fill.style.opacity=String(u);
+        nodes.forEach(n=>n.el.style.opacity=String(1-u));
+      }
+      if(t<TOTAL) raf=requestAnimationFrame(frame); else {
+        hideFx();
+        fill.style.opacity="1";
+        nodes.forEach(n=>{n.el.style.opacity="0";n.el.style.transform="none";});
+        prog.style.width="100%";
+        requestAnimationFrame(()=>{
+          wrap.classList.add("intro-finish-scale");
+          document.getElementById("loader").classList.add("intro-finish");
+        });
+        setTimeout(()=>{
+          try { sessionStorage.setItem(NH_INTRO_SESSION_KEY, '1'); } catch(_) {}
+          window.nhIntroDone = true;
+          document.dispatchEvent(new Event("nhIntroComplete"));
+        }, 1050);
+      }
+    }
+    raf=requestAnimationFrame(frame);
+  }
+  play();
+})();
+</script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, getDocs, query, where, orderBy, serverTimestamp, increment } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+  authDomain: "nothumans-7e285.firebaseapp.com",
+  projectId: "nothumans-7e285",
+  storageBucket: "nothumans-7e285.firebasestorage.app",
+  messagingSenderId: "409725804600",
+  appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+let pendingMatchId = null;
+let homeUser = null;
+
+const gate = {
+  db: false,
+  heroImg: false,
+  pageBg: false,
+  matches: false,
+  intro: !!window.nhIntroDone,
+};
+document.addEventListener("nhIntroComplete", () => {
+  gate.intro = true;
+  tryReveal();
+});
+let overallPct = 0;
+
+function setStatus(title, detail, pct){
+  if(typeof pct === 'number'){
+    overallPct = Math.max(overallPct, Math.min(100, Math.round(pct)));
+  }
+  const s = document.getElementById('loader-status');
+  const d = document.getElementById('loader-detail');
+  const p = document.getElementById('loader-pct');
+  if(s && title != null) s.textContent = title;
+  if(d && detail != null) d.textContent = detail;
+  if(p) p.innerHTML = overallPct + '<span>%</span>';
+}
+
+function mapRange(local01, from, to){
+  return from + (to - from) * Math.max(0, Math.min(1, local01));
+}
+
+function tryReveal(){
+  if(!(gate.db && gate.heroImg && gate.pageBg && gate.matches && gate.intro)) return;
+  const loader = document.getElementById('loader');
+  const mainUI = document.getElementById('main-ui');
+  if(loader && loader.classList.contains('done')){
+    mainUI?.classList.add('ready');
+    document.body.style.overflow = '';
+    return;
+  }
+  setStatus('READY', 'All assets loaded — opening arena', 100);
+  setTimeout(() => {
+    loader?.classList.add('done');
+    mainUI?.classList.add('ready');
+    document.body.style.overflow = '';
+  }, 500);
+}
+
+function loadImageWithWave(imgEl, loaderEl, url, onProgress){
+  return new Promise((resolve) => {
+    const report = (t) => { if(typeof onProgress === 'function') try{ onProgress(Math.min(1, Math.max(0, t))); }catch(_){} };
+    let settled = false;
+    const settle = (ok) => {
+      if(settled) return;
+      settled = true;
+      clearTimeout(hardTimeout);
+      clearInterval(tick);
+      report(1);
+      resolve(!!ok);
+    };
+    const hardTimeout = setTimeout(() => {
+      console.warn('Image load timeout', url);
+      if(loaderEl) loaderEl.classList.add('hide');
+      settle(false);
+    }, 20000);
+
+    if(!url){
+      if(loaderEl) loaderEl.classList.add('hide');
+      if(imgEl){ imgEl.classList.remove('loaded'); imgEl.removeAttribute('src'); }
+      settle(true);
+      return;
+    }
+
+    if(imgEl){
+      imgEl.classList.remove('loaded');
+      imgEl.removeAttribute('src');
+    }
+    if(loaderEl){
+      loaderEl.classList.remove('hide');
+      loaderEl.querySelectorAll('.wave-fill').forEach(f => f.style.top = '100%');
+      const pctEl = loaderEl.querySelector('.wave-pct');
+      if(pctEl) pctEl.textContent = '0%';
+    }
+    const fills = loaderEl ? loaderEl.querySelectorAll('.wave-fill') : [];
+    const pctEl = loaderEl ? loaderEl.querySelector('.wave-pct') : null;
+    const setLevel = (pct) => {
+      fills.forEach(f => { f.style.top = (100 - pct) + '%'; });
+      if(pctEl) pctEl.textContent = pct + '%';
+      report(pct / 100);
+    };
+    setLevel(0);
+
+    let fake = 0;
+    const tick = setInterval(() => {
+      if(settled) return;
+      fake = Math.min(90, fake + 2 + Math.random() * 4);
+      setLevel(Math.round(fake));
+    }, 180);
+
+    const pre = new Image();
+    pre.decoding = 'async';
+    pre.onload = async () => {
+      try {
+        if(pre.decode) await pre.decode();
+      } catch(_){}
+      if(settled) return;
+      clearInterval(tick);
+      setLevel(100);
+      if(imgEl){
+        imgEl.onload = null;
+        imgEl.onerror = null;
+        imgEl.src = url;
+        imgEl.classList.add('loaded');
+      }
+      if(loaderEl) loaderEl.classList.add('hide');
+      settle(true);
+    };
+    pre.onerror = () => {
+      clearInterval(tick);
+      setLevel(100);
+      if(loaderEl) loaderEl.classList.add('hide');
+      settle(false);
+    };
+    pre.src = url;
+  });
+}
+
+document.body.style.overflow = 'hidden';
+setStatus('CONNECTING DATABASE', 'Opening secure channel to NOT HUMANS servers', 3);
+
+
+let confirmedSlots = {};
+let lastMatches = [];
+let scheduleTimer = null;
+
+async function loadSlotCounts(){
+  try{
+    const snap = await getDocs(collection(db, 'slotCounts'));
+    confirmedSlots = {};
+    snap.forEach(d => {
+      const v = d.data().confirmed;
+      if(typeof v === 'number') confirmedSlots[d.id] = v;
+    });
+  }catch(e){ console.warn('slotCounts', e); }
+}
+
+function showField(m, key){
+  const df = Array.isArray(m.displayFields) ? m.displayFields : null;
+  if(!df || !df.length){
+    return ['image','title','subtitle','date','mode','prize','slots','progress','visitBtn'].includes(key);
+  }
+  return df.includes(key);
+}
+
+function getSlotOpenAtMs(m){
+  if(!m || !m.slotOpenEnabled || !m.slotOpenAt) return null;
+  const t = Date.parse(m.slotOpenAt);
+  return Number.isFinite(t) ? t : null;
+}
+
+function isRegistrationScheduled(m){
+  const t = getSlotOpenAtMs(m);
+  return t !== null && Date.now() < t && (m.status || 'open') === 'open';
+}
+
+function formatCountdown(ms){
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const d = Math.floor(total / 86400);
+  const h = Math.floor((total % 86400) / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  if(d > 0) return `${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+  return `${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+}
+
+function refreshScheduledMatches(){
+  if(!lastMatches.length) return;
+  const changed = lastMatches.some(m => {
+    const t = getSlotOpenAtMs(m);
+    return t !== null && Math.abs(Date.now() - t) < 1500;
+  });
+  document.querySelectorAll('.tour-block[data-match-id]').forEach(card => {
+    const id = card.getAttribute('data-match-id');
+    const m = lastMatches.find(x => x.id === id);
+    if(!m) return;
+    const t = getSlotOpenAtMs(m);
+    const countdown = card.querySelector('.tour-countdown');
+    const schedule = card.querySelector('.tour-schedule');
+    const btn = card.querySelector('.visit-btn');
+    if(t === null || !countdown || !btn) return;
+    const remaining = t - Date.now();
+    if(remaining > 0 && (m.status || 'open') === 'open'){
+      countdown.textContent = formatCountdown(remaining);
+      if(schedule) schedule.style.display = '';
+      btn.disabled = true;
+      btn.classList.add('schedule-locked');
+      btn.classList.remove('closed');
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> REGISTRATION LOCKED';
+    } else {
+      if(schedule) schedule.style.display = 'none';
+      if(btn.classList.contains('schedule-locked')){
+        btn.disabled = false;
+        btn.classList.remove('schedule-locked');
+        const full = (confirmedSlots[m.id] || 0) >= (parseInt(m.slots)||12);
+        if(full){ btn.disabled = true; btn.classList.add('closed'); btn.innerHTML = 'SLOTS FULL'; }
+        else if((m.status || 'open') === 'closed'){ btn.disabled = true; btn.classList.add('closed'); btn.innerHTML = 'REGISTRATION CLOSED'; }
+        else { btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg> VISIT / REGISTER'; }
+      }
+    }
+  });
+  if(changed) applyUserRegButtons();
+}
+
+function startScheduleTimer(){
+  clearInterval(scheduleTimer);
+  scheduleTimer = setInterval(refreshScheduledMatches, 1000);
+  refreshScheduledMatches();
+}
+
+function renderMatches(matches){
+  lastMatches = matches || [];
+  const c = document.getElementById('matches-container');
+  if(!c) return;
+
+  const active = lastMatches.filter(m => (m.status || 'open') !== 'completed');
+  const winners = lastMatches.filter(m => (m.status || '') === 'completed' && m.winner);
+
+  if(!active.length && !winners.length){
+    c.innerHTML = `<div class="empty-tournaments">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffc61a" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <div class="et-title">No tournaments live</div><div class="et-sub">Check back soon — new cups drop here first</div>
+    </div>`;
+    clearInterval(scheduleTimer);
+    return;
+  }
+
+  let html = '';
+  if(winners.length){
+    html += `<div class="section-title">Tournament results</div>`;
+    winners.forEach(m => { html += `<div class="winner-card reveal"><div class="winner-inner"><div class="winner-tag">Champion — ${esc(m.name||'Tournament')}</div><div class="winner-name">${esc(m.winner)}</div><div class="winner-sub">${esc(m.winnerSub||'Tournament winner')}</div></div></div>`; });
+  }
+
+  if(active.length){
+    if(winners.length) html += `<div class="section-title">Live tournaments</div>`;
+    active.forEach((m, i) => {
+      const total = parseInt(m.slots) || 12;
+      const booked = confirmedSlots[m.id] || 0;
+      const pct = Math.min(100, Math.round(booked / total * 100));
+      const full = booked >= total;
+      const closed = (m.status || 'open') === 'closed';
+      const scheduled = isRegistrationScheduled(m);
+      const sf = (k) => showField(m, k);
+
+      let media = '';
+      if(sf('image')){
+        const imgBlock = m.image ? `<div class="wave-loader"><div class="wave-fill"></div><div class="wave-fill wave2"></div><div class="wave-pct">0%</div></div><img class="wave-target" data-src="${escAttr(m.image)}" alt="${escAttr(m.name||'')}"/>` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#3a1a00,#160c06);"></div>`;
+        media = `<div class="tour-media">${imgBlock}<div class="tour-media-overlay"></div></div>`;
+      }
+      let kickerParts=[];
+      if(sf('date') && m.time) kickerParts.push(`<span>${esc(m.time)}</span>`);
+      if(sf('mode') && m.mode) kickerParts.push(`<span class="dot"></span><span>${esc(m.mode)}</span>`);
+      const kicker = kickerParts.length ? `<div class="tour-kicker">${kickerParts.join('')}</div>` : '';
+      const title = sf('title') ? `<div class="tour-title">${esc(m.name||'Tournament')}</div>` : '';
+      const subtitle = (sf('subtitle') && m.subtitle) ? `<div class="tour-subtitle">${esc(m.subtitle)}</div>` : '';
+      let metaItems=[];
+      if(sf('prize') && (m.prize || m.prize===0)) metaItems.push(`<div class="tour-meta-item"><span class="lbl">Prize</span><span class="val gold">${esc(m.prize||'TBA')}</span></div>`);
+      const isFreeMatch = m.matchType === 'free' || Number(m.entry) === 0;
+      if(sf('entry')) metaItems.push(isFreeMatch ? `<div class="tour-meta-item"><span class="lbl">Entry</span><span class="val green">FREE</span></div>` : ((m.entry || m.entry===0) ? `<div class="tour-meta-item"><span class="lbl">Entry</span><span class="val">${esc(String(m.entry))}₹</span></div>` : ''));
+      if(sf('bounty') && (m.bounty || m.bounty===0) && !isFreeMatch) metaItems.push(`<div class="tour-meta-item"><span class="lbl">Bounty</span><span class="val">${esc(String(m.bounty))}₹</span></div>`);
+      if(sf('slots')) metaItems.push(`<div class="tour-meta-item"><span class="lbl">Slots</span><span class="val green">${booked}/${total}</span></div>`);
+      const meta = metaItems.length ? `<div class="tour-meta">${metaItems.join('')}</div>` : '';
+      let schedule = '';
+      if(sf('countdown') && m.slotOpenEnabled && m.slotOpenAt){
+        const t = getSlotOpenAtMs(m);
+        if(t !== null && t > Date.now() && !closed) schedule = `<div class="tour-schedule"><div class="tour-schedule-label">REGISTRATION OPENS IN</div><div class="tour-countdown" data-open-at="${t}">${formatCountdown(t-Date.now())}</div><div class="tour-countdown-sub">Registration is locked until the scheduled time.</div></div>`;
+      }
+      let progress='';
+      if(sf('progress')) progress=`<div class="tour-progress"><div class="tour-progress-header"><span class="tour-progress-label">Confirmed slots</span><span class="tour-progress-count">${booked}/${total}${full?' · FULL':''}</span></div><div class="tour-bar-track"><div class="tour-bar-fill" style="width:${pct}%;${full?'background:var(--green);':''}"></div></div></div>`;
+      let btn='';
+      if(sf('visitBtn')){
+        let btnClass='visit-btn', btnTxt='VISIT / REGISTER', disabled=false;
+        const myReg=(window.userRegsByMatch && window.userRegsByMatch[m.id]) || null;
+        if(myReg){ const st=(myReg.status||'').toLowerCase(); if(st==='selected'){btnTxt='SELECTED';btnClass+=' status-locked';}else if(st==='confirmed'){btnTxt='CONFIRMED';btnClass+=' status-locked';}else if(st==='verifying'||st==='pending'){btnTxt='PENDING';btnClass+=' status-locked';}else if(st==='rejected'){btnTxt='REJECTED';btnClass+=' status-locked';}else{btnTxt='REGISTERED';btnClass+=' status-locked';} }
+        else if(full){btnTxt='SLOTS FULL';btnClass+=' closed';disabled=true;}
+        else if(closed){btnTxt='REGISTRATION CLOSED';btnClass+=' closed';disabled=true;}
+        else if(scheduled){btnTxt='REGISTRATION LOCKED';btnClass+=' schedule-locked';disabled=true;}
+        btn=`<button class="${btnClass}" ${disabled?'disabled':''} onclick="visitMatch('${escAttr(m.id)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>${btnTxt}</button>`;
+      }
+      html += `<article class="tour-block reveal" data-match-id="${escAttr(m.id)}" style="transition-delay:${Math.min(i*0.06,0.3)}s">${media}<div class="tour-body">${kicker}${title}${subtitle}${meta}${schedule}${progress}${btn}</div></article>`;
+    });
+  }
+  c.innerHTML=html;
+  c.querySelectorAll('img.wave-target[data-src]').forEach(img=>{ const url=img.getAttribute('data-src'); img.removeAttribute('data-src'); const loader=img.previousElementSibling&&img.previousElementSibling.classList.contains('wave-loader')?img.previousElementSibling:null; loadImageWithWave(img,loader,url); });
+  startScheduleTimer();
+  initMotion();
+}
+
+function esc(s){
+  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(s){
+  return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/'/g,'&#39;');
+}
+
+async function saveSiteUser(user){
+  if(!user) return;
+  try{
+    const ref = doc(db, 'users', user.uid);
+    const snap = await getDoc(ref);
+    if(snap.exists()){
+      await setDoc(ref, {
+        email: user.email || '',
+        name: user.displayName || '',
+        photoURL: user.photoURL || '',
+        lastLoginAt: serverTimestamp()
+      }, { merge: true });
+    } else {
+      await setDoc(ref, {
+        email: user.email || '',
+        name: user.displayName || '',
+        photoURL: user.photoURL || '',
+        createdAt: serverTimestamp(),
+        lastLoginAt: serverTimestamp(),
+        provider: 'google'
+      });
+      try {
+        await setDoc(doc(db, 'settings', 'global'), { totalUsers: increment(1) }, { merge: true });
+      } catch(_){}
+    }
+  }catch(e){ console.warn('saveSiteUser', e); }
+}
+
+function openAuthSheet(matchId){
+  pendingMatchId = matchId;
+  document.getElementById('auth-sheet-err').style.display = 'none';
+  document.getElementById('auth-sheet-bg').classList.add('open');
+  document.getElementById('auth-sheet').classList.add('open');
+}
+window.closeAuthSheet = () => {
+  pendingMatchId = null;
+  document.getElementById('auth-sheet-bg').classList.remove('open');
+  document.getElementById('auth-sheet').classList.remove('open');
+};
+
+window.doHomeGoogleLogin = async () => {
+  const btn = document.getElementById('auth-google-btn');
+  const err = document.getElementById('auth-sheet-err');
+  err.style.display = 'none';
+  btn.disabled = true;
+  const prev = btn.innerHTML;
+  btn.textContent = 'OPENING GOOGLE…';
+  try{
+    let result;
+    try {
+      result = await signInWithPopup(auth, googleProvider);
+    } catch(popErr){
+      if(popErr.code === 'auth/popup-blocked' || popErr.code === 'auth/cancelled-popup-request'){
+        sessionStorage.setItem('nh_pending_match', pendingMatchId || '');
+        await signInWithRedirect(auth, googleProvider);
+        return;
+      }
+      throw popErr;
+    }
+    if(result && result.user){
+      await saveSiteUser(result.user);
+      const mid = pendingMatchId;
+      closeAuthSheet();
+      if(mid) window.location.href = 'reg.html?matchId=' + encodeURIComponent(mid);
+    }
+  }catch(e){
+    console.error(e);
+    err.style.display = 'block';
+    err.textContent = e.code === 'auth/unauthorized-domain'
+      ? 'ADD THIS DOMAIN IN FIREBASE → AUTH → SETTINGS'
+      : (e.message || 'GOOGLE SIGN-IN FAILED');
+    btn.disabled = false;
+    btn.innerHTML = prev;
+  }
+};
+
+window.visitMatch = (matchId) => {
+  if(homeUser && window.userRegsByMatch && window.userRegsByMatch[matchId]){
+    window.location.href = 'reg.html?matchId=' + encodeURIComponent(matchId);
+    return;
+  }
+  if(homeUser){
+    window.location.href = 'reg.html?matchId=' + encodeURIComponent(matchId);
+    return;
+  }
+  openAuthSheet(matchId);
+};
+
+function playHomeCongrats(teamName, matchName){
+  const layer = document.createElement('div');
+  layer.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:100000;overflow:hidden;';
+  const colors = ['#ffc61a','#ff9d00','#ff6b1a','#fff','#2fe28a','#1a6fff'];
+  for(let i=0;i<60;i++){
+    const p = document.createElement('div');
+    p.style.cssText = `position:absolute;width:8px;height:12px;top:-16px;left:${Math.random()*100}%;background:${colors[i%colors.length]};border-radius:2px;animation:nhConfetti ${1.5+Math.random()*1.8}s linear ${Math.random()*0.3}s forwards;`;
+    layer.appendChild(p);
+  }
+  if(!document.getElementById('nh-confetti-style')){
+    const st = document.createElement('style');
+    st.id = 'nh-confetti-style';
+    st.textContent = `@keyframes nhConfetti{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}`;
+    document.head.appendChild(st);
+  }
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;left:50%;top:30%;transform:translate(-50%,-50%);z-index:100001;background:rgba(12,6,4,0.95);border:2px solid #ffc61a;border-radius:16px;padding:24px 20px;max-width:90vw;width:360px;text-align:center;font-family:Orbitron,sans-serif;';
+  const safeTeam = String(teamName||'').replace(/</g,'');
+  const safeMatch = String(matchName||'').replace(/</g,'');
+  banner.innerHTML = `<div style="font-size:15px;font-weight:900;color:#ffc61a;letter-spacing:1px;line-height:1.4;margin-bottom:8px;">CONGRATULATIONS</div><div style="font-size:13px;color:rgba(255,248,240,0.75);font-family:Rajdhani,sans-serif;">Your team${safeTeam?(' <b style="color:#fff">'+safeTeam+'</b>'):''} has been selected for NOT HUMANS${safeMatch?(' · '+safeMatch):''}!</div>`;
+  document.body.appendChild(layer);
+  document.body.appendChild(banner);
+  setTimeout(()=>{ layer.remove(); banner.remove(); }, 4200);
+}
+
+window.userRegsByMatch = {};
+
+function applyUserRegButtons(){
+  document.querySelectorAll('.tour-block .visit-btn').forEach(btn => {
+    const onclick = btn.getAttribute('onclick') || '';
+    const m = onclick.match(/visitMatch\('([^']+)'\)/);
+    if(!m) return;
+    const reg = window.userRegsByMatch[m[1]];
+    if(!reg) return;
+    const st = (reg.status || '').toLowerCase();
+    btn.disabled = false;
+    btn.classList.remove('closed');
+    btn.classList.add('status-locked');
+    const arrow = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg> ';
+    if(st === 'selected') btn.innerHTML = arrow + 'SELECTED';
+    else if(st === 'confirmed') btn.innerHTML = arrow + 'CONFIRMED';
+    else if(st === 'verifying' || st === 'pending') btn.innerHTML = arrow + 'PENDING';
+    else if(st === 'rejected') btn.innerHTML = arrow + 'REJECTED';
+    else btn.innerHTML = arrow + 'REGISTERED';
+  });
+}
+
+async function checkUserSelections(user){
+  if(!user) return;
+  try{
+    const snap = await getDocs(query(
+      collection(db, 'registrations'),
+      where('userId', '==', user.uid)
+    ));
+    window.userRegsByMatch = {};
+    const selectedFree = [];
+    snap.forEach(d => {
+      const r = { id: d.id, ...d.data() };
+      if(r.matchId) window.userRegsByMatch[r.matchId] = r;
+      const isFree = r.matchType === 'free'
+        || Number(r.entryFee) === 0
+        || Number(r.entry) === 0
+        || String(r.entryFee || '').toLowerCase() === 'free'
+        || String(r.entry || '').toLowerCase() === 'free';
+      const st = String(r.status || '').toLowerCase();
+      if(isFree && st === 'selected'){
+        selectedFree.push(r);
+      }
+    });
+    selectedFree.forEach(r => playHomeCongrats(r.teamName, r.matchName));
+    applyUserRegButtons();
+  }catch(e){ console.warn(e); }
+}
+
+onAuthStateChanged(auth, async (user) => {
+  homeUser = user;
+  if(user){
+    await saveSiteUser(user);
+    await checkUserSelections(user);
+  }
+});
+getRedirectResult(auth).then(async (result) => {
+  if(result && result.user){
+    await saveSiteUser(result.user);
+    const mid = sessionStorage.getItem('nh_pending_match') || '';
+    sessionStorage.removeItem('nh_pending_match');
+    if(mid) window.location.href = 'reg.html?matchId=' + encodeURIComponent(mid);
+  }
+}).catch(() => {});
+
+async function loadMatches(){
+  try{
+    await loadSlotCounts();
+    let snap;
+    try {
+      snap = await getDocs(query(collection(db, 'matches'), orderBy('createdAt', 'desc')));
+    } catch(orderErr){
+      console.warn('orderBy createdAt failed, loading unordered', orderErr);
+      snap = await getDocs(collection(db, 'matches'));
+    }
+    const matches = [];
+    snap.forEach(d => matches.push({ id: d.id, ...d.data() }));
+    matches.sort((a,b) => {
+      const ta = a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : (a.createdAt ? Date.parse(a.createdAt) : 0);
+      const tb = b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : (b.createdAt ? Date.parse(b.createdAt) : 0);
+      return (tb||0) - (ta||0);
+    });
+    renderMatches(matches);
+    applyUserRegButtons();
+    gate.matches = true;
+    setStatus('TREATING VALUES', 'Tournaments ready', Math.max(overallPct, 40));
+    tryReveal();
+  }catch(e){
+    console.warn('matches load', e);
+    const c = document.getElementById('matches-container');
+    if(c) c.innerHTML = `<div class="empty-tournaments"><div class="et-title">Could not load tournaments</div><div class="et-sub">Check Firestore rules / connection</div></div>`;
+    gate.matches = true;
+    tryReveal();
+  }
+}
+
+function applySidebarLinks(links){
+  const box = document.getElementById('sidebar-links');
+  if(!box) return;
+  const builtins = [
+    { name: 'Home', href: '#hero' },
+    { name: 'Tournaments', href: '#tournaments' },
+    { name: 'VERIFY', href: 'verify.html' },
+    { name: 'RULES', href: 'rules.html' },
+    { name: 'How it works', href: '#pipeline' }
+  ];
+  const custom = (links || []).filter(l => l && (l.name || '').trim() && (l.url || '').trim()).slice(0, 7);
+  let html = builtins.map(b =>
+    `<a href="${b.href}" class="sidebar-link" onclick="closeSidebar()">${b.name}</a>`
+  ).join('');
+  custom.forEach(l => {
+    let url = String(l.url).trim();
+    if(!/^https?:\/\//i.test(url) && !url.startsWith('#') && !url.startsWith('/')){
+      url = 'https://' + url;
+    }
+    const external = url.startsWith('http');
+    html += `<a href="${url.replace(/"/g,'&quot;')}" class="sidebar-link" ${external?'target="_blank" rel="noopener"':''} onclick="closeSidebar()">${String(l.name).trim().replace(/</g,'&lt;')}</a>`;
+  });
+  box.innerHTML = html;
+}
+
+function applyHeroText(d){
+  if(d.tag){ const el = document.getElementById('hero-live-text'); if(el) el.textContent = d.tag; }
+  if(d.title){
+    const parts = d.title.split('|');
+    const titleEl = document.getElementById('hero-title');
+    if(titleEl) titleEl.innerHTML = (parts[0]||'') + (parts[1] ? '<br><em id="hero-highlight">'+parts[1]+'</em>' : '');
+  }
+  if(d.subtitle){ const el = document.getElementById('hero-sub'); if(el) el.textContent = d.subtitle; }
+  if(d.statusLabel){ const el = document.getElementById('hero-status-label'); if(el) el.textContent = d.statusLabel; }
+  if(d.statusValue){ const el = document.getElementById('hero-status-value'); if(el) el.textContent = d.statusValue; }
+}
+
+function withTimeout(promise, ms, label){
+  return Promise.race([
+    promise,
+    new Promise((_, rej) => setTimeout(() => rej(new Error('timeout:'+label)), ms))
+  ]);
+}
+
+let motionObserver = null;
+function initMotion(){
+  const items = document.querySelectorAll('.reveal:not(.in-view),.pipe-step:not(.in-view),.tour-block:not(.in-view)');
+  if(!items.length) return;
+  if(!('IntersectionObserver' in window)){ items.forEach(el=>el.classList.add('in-view')); return; }
+  if(!motionObserver){
+    motionObserver = new IntersectionObserver((entries)=>entries.forEach(entry=>{
+      if(entry.isIntersecting){ entry.target.classList.add('in-view'); motionObserver.unobserve(entry.target); }
+    }),{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  }
+  items.forEach(el=>motionObserver.observe(el));
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initMotion,{once:true}); else initMotion();
+
+async function bootstrap(){
+  const forceReveal = setTimeout(() => {
+    console.warn('Force reveal after 25s');
+    gate.db = true; gate.heroImg = true; gate.pageBg = true; gate.matches = true;
+    setStatus('READY', 'Opening with available assets', 100);
+    tryReveal();
+  }, 25000);
+
+  try{
+    setStatus('CONNECTING DATABASE', 'Reaching Firestore cluster…', 6);
+    await new Promise(r => setTimeout(r, 100));
+    setStatus('ISSUING SECURITY', 'Verifying app keys & access rules', 12);
+
+    const [heroSnap, setSnap] = await Promise.all([
+      withTimeout(getDoc(doc(db, 'banners', 'hero')), 10000, 'hero'),
+      withTimeout(getDoc(doc(db, 'settings', 'global')), 10000, 'settings')
+    ]);
+    setStatus('TREATING VALUES', 'Reading banners, settings & match data', 18);
+
+    let heroUrl = null;
+    if(heroSnap.exists()){
+      const d = heroSnap.data();
+      applyHeroText(d);
+      heroUrl = d.bgImage || null;
+    }
+    let pageUrl = null;
+    if(setSnap.exists()){
+      const d = setSnap.data();
+      pageUrl = d.pageBackground || null;
+      if(Array.isArray(d.sidebarLinks)) applySidebarLinks(d.sidebarLinks);
+      if(d.maintenanceMode){
+        document.getElementById('maintenance-overlay').style.display = 'flex';
+        const reason = document.getElementById('maint-reason-text');
+        if(reason) reason.textContent = d.maintenanceReason || 'We are performing updates. Back soon.';
+      }
+      if(Array.isArray(d.stats)) applyPublicStats(d.stats);
+      applyPublicTicker(d);
+    }
+    gate.db = true;
+
+    setStatus('TREATING VALUES', 'Loading tournaments…', 22);
+    const matchesPromise = loadMatches();
+
+    if(heroUrl){
+      setStatus('LOADING HERO BANNER', 'Downloading hero background — please wait…', 28);
+      await loadImageWithWave(
+        document.getElementById('hero-bg-img'),
+        document.getElementById('hero-wave-loader'),
+        heroUrl,
+        (t) => {
+          const pct = Math.round(mapRange(t, 28, 62));
+          setStatus('LOADING HERO BANNER', 'Hero image · ' + Math.round(t * 100) + '% loaded', pct);
+        }
+      );
+    } else {
+      const hl = document.getElementById('hero-wave-loader');
+      if(hl) hl.classList.add('hide');
+      setStatus('HERO BANNER', 'No hero image set', 62);
+    }
+    gate.heroImg = true;
+
+    if(pageUrl){
+      setStatus('LOADING PAGE BACKGROUND', 'Downloading page texture — please wait…', 66);
+      await loadImageWithWave(
+        document.getElementById('page-bg-img'),
+        document.getElementById('page-bg-loader'),
+        pageUrl,
+        (t) => {
+          const pct = Math.round(mapRange(t, 66, 90));
+          setStatus('LOADING PAGE BACKGROUND', 'Page background · ' + Math.round(t * 100) + '% loaded', pct);
+        }
+      );
+    } else {
+      const pl = document.getElementById('page-bg-loader');
+      if(pl) pl.classList.add('hide');
+      setStatus('PAGE BACKGROUND', 'No page background set', 90);
+    }
+    gate.pageBg = true;
+
+    setStatus('FINALIZING', 'Waiting for tournaments & interface…', 94);
+    await matchesPromise;
+    setStatus('FINALIZING', 'All data ready', 98);
+    await new Promise(r => setTimeout(r, 250));
+    clearTimeout(forceReveal);
+    tryReveal();
+  } catch(e){
+    console.warn(e);
+    clearTimeout(forceReveal);
+    gate.db = true; gate.heroImg = true; gate.pageBg = true; gate.matches = true;
+    setStatus('READY (OFFLINE MODE)', 'Could not reach server — opening with defaults', 100);
+    tryReveal();
+  }
+}
+
+onSnapshot(doc(db, 'banners', 'hero'), (snap) => {
+  if(!snap.exists() || !gate.db) return;
+  const d = snap.data();
+  applyHeroText(d);
+  if(d.bgImage){
+    loadImageWithWave(
+      document.getElementById('hero-bg-img'),
+      document.getElementById('hero-wave-loader'),
+      d.bgImage
+    );
+  }
+}, () => {});
+
+function applyPublicStats(stats){
+  const items = document.querySelectorAll('#stats .stat-item');
+  if(!items.length) return;
+  const list = Array.isArray(stats) && stats.length ? stats : null;
+  if(!list) return;
+  items.forEach((el, i) => {
+    const s = list[i];
+    if(!s) return;
+    const num = el.querySelector('.stat-num');
+    const lab = el.querySelector('.stat-label');
+    if(num){
+      const val = parseInt(s.value, 10) || 0;
+      num.setAttribute('data-count', String(val));
+      if(num.dataset.done === '1') num.textContent = val.toLocaleString();
+      else num.dataset.done = '';
+    }
+    if(lab && s.label) lab.textContent = s.label;
+  });
+  document.querySelectorAll('#stats .stat-item').forEach(el => {
+    const num = el.querySelector('[data-count]');
+    if(num && !num.dataset.done){
+      const target = parseInt(num.getAttribute('data-count'), 10) || 0;
+      num.dataset.done = '1';
+      const dur = 1300, start = performance.now();
+      function step(t){
+        const p = Math.min(1, (t - start) / dur);
+        const eased = 1 - Math.pow(1 - p, 4);
+        num.textContent = Math.round(target * eased).toLocaleString();
+        if(p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+  });
+}
+
+function applyPublicTicker(d){
+  const wrap = document.querySelector('.ticker');
+  const track = document.getElementById('ticker-track');
+  if(!wrap || !track) return;
+
+  const enabled = d.tickerEnabled !== false;
+  const items = Array.isArray(d.tickerItems)
+    ? d.tickerItems.map(t => String(t||'').trim()).filter(Boolean)
+    : [];
+
+  if(!enabled || !items.length){
+    wrap.classList.add('hidden');
+    track.style.animation = 'none';
+    return;
+  }
+  wrap.classList.remove('hidden');
+
+  const oneSet = items.map(t => `<span class="ticker-item">${esc(t)}</span>`).join('');
+  let html = oneSet + oneSet;
+  track.innerHTML = html;
+  try {
+    const need = Math.max(wrap.clientWidth * 2, 800);
+    let guard = 0;
+    while(track.scrollWidth < need && guard < 12){
+      track.insertAdjacentHTML('beforeend', oneSet);
+      guard++;
+    }
+    if(guard % 2 === 1) track.insertAdjacentHTML('beforeend', oneSet);
+  } catch(_){}
+
+  const rawDir = String(d.tickerDirection || d.tickerDir || 'left').toLowerCase().trim();
+  const dir = (rawDir === 'right' || rawDir === 'rtl' || rawDir === 'to-right') ? 'right' : 'left';
+  track.classList.toggle('dir-right', dir === 'right');
+
+  const speed = Math.min(120, Math.max(8, parseInt(d.tickerSpeed, 10) || 28));
+  const animName = dir === 'right' ? 'tickerMoveRight' : 'tickerMoveLeft';
+
+  track.style.animation = 'none';
+  void track.offsetWidth;
+  track.style.animation = animName + ' ' + speed + 's linear infinite';
+}
+
+onSnapshot(doc(db, 'settings', 'global'), (snap) => {
+  if(!snap.exists() || !gate.db) return;
+  const d = snap.data();
+  if(Array.isArray(d.sidebarLinks)) applySidebarLinks(d.sidebarLinks);
+  if(d.pageBackground){
+    loadImageWithWave(
+      document.getElementById('page-bg-img'),
+      document.getElementById('page-bg-loader'),
+      d.pageBackground
+    );
+  }
+  if(d.maintenanceMode){
+    document.getElementById('maintenance-overlay').style.display = 'flex';
+    const reason = document.getElementById('maint-reason-text');
+    if(reason) reason.textContent = d.maintenanceReason || 'We are performing updates. Back soon.';
+  } else {
+    document.getElementById('maintenance-overlay').style.display = 'none';
+  }
+  if(Array.isArray(d.stats)) applyPublicStats(d.stats);
+  applyPublicTicker(d);
+}, () => {});
+
+function renderPubBlock(b){
+  const align = b.align || 'left';
+  const color = b.color || '#fff8f0';
+  const bg = (b.bg && b.bg !== 'transparent') ? b.bg : 'transparent';
+  if(b.type === 'title'){
+    return `<div style="font-family:Orbitron,sans-serif;font-weight:900;font-size:${b.size||20}px;color:${color};background:${bg};text-align:${align};padding:2px 0;line-height:1.15;">${esc(b.text||'')}</div>`;
+  }
+  if(b.type === 'text'){
+    return `<div style="font-family:Rajdhani,sans-serif;font-size:${b.size||14}px;font-weight:600;color:${color};background:${bg};text-align:${align};line-height:1.45;padding:2px 0;">${esc(b.text||'')}</div>`;
+  }
+  if(b.type === 'badge'){
+    return `<div style="text-align:${align};"><span style="display:inline-block;font-family:Orbitron,sans-serif;font-size:${b.size||11}px;font-weight:800;letter-spacing:1.5px;color:${color};background:${bg};padding:5px 10px;border-radius:4px;text-transform:uppercase;">${esc(b.text||'')}</span></div>`;
+  }
+  if(b.type === 'button'){
+    const href = (b.url||'#').trim() || '#';
+    const safe = /^https?:\/\//i.test(href) || href.startsWith('#') || href.startsWith('/') ? href : ('https://' + href);
+    return `<div style="text-align:${align};"><a href="${escAttr(safe)}" ${safe.startsWith('http')?'target="_blank" rel="noopener"':''} style="display:inline-block;font-family:Orbitron,sans-serif;font-size:${b.size||12}px;font-weight:800;letter-spacing:1px;color:${color};background:${bg};padding:11px 18px;border-radius:6px;text-decoration:none;">${esc(b.text||'OPEN')}</a></div>`;
+  }
+  if(b.type === 'image' && b.url){
+    return `<div style="text-align:${align};"><img src="${escAttr(b.url)}" alt="" style="max-width:100%;border-radius:10px;display:inline-block;" loading="lazy"/></div>`;
+  }
+  if(b.type === 'divider'){
+    return `<div style="height:0;border-top:2px solid ${color};margin:8px 0;"></div>`;
+  }
+  if(b.type === 'spacer'){
+    return `<div style="height:${parseInt(b.size)||16}px;"></div>`;
+  }
+  return '';
+}
+
+function renderPublicAnnouncements(list){
+  const section = document.getElementById('announcements');
+  const box = document.getElementById('announcements-container');
+  if(!section || !box) return;
+  const active = (list||[]).filter(a => a.active !== false && Array.isArray(a.blocks) && a.blocks.length);
+  if(!active.length){
+    section.style.display = 'none';
+    box.innerHTML = '';
+    return;
+  }
+  section.style.display = 'block';
+  active.sort((a,b) => {
+    if(!!b.pinned !== !!a.pinned) return b.pinned ? 1 : -1;
+    const ta = a.updatedAt?.toMillis ? a.updatedAt.toMillis() : 0;
+    const tb = b.updatedAt?.toMillis ? b.updatedAt.toMillis() : 0;
+    return (tb||0)-(ta||0);
+  });
+  box.innerHTML = active.map(a => {
+    const border = a.border || 'rgba(255,198,26,0.28)';
+    const bg = a.bg || 'rgba(20,10,6,0.85)';
+    const blocks = (a.blocks||[]).map(renderPubBlock).join('');
+    return `<article class="pub-ann reveal" style="background:${bg};border-color:${border};">
+      <div class="pub-ann-blocks">${blocks}</div>
+    </article>`;
+  }).join('');
+  initMotion();
+}
+
+async function loadPublicAnnouncements(){
+  try {
+    let snap;
+    try {
+      snap = await getDocs(query(collection(db, 'announcements'), orderBy('updatedAt', 'desc')));
+    } catch(_) {
+      snap = await getDocs(collection(db, 'announcements'));
+    }
+    const list = [];
+    snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+    renderPublicAnnouncements(list);
+  } catch(e){
+    console.warn('announcements', e);
+  }
+}
+
+onSnapshot(collection(db, 'announcements'), (snap) => {
+  const list = [];
+  snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+  renderPublicAnnouncements(list);
+}, () => {});
+
+loadPublicAnnouncements();
+
+bootstrap();
+
+window.openSidebar = () => {
+  const overlay = document.getElementById('sidebar-overlay');
+  const sidebar = document.getElementById('sidebar');
+  overlay.classList.remove('open');
+  sidebar.classList.remove('open');
+  void sidebar.offsetWidth;
+  requestAnimationFrame(() => {
+    overlay.classList.add('open');
+    sidebar.classList.add('open');
+  });
+};
+window.closeSidebar = () => {
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.getElementById('sidebar').classList.remove('open');
+};
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if(!en.isIntersecting) return;
+    const el = en.target;
+    const num = el.querySelector && el.querySelector('[data-count]');
+    if(num && !num.dataset.done){
+      num.dataset.done = '1';
+      const target = parseInt(num.getAttribute('data-count'), 10);
+      const dur = 1300, start = performance.now();
+      function step(t){
+        const p = Math.min(1, (t - start) / dur);
+        const eased = 1 - Math.pow(1 - p, 4);
+        num.textContent = Math.round(target * eased).toLocaleString();
+        if(p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    io.unobserve(el);
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll('.stat-item').forEach(el => io.observe(el));
+
+const rail = document.getElementById('rail');
+let isDown = false, startX = 0, scrollLeft = 0, autoTimer = null;
+function startAuto(){
+  stopAuto();
+  autoTimer = setInterval(() => {
+    if(document.hidden) return;
+    const card = rail.querySelector('.rail-card'); if(!card) return;
+    const cardW = card.offsetWidth + 16;
+    const max = rail.scrollWidth - rail.clientWidth;
+    if(rail.scrollLeft >= max - 4) rail.scrollTo({ left: 0, behavior: 'smooth' });
+    else rail.scrollBy({ left: cardW, behavior: 'smooth' });
+  }, 3800);
+}
+function stopAuto(){ if(autoTimer) clearInterval(autoTimer); }
+rail.addEventListener('pointerdown', e => { isDown = true; rail.classList.add('dragging'); startX = e.clientX; scrollLeft = rail.scrollLeft; stopAuto(); });
+window.addEventListener('pointerup', () => { if(!isDown) return; isDown = false; rail.classList.remove('dragging'); startAuto(); });
+window.addEventListener('pointermove', e => { if(!isDown) return; rail.scrollLeft = scrollLeft - (e.clientX - startX); });
+document.getElementById('rail-prev').addEventListener('click', () => { stopAuto(); const c = rail.querySelector('.rail-card'); if(c) rail.scrollBy({ left: -(c.offsetWidth+16), behavior: 'smooth' }); startAuto(); });
+document.getElementById('rail-next').addEventListener('click', () => { stopAuto(); const c = rail.querySelector('.rail-card'); if(c) rail.scrollBy({ left: c.offsetWidth+16, behavior: 'smooth' }); startAuto(); });
+startAuto();
+</script>
+<script type="module">import{getApps,getApp,initializeApp}from"https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";const C={apiKey:"AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",authDomain:"nothumans-7e285.firebaseapp.com",projectId:"nothumans-7e285",storageBucket:"nothumans-7e285.firebasestorage.app",messagingSenderId:"409725804600",appId:"1:409725804600:web:ec0344bf1ac49a55edc6cd"},a=getApps().length?getApp():initializeApp(C),auth=getAuth(a),provider=new GoogleAuthProvider;window.NHLogin=async()=>{let b=document.getElementById("nh-login-btn");try{b&&(b.disabled=true);await signInWithPopup(auth,provider)}catch(e){console.error(e)}finally{b&&(b.disabled=false)}};window.NHLogout=async()=>{try{await signOut(auth)}catch(e){console.error(e)}};onAuthStateChanged(auth,u=>{let n=document.getElementById("nh-user-name"),st=document.getElementById("nh-user-state"),av=document.getElementById("nh-user-avatar"),fb=document.getElementById("nh-user-fallback"),li=document.getElementById("nh-login-btn"),lo=document.getElementById("nh-logout-btn");if(!n)return;if(u){n.textContent=u.displayName||u.email||"GOOGLE USER";st.textContent="LOGGED IN · GOOGLE";st.classList.add("logged");if(u.photoURL){av.src=u.photoURL;av.style.display="block";fb.style.display="none"}else{av.style.display="none";fb.style.display="grid"}li&&(li.style.display="none");lo&&(lo.style.display="block")}else{n.textContent="NOT LOGGED IN";st.textContent="GOOGLE ACCOUNT";st.classList.remove("logged");av.style.display="none";fb.style.display="grid";li&&(li.style.display="block");lo&&(lo.style.display="none")}});</script></body>
+</html>
