@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>Success — NotHumans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+button,a,div,span,img,input,textarea,select,label{outline:none!important;-webkit-tap-highlight-color:transparent!important;-webkit-touch-callout:none;}
+button,a{cursor:pointer;touch-action:manipulation;}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;overflow-x:hidden;}
+:root{
+  --bg:#0c0604;--bg2:#140a06;--panel:rgba(28,14,8,0.78);
+  --line:rgba(255,180,60,0.18);--line-strong:rgba(255,198,26,0.45);
+  --text:#fff8f0;--text-dim:rgba(255,248,240,0.62);--text-faint:rgba(255,248,240,0.36);
+  --gold:#ffc61a;--gold2:#ff9d00;--orange:#ff6b1a;--green:#2fe28a;--red:#ff3d2e;
+  --glass:rgba(255,255,255,0.06);--glass-border:rgba(255,210,120,0.22);
+}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,198,26,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,0.03) 1px,transparent 1px);
+  background-size:36px 36px;}
+.bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 18%,rgba(255,157,0,.14),transparent 42%),
+    radial-gradient(circle at 50% 70%,rgba(196,30,58,.10),transparent 50%),
+    linear-gradient(180deg,#0c0604 0%,#140a06 100%);}
+nav{position:relative;z-index:10;height:56px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(12,6,4,0.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+.nav-word{font-family:'Orbitron',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;color:var(--text);text-decoration:none;}
+.nav-word span{color:var(--gold);}
+.wrap{position:relative;z-index:2;max-width:440px;margin:0 auto;padding:28px 18px 56px;}
+.hero-card{
+  border:1px solid var(--glass-border);border-radius:18px;background:var(--panel);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  padding:28px 20px 24px;text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.45),0 0 0 1px rgba(255,198,26,0.06) inset;
+  position:relative;overflow:hidden;
+}
+.hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--orange),var(--red));}
+.check-ring{
+  width:72px;height:72px;margin:0 auto 18px;border-radius:50%;
+  background:rgba(47,226,138,0.1);border:1.5px solid rgba(47,226,138,0.45);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 28px rgba(47,226,138,0.18);
+  animation:popIn .55s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes popIn{0%{opacity:0;transform:scale(0.7);}100%{opacity:1;transform:scale(1);}}
+.kicker{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
+h1{font-family:'Orbitron',sans-serif;font-size:clamp(18px,5vw,22px);font-weight:900;letter-spacing:0.5px;line-height:1.25;margin-bottom:10px;}
+.sub{font-size:14px;color:var(--text-dim);line-height:1.5;margin-bottom:20px;}
+.invoice{
+  text-align:left;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,0.28);
+  padding:14px 14px 10px;margin-bottom:18px;
+}
+.inv-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,180,60,0.08);}
+.inv-row:last-child{border-bottom:none;}
+.inv-lab{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:1px;color:var(--text-faint);text-transform:uppercase;}
+.inv-val{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;color:var(--text);text-align:right;word-break:break-word;}
+.inv-val.gold{color:var(--gold);}
+.swipe-wrap{margin:16px 0 8px;}
+.swipe-track{
+  position:relative;width:100%;height:62px;border:1px solid rgba(255,198,26,.28);
+  border-radius:16px;background:rgba(0,0,0,.28);overflow:hidden;
+  box-shadow:inset 0 0 24px rgba(255,157,0,.035);user-select:none;touch-action:pan-y;
+}
+.swipe-fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:16px;background:linear-gradient(90deg,rgba(255,198,26,.16),rgba(255,107,26,.24));transition:width .12s ease;}
+.swipe-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:900;letter-spacing:1.3px;color:var(--text-dim);pointer-events:none;transition:opacity .2s ease;}
+.swipe-thumb{position:absolute;left:5px;top:5px;width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a0a00;box-shadow:0 7px 20px rgba(255,107,26,.25);cursor:grab;z-index:2;transition:left .12s ease,transform .18s ease;}
+.swipe-thumb:active{cursor:grabbing;transform:scale(.96);}
+.swipe-thumb svg{width:20px;height:20px;}
+.swipe-wrap.sent .swipe-label{color:var(--green);}
+.swipe-wrap.sent .swipe-thumb{background:linear-gradient(135deg,var(--green),#19b96d);}
+.hint{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:1.5px;color:var(--gold);margin:10px 0 4px;text-transform:uppercase;}
+.note{
+  margin-top:16px;padding:12px 14px;border-radius:10px;text-align:left;
+  border:1px solid var(--line);background:rgba(255,255,255,0.03);
+  font-size:12px;color:var(--text-dim);line-height:1.5;
+}
+.note b{color:var(--gold);}
+.back{display:inline-block;margin-top:22px;color:var(--gold);font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:1px;text-decoration:none;}
+.back:hover{text-decoration:underline;}
+.loading{text-align:center;padding:60px 20px;font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;color:var(--text-dim);}
+.empty-card{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:36px 20px;text-align:center;}
+.confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;}
+.confetti-piece{position:absolute;top:-12px;width:7px;height:11px;border-radius:2px;animation:fall linear forwards;opacity:0.9;}
+@keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(105vh) rotate(720deg);opacity:0;}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);z-index:10000;
+  background:rgba(12,6,4,0.95);border:1px solid var(--line-strong);color:var(--gold);
+  font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:1px;padding:10px 16px;border-radius:999px;
+  opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+@media (prefers-reduced-motion: reduce){
+  .check-ring,.code,.confetti-piece{animation:none!important;transition:none!important;}
+}
+
+/* NH SHARED USER SIDEBAR */
+.nh-user-status{margin:0 0 24px;padding:14px 12px;border:1px solid var(--line,rgba(255,180,60,.18));border-radius:14px;background:rgba(255,255,255,.035);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.nh-user-head{display:flex;align-items:center;gap:10px;min-width:0;}
+.nh-user-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:rgba(255,198,26,.1);border:1px solid rgba(255,198,26,.35);flex:none;}
+.nh-user-copy{min-width:0;flex:1;}
+.nh-user-name{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;letter-spacing:1px;color:var(--text,#fff8f0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nh-user-state{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-dim,rgba(255,248,240,.62));margin-top:3px;text-transform:uppercase;}
+.nh-user-state.logged{color:var(--green,#2fe28a);}
+.nh-user-actions{display:flex;gap:7px;margin-top:10px;}
+.nh-user-btn{flex:1;border:1px solid var(--line,rgba(255,180,60,.18));background:rgba(255,255,255,.035);color:var(--text-dim,rgba(255,248,240,.62));border-radius:8px;padding:8px 7px;font-family:'Orbitron',sans-serif;font-size:8px;font-weight:800;letter-spacing:.8px;cursor:pointer;}
+.nh-user-btn:hover{border-color:var(--gold,#ffc61a);color:var(--gold,#ffc61a);}
+.nh-user-btn.google{background:linear-gradient(135deg,var(--gold,#ffc61a),var(--orange,#ff6b1a));border-color:transparent;color:#1a0a00;}
+.nh-user-btn:disabled{opacity:.55;pointer-events:none;}
+.nh-google-dot{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;background:#fff;color:#4285f4;font-family:Arial,sans-serif;font-weight:900;font-size:19px;border:1px solid rgba(255,255,255,.7);}
+@media(max-width:420px){.nh-user-status{padding:12px 10px}.nh-user-name{font-size:9px}}
+.nh-shell-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:900;opacity:0;pointer-events:none;transition:opacity .4s cubic-bezier(.22,1,.36,1)}.nh-shell-overlay.open{opacity:1;pointer-events:auto}.nh-shell-sidebar{position:fixed;top:0;right:0;bottom:0;width:min(310px,88vw);z-index:901;padding:24px 20px;background:rgba(18,10,6,.72);backdrop-filter:blur(36px) saturate(1.35);-webkit-backdrop-filter:blur(36px) saturate(1.35);border-left:1px solid rgba(255,255,255,.12);box-shadow:-16px 0 50px rgba(0,0,0,.38);transform:translate3d(100%,0,0);transition:transform .45s cubic-bezier(.22,1,.36,1);overflow-y:auto}.nh-shell-sidebar.open{transform:translate3d(0,0,0)}.nh-shell-close{width:36px;height:36px;border:0;background:none;color:var(--text,#fff);margin:0 0 28px auto;display:grid;place-items:center;cursor:pointer}.nh-shell-link{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--line,rgba(255,180,60,.18));font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:800;letter-spacing:1.8px;color:var(--text-dim,rgba(255,248,240,.62));text-decoration:none;transition:color .25s ease,transform .3s cubic-bezier(.22,1,.36,1)}.nh-shell-link:before{content:'';width:6px;height:6px;background:var(--gold,#ffc61a);clip-path:polygon(0 0,100% 50%,0 100%)}.nh-shell-link:hover{color:#fff;transform:translateX(4px)}.nh-sidebar-links{display:flex;flex-direction:column}
+/* NH SHARED USER SIDEBAR */
+.nh-user-status{margin:0 0 24px;padding:14px 12px;border:1px solid var(--line,rgba(255,180,60,.18));border-radius:14px;background:rgba(255,255,255,.035);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.nh-user-head{display:flex;align-items:center;gap:10px;min-width:0;}
+.nh-user-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:rgba(255,198,26,.1);border:1px solid rgba(255,198,26,.35);flex:none;}
+.nh-user-copy{min-width:0;flex:1;}
+.nh-user-name{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;letter-spacing:1px;color:var(--text,#fff8f0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nh-user-state{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-dim,rgba(255,248,240,.62));margin-top:3px;text-transform:uppercase;}
+.nh-user-state.logged{color:var(--green,#2fe28a);}
+.nh-user-actions{display:flex;gap:7px;margin-top:10px;}
+.nh-user-btn{flex:1;border:1px solid var(--line,rgba(255,180,60,.18));background:rgba(255,255,255,.035);color:var(--text-dim,rgba(255,248,240,.62));border-radius:8px;padding:8px 7px;font-family:'Orbitron',sans-serif;font-size:8px;font-weight:800;letter-spacing:.8px;cursor:pointer;}
+.nh-user-btn:hover{border-color:var(--gold,#ffc61a);color:var(--gold,#ffc61a);}
+.nh-user-btn.google{background:linear-gradient(135deg,var(--gold,#ffc61a),var(--orange,#ff6b1a));border-color:transparent;color:#1a0a00;}
+.nh-user-btn:disabled{opacity:.55;pointer-events:none;}
+.nh-google-dot{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;background:#fff;color:#4285f4;font-family:Arial,sans-serif;font-weight:900;font-size:19px;border:1px solid rgba(255,255,255,.7);}
+@media(max-width:420px){.nh-user-status{padding:12px 10px}.nh-user-name{font-size:9px}}
+
+/* NH SHARED SHELL */
+#page-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--bg);overflow:hidden;}
+#page-bg img{width:100%;height:100%;object-fit:cover;opacity:0;filter:contrast(1.05) brightness(.35) saturate(1.1);transition:opacity .8s cubic-bezier(.22,1,.36,1);}
+#page-bg img.loaded{opacity:.28;}
+body::after{z-index:0;}
+.top-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(12,6,4,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);-webkit-tap-highlight-color:transparent;}
+.nav-logo img{width:42px;height:42px;object-fit:contain;display:block;border-radius:50%;background:#fff;}
+.top-nav .nav-word{font-family:'Orbitron',sans-serif;font-weight:800;font-size:15px;letter-spacing:1.5px;}
+.top-nav .nav-word span{color:var(--gold);}
+.menu-btn{width:40px;height:40px;background:none;border:none;display:flex;align-items:center;justify-content:center;color:var(--text);-webkit-tap-highlight-color:transparent;}
+.menu-btn svg{transition:transform .3s cubic-bezier(.16,1,.3,1);}
+.menu-btn:active svg{transform:scale(.9);}
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:200;opacity:0;pointer-events:none;transition:opacity .42s cubic-bezier(.22,1,.36,1);}
+.sidebar-overlay.open{opacity:1;pointer-events:all;}
+.sidebar{position:fixed;top:0;right:0;bottom:0;width:min(300px,88vw);z-index:201;background:rgba(18,10,6,.55);backdrop-filter:blur(40px) saturate(1.4);-webkit-backdrop-filter:blur(40px) saturate(1.4);border-left:1px solid rgba(255,255,255,.12);box-shadow:-12px 0 40px rgba(0,0,0,.35);transform:translate3d(100%,0,0);transition:transform .42s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;padding:24px 20px;will-change:transform;backface-visibility:hidden;}
+.sidebar.open{transform:translate3d(0,0,0);}
+.sidebar-close{width:36px;height:36px;background:none;border:none;color:var(--text);margin-bottom:22px;align-self:flex-end;transition:transform .3s cubic-bezier(.16,1,.3,1);}
+.sidebar-close:active{transform:rotate(90deg);}
+.sidebar-link{display:flex;align-items:center;gap:12px;padding:16px 0;border-bottom:1px solid var(--line);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;color:var(--text-dim);text-decoration:none;text-transform:uppercase;transition:color .25s,transform .25s cubic-bezier(.16,1,.3,1);}
+.sidebar-link::before{content:'';width:6px;height:6px;background:var(--gold);clip-path:polygon(0 0,100% 50%,0 100%);transition:transform .25s;}
+.sidebar-link:hover{color:var(--text);transform:translateX(4px);}.sidebar-link:hover::before{transform:translateX(2px);}
+.nh-user-status{margin:0 0 8px;padding:14px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.nh-user-head{display:flex;align-items:center;gap:10px;min-width:0}.nh-google-dot{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;background:#fff;color:#4285f4;font-family:Arial,sans-serif;font-weight:900;font-size:19px;border:1px solid rgba(255,255,255,.7)}
+.nh-user-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:rgba(255,198,26,.1);border:1px solid rgba(255,198,26,.35);flex:none}.nh-user-copy{min-width:0;flex:1}.nh-user-name{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;letter-spacing:1px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nh-user-state{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-dim);margin-top:3px;text-transform:uppercase}.nh-user-state.logged{color:var(--green)}.nh-user-actions{display:flex;gap:7px;margin-top:10px}.nh-user-btn{flex:1;border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--text-dim);border-radius:8px;padding:8px 7px;font-family:'Orbitron',sans-serif;font-size:8px;font-weight:800;letter-spacing:.8px;cursor:pointer}.nh-user-btn:hover{border-color:var(--gold);color:var(--gold)}.nh-user-btn.google{background:linear-gradient(135deg,var(--gold),var(--orange));border-color:transparent;color:#1a0a00}
+.wrap{padding-top:92px;}
+@media(max-width:520px){.top-nav{padding:0 14px}.top-nav .nav-word{font-size:13px}.wrap{padding-top:86px;padding-left:14px;padding-right:14px;}.sidebar{width:min(320px,92vw);}}
+@media(prefers-reduced-motion:reduce){.sidebar,.sidebar-overlay{transition-duration:.22s!important;transition-timing-function:ease-out!important}.check-ring,.code,.confetti-piece{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="nh-shell-overlay" id="nh-shell-overlay" onclick="nhCloseMenu()"></div>
+<aside class="nh-shell-sidebar" id="nh-shell-sidebar" aria-label="Navigation">
+  <button class="nh-shell-close" type="button" onclick="nhCloseMenu()" aria-label="Close menu">✕</button>
+  <div class="nh-user-status" id="nh-user-status">
+  <div class="nh-user-head">
+    <div class="nh-google-dot" id="nh-user-fallback">G</div>
+    <img class="nh-user-avatar" id="nh-user-avatar" src="" alt="Google profile" style="display:none" referrerpolicy="no-referrer"/>
+    <div class="nh-user-copy">
+      <div class="nh-user-name" id="nh-user-name">NOT LOGGED IN</div>
+      <div class="nh-user-state" id="nh-user-state">GOOGLE ACCOUNT</div>
+    </div>
+  </div>
+  <div class="nh-user-actions">
+    <button class="nh-user-btn google" id="nh-login-btn" type="button" onclick="NHLogin()">LOGIN WITH GOOGLE</button>
+    <button class="nh-user-btn" id="nh-logout-btn" type="button" onclick="NHLogout()" style="display:none">LOGOUT</button>
+  </div>
+</div>
+  <nav class="nh-sidebar-links"><a href="index.html#hero" class="nh-shell-link">HOME</a><a href="index.html#tournaments" class="nh-shell-link">TOURNAMENTS</a><a href="rules.html" class="nh-shell-link">RULES</a><a href="verify.html" class="nh-shell-link">VERIFY / CODES</a><a href="index.html#pipeline" class="nh-shell-link">HOW IT WORKS</a></nav>
+</aside>
+<script>window.nhOpenMenu=()=>{document.getElementById('nh-shell-sidebar')?.classList.add('open');document.getElementById('nh-shell-overlay')?.classList.add('open');document.body.style.overflow='hidden'};window.nhCloseMenu=()=>{document.getElementById('nh-shell-sidebar')?.classList.remove('open');document.getElementById('nh-shell-overlay')?.classList.remove('open');document.body.style.overflow=''};</script>
+
+<div id="page-bg" aria-hidden="true"><img id="page-bg-img" src="" alt=""></div>
+<div class="bg-glow" aria-hidden="true"></div>
+<header class="top-nav">
+  <a href="index.html" class="nav-logo" aria-label="Not Humans Home">
+    <img src="https://i.ibb.co/PvRR7m3h/file-0000000014b4820898e6a19e0acc6c28.png" alt="NH">
+    <div class="nav-word">NOT <span>HUMANS</span></div>
+  </a>
+  <button class="menu-btn" id="menu-btn" aria-label="Open menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+</header>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar" aria-label="Navigation">
+  <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="nh-user-status" id="nh-user-status">
+    <div class="nh-user-head"><div class="nh-google-dot" id="nh-user-fallback">G</div><img class="nh-user-avatar" id="nh-user-avatar" src="" alt="Google profile" style="display:none" referrerpolicy="no-referrer"><div class="nh-user-copy"><div class="nh-user-name" id="nh-user-name">NOT LOGGED IN</div><div class="nh-user-state" id="nh-user-state">GOOGLE ACCOUNT</div></div></div>
+    <div class="nh-user-actions"><button class="nh-user-btn google" id="nh-login-btn" type="button">LOGIN WITH GOOGLE</button><button class="nh-user-btn" id="nh-logout-btn" type="button" style="display:none">LOGOUT</button></div>
+  </div>
+  <a class="sidebar-link" href="index.html">HOME</a>
+  <a class="sidebar-link" href="rules.html">RULES</a>
+  <a class="sidebar-link" href="reg.html">REGISTER</a>
+  <a class="sidebar-link" href="payment.html">PAYMENT</a>
+  <a class="sidebar-link" href="verify.html">VERIFY / CODES</a>
+  <a class="sidebar-link" href="index.html#reviews">REVIEWS</a>
+</aside>
+<div class="wrap" id="app">
+  <div class="loading">LOADING…</div>
+</div>
+<div class="toast" id="toast">OPENING WHATSAPP…</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { getFirestore, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+  authDomain: "nothumans-7e285.firebaseapp.com",
+  projectId: "nothumans-7e285",
+  storageBucket: "nothumans-7e285.firebasestorage.app",
+  messagingSenderId: "409725804600",
+  appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const nhAuth = getAuth(app);
+const nhProvider = new GoogleAuthProvider();
+
+const menuBtn=document.getElementById('menu-btn'), sidebar=document.getElementById('sidebar'), overlay=document.getElementById('sidebar-overlay'), closeBtn=document.getElementById('sidebar-close');
+function openSidebar(){sidebar.classList.add('open');overlay.classList.add('open');document.body.style.overflow='hidden';}
+function closeSidebar(){sidebar.classList.remove('open');overlay.classList.remove('open');document.body.style.overflow='';}
+menuBtn?.addEventListener('click',openSidebar); closeBtn?.addEventListener('click',closeSidebar); overlay?.addEventListener('click',closeSidebar);
+document.querySelectorAll('.sidebar-link').forEach(a=>a.addEventListener('click',closeSidebar));
+document.getElementById('nh-login-btn')?.addEventListener('click',async()=>{try{await signInWithPopup(nhAuth,nhProvider)}catch(e){console.error(e)}});
+document.getElementById('nh-logout-btn')?.addEventListener('click',async()=>{try{await signOut(nhAuth)}catch(e){console.error(e)}});
+onAuthStateChanged(nhAuth,u=>{const n=document.getElementById('nh-user-name'),st=document.getElementById('nh-user-state'),av=document.getElementById('nh-user-avatar'),fb=document.getElementById('nh-user-fallback'),li=document.getElementById('nh-login-btn'),lo=document.getElementById('nh-logout-btn');if(!n)return;if(u){n.textContent=u.displayName||u.email||'GOOGLE USER';st.textContent='LOGGED IN · GOOGLE';st.classList.add('logged');if(u.photoURL){av.src=u.photoURL;av.style.display='block';fb.style.display='none'}else{av.style.display='none';fb.style.display='grid'}li.style.display='none';lo.style.display='block'}else{n.textContent='NOT LOGGED IN';st.textContent='GOOGLE ACCOUNT';st.classList.remove('logged');av.style.display='none';fb.style.display='grid';li.style.display='block';lo.style.display='none'}});
+
+async function loadPageBackground(){try{const snap=await getDoc(doc(db,'settings','global'));if(snap.exists()){const url=snap.data().pageBackground||'';if(url){const im=document.getElementById('page-bg-img');im.onload=()=>im.classList.add('loaded');im.src=url;}}}catch(e){}}
+loadPageBackground();
+
+const DEFAULTS = {
+  kicker: 'REGISTRATION',
+  title: 'PAYMENT SUBMITTED',
+  subtitle: 'Your squad is in the verification queue. Tap the code to send a full invoice to admin on WhatsApp.',
+  hint: 'TAP CODE → ADMIN WHATSAPP',
+  note: 'If you skip this, open menu → <b>Verify / Codes</b> anytime to resend.',
+  waButton: 'SEND INVOICE ON WHATSAPP',
+  emptyTitle: 'NO CODE FOUND',
+  emptyMsg: 'Open Verify from the menu if you already registered.',
+  confetti: true,
+  showInvoice: true,
+  fields: {
+    tournament: true,
+    entry: true,
+    time: true,
+    prize: true,
+    team: true,
+    guild: true,
+    igl: true
+  }
+};
+
+let data = null;
+let adminWa = '';
+let cfg = { ...DEFAULTS, fields: { ...DEFAULTS.fields } };
+
+try { data = JSON.parse(sessionStorage.getItem('nh_success') || 'null'); } catch(_){}
+
+function mergeCfg(raw){
+  if(!raw || typeof raw !== 'object') return;
+  const f = raw.fields && typeof raw.fields === 'object' ? raw.fields : {};
+  cfg = {
+    ...DEFAULTS,
+    ...raw,
+    fields: { ...DEFAULTS.fields, ...f }
+  };
+}
+
+async function loadSettings(){
+  try {
+    const snap = await getDoc(doc(db, 'settings', 'global'));
+    if(snap.exists()){
+      const d = snap.data();
+      adminWa = String(d.adminWhatsapp || d.whatsapp || '').replace(/\D/g,'');
+      if(d.successPage) mergeCfg(d.successPage);
+    }
+  } catch(_){}
+}
+
+function esc(s){
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function buildInvoice(){
+  if(!data) return '';
+  const lines = ['*NH ENTRY INVOICE*', ''];
+  const f = cfg.fields || {};
+  if(f.tournament !== false) lines.push(`Tournament: ${data.matchName || '—'}`);
+  if(f.entry !== false) lines.push(`Entry: ₹${data.entryFee || 0}`);
+  if(f.time !== false) lines.push(`Date/Time: ${data.matchTime || '—'}`);
+  if(f.prize !== false) lines.push(`Prize Pool: ${data.matchPrize || '—'}`);
+  if(f.team !== false) lines.push(`Team: ${data.teamName || '—'}`);
+  if(f.guild !== false) lines.push(`Guild: ${data.guild || '—'}`);
+  if(f.igl !== false) lines.push(`IGL: ${data.iglContact || '—'}`);
+  lines.push(`Verify Code: *${data.code || '—'}*`, '', 'Please verify my payment registration.');
+  return lines.join('\n');
+}
+
+function invRows(){
+  if(!data || cfg.showInvoice === false) return '';
+  const f = cfg.fields || {};
+  const rows = [];
+  if(f.tournament !== false) rows.push(['Tournament', data.matchName || '—', '']);
+  if(f.entry !== false) rows.push(['Entry', '₹' + (data.entryFee || 0), 'gold']);
+  if(f.time !== false) rows.push(['Date / Time', data.matchTime || '—', '']);
+  if(f.prize !== false) rows.push(['Prize', data.matchPrize || '—', 'gold']);
+  if(f.team !== false) rows.push(['Team', data.teamName || '—', '']);
+  if(f.guild !== false && data.guild) rows.push(['Guild', data.guild, '']);
+  if(f.igl !== false && data.iglContact) rows.push(['IGL', data.iglContact, '']);
+  if(!rows.length) return '';
+  return `<div class="invoice">${rows.map(([l,v,c]) =>
+    `<div class="inv-row"><span class="inv-lab">${esc(l)}</span><span class="inv-val ${c}">${esc(v)}</span></div>`
+  ).join('')}</div>`;
+}
+
+function fireConfetti(){
+  if(cfg.confetti === false) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  document.body.appendChild(layer);
+  const colors = ['#ffc61a','#ff9d00','#ff6b1a','#2fe28a','#ff3d2e','#fff8f0'];
+  for(let i=0;i<36;i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = (Math.random()*100) + '%';
+    p.style.background = colors[i % colors.length];
+    p.style.animationDuration = (1.6 + Math.random()*1.8) + 's';
+    p.style.animationDelay = (Math.random()*0.4) + 's';
+    p.style.transform = 'rotate(' + (Math.random()*360) + 'deg)';
+    layer.appendChild(p);
+  }
+  setTimeout(() => layer.remove(), 4200);
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+let swipeBusy = false;
+
+function initSwipeSend(){
+  const wrap=document.getElementById('swipe-send');
+  const track=document.getElementById('swipe-track');
+  const thumb=document.getElementById('swipe-thumb');
+  const fill=document.getElementById('swipe-fill');
+  const label=document.getElementById('swipe-label');
+  if(!wrap||!track||!thumb) return;
+  let dragging=false, startX=0, maxX=0, current=0;
+  const getMax=()=>Math.max(0,track.clientWidth-thumb.offsetWidth-10);
+  const render=(x)=>{ current=Math.max(0,Math.min(x,maxX)); thumb.style.left=(5+current)+'px'; fill.style.width=(Math.min(100,(current/maxX)*100)||0)+'%'; };
+  const end=async()=>{
+    if(!dragging)return;
+    dragging=false;
+    const passed=current >= maxX*.82;
+    if(passed && !swipeBusy){
+      swipeBusy=true; render(maxX); label.textContent='SENDING TO WHATSAPP…';
+      wrap.classList.add('sent');
+      await sendCodeToAdmin();
+      setTimeout(()=>{render(0);label.textContent='SWIPE TO SEND ON WHATSAPP';wrap.classList.remove('sent');swipeBusy=false;},1200);
+    }else render(0);
+  };
+  thumb.addEventListener('pointerdown',e=>{ if(swipeBusy)return; dragging=true; startX=e.clientX; maxX=getMax(); thumb.setPointerCapture?.(e.pointerId); });
+  thumb.addEventListener('pointermove',e=>{ if(!dragging)return; render(e.clientX-startX); });
+  thumb.addEventListener('pointerup',end);
+  thumb.addEventListener('pointercancel',end);
+}
+
+window.sendCodeToAdmin = async () => {
+  if(!data || !data.code) return;
+  const text = buildInvoice();
+  if(data.regId){
+    try { await updateDoc(doc(db, 'registrations', data.regId), { codeSentToAdmin: true }); } catch(_){}
+  }
+  let phone = adminWa;
+  if(phone.startsWith('0')) phone = phone.slice(1);
+  if(phone && !phone.startsWith('91') && phone.length === 10) phone = '91' + phone;
+  const url = phone
+    ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
+    : `https://wa.me/?text=${encodeURIComponent(text)}`;
+  toast('OPENING WHATSAPP…');
+  window.open(url, '_blank');
+};
+
+(async () => {
+  await loadSettings();
+  const el = document.getElementById('app');
+
+  if(!data || !data.code){
+    el.innerHTML = `
+      <div class="empty-card">
+        <div class="kicker">VERIFY</div>
+        <h1>${esc(cfg.emptyTitle)}</h1>
+        <p class="sub">${esc(cfg.emptyMsg)}</p>
+        <a class="back" href="verify.html">OPEN VERIFY →</a>
+        <br/><a class="back" href="index.html">← HOME</a>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="hero-card">
+      <div class="check-ring">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2fe28a" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+      </div>
+      <div class="kicker">${esc(cfg.kicker)}</div>
+      <h1>${esc(cfg.title)}</h1>
+      <p class="sub">${esc(cfg.subtitle)}</p>
+      ${invRows()}
+      <div class="swipe-wrap" id="swipe-send">
+        <div class="swipe-track" id="swipe-track" aria-label="Swipe to send invoice on WhatsApp">
+          <div class="swipe-fill" id="swipe-fill"></div>
+          <div class="swipe-label" id="swipe-label">SWIPE TO SEND ON WHATSAPP</div>
+          <div class="swipe-thumb" id="swipe-thumb">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 12h12.2l-4.6-4.6L14 6l7 7-7 7-1.4-1.4 4.6-4.6H5z"/></svg>
+          </div>
+        </div>
+        <div class="hint">SWIPE RIGHT → AUTO SEND</div>
+      </div>
+      <div class="note">${cfg.note || ''}</div>
+    </div>
+    <div style="text-align:center"><a class="back" href="index.html">← BACK TO HOME</a></div>
+  `;
+  initSwipeSend();
+  fireConfetti();
+})();
+</script>
+</body>
+</html>

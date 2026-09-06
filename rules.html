@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>NOT HUMANS — Tournament Rules</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+button,a,div,span,img,input,textarea,select,label,li,ul,section,article,nav,header,footer,aside{outline:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
+img{-webkit-user-drag:none;-webkit-touch-callout:none;user-select:none;}
+body{user-select:none;-webkit-user-select:none;font-family:'Rajdhani',sans-serif;overflow-x:hidden;background:var(--bg);color:var(--text);min-height:100vh;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+input,textarea{user-select:text;-webkit-user-select:text;}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+button,a{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+::selection{background:rgba(255,198,26,0.35);color:#fff;}
+:root{
+  --bg:#0c0604;--bg2:#140a06;--panel:rgba(28,14,8,0.72);
+  --line:rgba(255,180,60,0.18);--line-strong:rgba(255,198,26,0.45);
+  --text:#fff8f0;--text-dim:rgba(255,248,240,0.62);--text-faint:rgba(255,248,240,0.36);
+  --gold:#ffc61a;--gold2:#ff9d00;--orange:#ff6b1a;--red:#ff3d2e;--crimson:#c41e3a;
+  --green:#2fe28a;
+  --glass:rgba(255,255,255,0.06);--glass-border:rgba(255,210,120,0.22);
+  --ease:cubic-bezier(0.22,1,0.36,1);--ease-soft:cubic-bezier(0.16,1,0.3,1);
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}
+  .sidebar,.sidebar-overlay{transition-duration:0.22s!important;transition-timing-function:ease-out!important;}
+}
+#page-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--bg);overflow:hidden;}
+#page-bg img{width:100%;height:100%;object-fit:cover;opacity:0;filter:contrast(1.05) brightness(0.35) saturate(1.1);transition:opacity 0.8s var(--ease);}
+#page-bg img.loaded{opacity:0.28;}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,198,26,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,0.03) 1px,transparent 1px);background-size:36px 36px;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(12,6,4,0.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);-webkit-tap-highlight-color:transparent;}
+.nav-logo img{width:42px;height:42px;object-fit:contain;display:block;border-radius:50%;background:#fff;}
+.nav-word{font-family:'Orbitron',sans-serif;font-weight:800;font-size:15px;letter-spacing:1.5px;}
+.nav-word span{color:var(--gold);}
+.menu-btn{width:40px;height:40px;background:none;border:none;display:flex;align-items:center;justify-content:center;color:var(--text);-webkit-tap-highlight-color:transparent;}
+.menu-btn svg{transition:transform 0.3s var(--ease-soft);}
+.menu-btn:active svg{transform:scale(0.9);}
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.42s var(--ease);}
+.sidebar-overlay.open{opacity:1;pointer-events:all;}
+.sidebar{
+  position:fixed;top:0;right:0;bottom:0;width:min(300px,88vw);z-index:201;
+  background:rgba(18,10,6,0.55);
+  backdrop-filter:blur(40px) saturate(1.4);
+  -webkit-backdrop-filter:blur(40px) saturate(1.4);
+  border-left:1px solid rgba(255,255,255,0.12);
+  box-shadow:-12px 0 40px rgba(0,0,0,0.35);
+  transform:translate3d(100%,0,0);
+  transition:transform 0.42s var(--ease);
+  display:flex;flex-direction:column;padding:24px 20px;
+  will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+}
+.sidebar.open{transform:translate3d(0,0,0);}
+.sidebar-close{width:36px;height:36px;background:none;border:none;color:var(--text);margin-bottom:32px;align-self:flex-end;transition:transform 0.3s var(--ease-soft);-webkit-tap-highlight-color:transparent;}
+.sidebar-close:active{transform:rotate(90deg);}
+.sidebar-link{display:flex;align-items:center;gap:12px;padding:16px 0;border-bottom:1px solid var(--line);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;color:var(--text-dim);text-decoration:none;text-transform:uppercase;transition:color 0.25s var(--ease),transform 0.25s var(--ease-soft);-webkit-tap-highlight-color:transparent;}
+.sidebar-link::before{content:'';width:6px;height:6px;background:var(--gold);clip-path:polygon(0 0,100% 50%,0 100%);transition:transform 0.25s var(--ease);}
+.sidebar-link:hover{color:var(--text);transform:translateX(4px);}
+.sidebar-link:hover::before{transform:translateX(2px);}
+.sidebar-link.active{color:var(--gold);}
+
+.reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity .8s var(--ease),transform .8s var(--ease);will-change:opacity,transform;}
+.reveal-delay-1{transition-delay:.08s}.reveal-delay-2{transition-delay:.16s}
+.reveal.in-view{opacity:1;transform:none;}
+
+.page-hero{position:relative;padding:140px 20px 40px;max-width:900px;margin:0 auto;z-index:1;}
+.page-kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;}
+.page-kicker::before{content:'';width:18px;height:2px;background:var(--gold);}
+.page-title{font-family:'Orbitron',sans-serif;font-size:clamp(30px,7vw,52px);font-weight:900;letter-spacing:-0.5px;line-height:1.05;text-transform:uppercase;color:var(--text);text-shadow:0 4px 30px rgba(0,0,0,0.5);margin-bottom:10px;}
+.page-sub{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;color:var(--text-dim);}
+
+.rules-wrap{max-width:900px;margin:0 auto;padding:0 20px 100px;position:relative;z-index:1;}
+.rules-card{
+  border:1px solid var(--line);background:var(--panel);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-radius:14px;padding:26px 22px;box-shadow:0 20px 60px rgba(0,0,0,0.35);
+}
+.rules-blocks{display:flex;flex-direction:column;gap:10px;}
+.rules-blocks a{text-decoration:none;}
+.rules-empty{text-align:center;padding:60px 20px;}
+.rules-empty .re-title{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:800;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;margin-top:14px;}
+.rules-empty .re-sub{font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--text-faint);margin-top:6px;}
+.rules-loading{display:flex;flex-direction:column;align-items:center;gap:14px;padding:60px 20px;}
+.spin{width:30px;height:30px;border:3px solid var(--gold);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.rules-updated{font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:1px;color:var(--text-faint);text-transform:uppercase;margin-top:18px;text-align:right;}
+
+footer{padding:40px 20px;border-top:1px solid var(--line);min-height:80px;position:relative;z-index:1;text-align:center;font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--text-faint);letter-spacing:1px;}
+
+.rule-section{
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+  border:1px solid var(--glass-border);border-radius:18px;overflow:hidden;
+  margin-bottom:18px;box-shadow:0 18px 55px rgba(0,0,0,.22);
+  transition:transform .65s var(--ease),opacity .65s var(--ease),border-color .3s ease;
+  transition-delay:var(--delay,0ms);
+}
+.rule-section:hover{transform:translateY(-3px);border-color:var(--line-strong);}
+.rule-section-head{display:flex;align-items:center;gap:13px;padding:18px 18px 15px;background:rgba(255,198,26,.055);border-bottom:1px solid var(--line);}
+.rule-number{width:38px;height:38px;display:grid;place-items:center;flex:none;border:1px solid rgba(255,198,26,.45);border-radius:10px;color:var(--gold);font-family:'Orbitron',sans-serif;font-size:10px;font-weight:900;letter-spacing:1px;background:rgba(255,198,26,.08);}
+.rule-section-head h2{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:900;letter-spacing:1.2px;color:var(--text);text-transform:uppercase;line-height:1.25;}
+.rule-list{padding:7px 16px 10px;}
+.rule-item{display:flex;align-items:flex-start;gap:12px;padding:14px 4px;border-bottom:1px solid rgba(255,255,255,.075);}
+.rule-item:last-child{border-bottom:0;}
+.rule-index{flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:8px;background:rgba(255,198,26,.08);border:1px solid rgba(255,198,26,.2);color:var(--gold);font-family:'Orbitron',sans-serif;font-size:8px;font-weight:800;}
+.rule-item p{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;line-height:1.45;color:var(--text-dim);padding-top:3px;white-space:pre-wrap;word-break:break-word;}
+
+#main-ui{opacity:0;transition:opacity 0.6s var(--ease);}
+#main-ui.ready{opacity:1;}
+</style>
+</head>
+<body>
+<div id="page-bg">
+  <img id="page-bg-img" alt="" decoding="async"/>
+</div>
+
+<div id="main-ui">
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar" aria-label="Menu">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Close menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <div id="sidebar-links">
+    <a href="index.html#hero" class="sidebar-link" onclick="closeSidebar()">Home</a>
+    <a href="index.html#tournaments" class="sidebar-link" onclick="closeSidebar()">Tournaments</a>
+    <a href="verify.html" class="sidebar-link" onclick="closeSidebar()">VERIFY</a>
+    <a href="rules.html" class="sidebar-link active" onclick="closeSidebar()">RULES</a>
+    <a href="index.html#pipeline" class="sidebar-link" onclick="closeSidebar()">How it works</a>
+  </div>
+</aside>
+
+<nav>
+  <a href="index.html#hero" class="nav-logo">
+    <img src="nh.png" alt="NOT HUMANS" width="42" height="42" onerror="this.style.display='none'"/>
+    <div class="nav-word">NOT HUMANS <span>ESPORTS</span></div>
+  </a>
+  <button class="menu-btn" onclick="openSidebar()" aria-label="Open menu">
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+      <rect width="22" height="2.2" rx="1" fill="currentColor"/>
+      <rect y="6.9" width="16" height="2.2" rx="1" fill="currentColor"/>
+      <rect y="13.8" width="10" height="2.2" rx="1" fill="var(--gold)"/>
+    </svg>
+  </button>
+</nav>
+
+<section class="page-hero">
+  <div class="page-kicker reveal">Official rulebook</div>
+  <h1 class="page-title reveal reveal-delay-1">Tournament Rules</h1>
+  <p class="page-sub reveal reveal-delay-2">Read this before you register — rules apply to every NOT HUMANS match and are updated by tournament admins.</p>
+</section>
+
+<section class="rules-wrap">
+  <div class="rules-card reveal">
+    <div id="rules-container">
+      <div class="rules-loading">
+        <div class="spin"></div>
+        <div class="re-title" style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;">Loading rules…</div>
+      </div>
+    </div>
+    <div class="rules-updated" id="rules-updated" style="display:none;"></div>
+  </div>
+</section>
+
+<footer>© NOT HUMANS ESPORTS — All rights reserved</footer>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { getFirestore, doc, getDoc, onSnapshot, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+  authDomain: "nothumans-7e285.firebaseapp.com",
+  projectId: "nothumans-7e285",
+  storageBucket: "nothumans-7e285.firebasestorage.app",
+  messagingSenderId: "409725804600",
+  appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function esc(s){
+  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(s){
+  return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/'/g,'&#39;');
+}
+
+/* Same block renderer used by the admin's announcement editor, so a
+   rules document is edited the exact same way:
+   Firestore path: content/rules  ->  { blocks: [...], updatedAt } */
+function renderBlock(b){
+  const align = b.align || 'left';
+  const color = b.color || '#fff8f0';
+  const bg = (b.bg && b.bg !== 'transparent') ? b.bg : 'transparent';
+  if(b.type === 'title'){
+    return `<div style="font-family:Orbitron,sans-serif;font-weight:900;font-size:${b.size||20}px;color:${color};background:${bg};text-align:${align};padding:6px 0;line-height:1.2;">${esc(b.text||'')}</div>`;
+  }
+  if(b.type === 'text'){
+    return `<div style="font-family:Rajdhani,sans-serif;font-size:${b.size||15}px;font-weight:600;color:${color};background:${bg};text-align:${align};line-height:1.6;padding:2px 0;white-space:pre-wrap;">${esc(b.text||'')}</div>`;
+  }
+  if(b.type === 'badge'){
+    return `<div style="text-align:${align};"><span style="display:inline-block;font-family:Orbitron,sans-serif;font-size:${b.size||11}px;font-weight:800;letter-spacing:1.5px;color:${color};background:${bg};padding:5px 10px;border-radius:4px;text-transform:uppercase;">${esc(b.text||'')}</span></div>`;
+  }
+  if(b.type === 'button'){
+    const href = (b.url||'#').trim() || '#';
+    const safe = /^https?:\/\//i.test(href) || href.startsWith('#') || href.startsWith('/') ? href : ('https://' + href);
+    return `<div style="text-align:${align};"><a href="${escAttr(safe)}" ${safe.startsWith('http')?'target="_blank" rel="noopener"':''} style="display:inline-block;font-family:Orbitron,sans-serif;font-size:${b.size||12}px;font-weight:800;letter-spacing:1px;color:${color};background:${bg};padding:11px 18px;border-radius:6px;text-decoration:none;">${esc(b.text||'OPEN')}</a></div>`;
+  }
+  if(b.type === 'image' && b.url){
+    return `<div style="text-align:${align};"><img src="${escAttr(b.url)}" alt="" style="max-width:100%;border-radius:10px;display:inline-block;" loading="lazy"/></div>`;
+  }
+  if(b.type === 'divider'){
+    return `<div style="height:0;border-top:2px solid ${color};margin:10px 0;"></div>`;
+  }
+  if(b.type === 'spacer'){
+    return `<div style="height:${parseInt(b.size)||16}px;"></div>`;
+  }
+  return '';
+}
+
+function formatUpdated(ts){
+  try{
+    const ms = ts && ts.toMillis ? ts.toMillis() : (ts ? Date.parse(ts) : null);
+    if(!ms) return '';
+    return 'Last updated ' + new Date(ms).toLocaleString();
+  }catch(_){ return ''; }
+}
+
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+}
+
+function renderRules(data){
+  const box = document.getElementById('rules-container');
+  const updatedEl = document.getElementById('rules-updated');
+  const pageTitle = document.querySelector('.page-title');
+  const pageSub = document.querySelector('.page-sub');
+  const page = data && data.rulesPage ? data.rulesPage : null;
+  const sections = page && Array.isArray(page.sections) ? page.sections : [];
+
+  if(pageTitle) pageTitle.textContent = page?.title || 'NH MAC TT RULES';
+  if(pageSub) pageSub.textContent = page?.subtitle || 'Official tournament rules. Read every rule before registering.';
+
+  if(!sections.length){
+    box.innerHTML = `<div class="rules-empty">
+      <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ffc61a" stroke-width="1.5" stroke-linecap="round" style="display:block;margin:0 auto;"><path d="M4 19V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14"/><path d="M4 19a2 2 0 0 0 2 2h12"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+      <div class="re-title">Rules not published yet</div>
+      <div class="re-sub">The tournament rulebook will appear here once admins publish it.</div>
+    </div>`;
+    updatedEl.style.display = 'none';
+    return;
+  }
+
+  box.innerHTML = `<div class="rules-blocks">${sections.map((section, sectionIndex) => {
+    const items = Array.isArray(section.items) ? section.items : [];
+    return `<article class="rule-section reveal" style="--delay:${sectionIndex * 70}ms">
+      <div class="rule-section-head">
+        <span class="rule-number">${String(sectionIndex + 1).padStart(2,'0')}</span>
+        <h2>${escapeHtml(section.title || `SECTION ${sectionIndex + 1}`)}</h2>
+      </div>
+      <div class="rule-list">
+        ${items.map((item, itemIndex) => `<div class="rule-item">
+          <span class="rule-index">${String(itemIndex + 1).padStart(2,'0')}</span>
+          <p>${escapeHtml(item)}</p>
+        </div>`).join('')}
+      </div>
+    </article>`;
+  }).join('')}</div>`;
+
+  updatedEl.style.display = 'none';
+  initMotion();
+}
+
+async function loadRules(){
+  try{
+    // RULES ARE SAVED BY THE ADMIN PANEL AT settings/global → rulesPage
+    const snap = await getDoc(doc(db, 'settings', 'global'));
+    if(snap.exists()) renderRules(snap.data());
+    else renderRules(null);
+  }catch(e){
+    console.warn('rules load', e);
+    document.getElementById('rules-container').innerHTML = `<div class="rules-empty">
+      <div class="re-title">Could not load rules</div>
+      <div class="re-sub">Check your connection and try again.</div>
+    </div>`;
+  }
+  document.getElementById('main-ui').classList.add('ready');
+  initMotion();
+}
+
+// Live update: changes made in Admin → Rules Manager appear here automatically.
+onSnapshot(doc(db, 'settings', 'global'), (snap) => {
+  if(snap.exists()) renderRules(snap.data());
+}, () => {});
+
+async function loadSidebarLinks(){
+  try{
+    const snap = await getDoc(doc(db, 'settings', 'global'));
+    if(snap.exists()){
+      const d = snap.data();
+      if(Array.isArray(d.sidebarLinks) && d.sidebarLinks.length){
+        const box = document.getElementById('sidebar-links');
+        const custom = d.sidebarLinks.filter(l => l && (l.name||'').trim() && (l.url||'').trim()).slice(0,7);
+        custom.forEach(l => {
+          let url = String(l.url).trim();
+          if(!/^https?:\/\//i.test(url) && !url.startsWith('#') && !url.startsWith('/')) url = 'https://' + url;
+          const external = url.startsWith('http');
+          const a = document.createElement('a');
+          a.href = url;
+          a.className = 'sidebar-link';
+          if(external){ a.target = '_blank'; a.rel = 'noopener'; }
+          a.textContent = String(l.name).trim();
+          a.onclick = closeSidebar;
+          box.appendChild(a);
+        });
+      }
+      if(d.pageBackground){
+        const img = document.getElementById('page-bg-img');
+        const pre = new Image();
+        pre.onload = () => { img.src = d.pageBackground; img.classList.add('loaded'); };
+        pre.src = d.pageBackground;
+      }
+    }
+  }catch(e){ console.warn('settings load', e); }
+}
+
+function initMotion(){
+  const items = document.querySelectorAll('.reveal:not(.in-view)');
+  if(!items.length) return;
+  if(!('IntersectionObserver' in window)){ items.forEach(el=>el.classList.add('in-view')); return; }
+  const observer = new IntersectionObserver((entries)=>entries.forEach(entry=>{
+    if(entry.isIntersecting){ entry.target.classList.add('in-view'); observer.unobserve(entry.target); }
+  }),{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  items.forEach(el=>observer.observe(el));
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initMotion,{once:true}); else initMotion();
+
+window.openSidebar = () => {
+  const overlay = document.getElementById('sidebar-overlay');
+  const sidebar = document.getElementById('sidebar');
+  overlay.classList.remove('open');
+  sidebar.classList.remove('open');
+  void sidebar.offsetWidth;
+  requestAnimationFrame(() => {
+    overlay.classList.add('open');
+    sidebar.classList.add('open');
+  });
+};
+window.closeSidebar = () => {
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.getElementById('sidebar').classList.remove('open');
+};
+
+loadSidebarLinks();
+loadRules();
+</script>
+</body>
+</html>

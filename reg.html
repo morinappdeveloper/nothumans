@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>Register — NotHumans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+button,a,div,span,img,input,textarea,select,label{outline:none;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Rajdhani',sans-serif;background:#0c0604;color:#fff8f0;min-height:100vh;min-height:100dvh;}
+input,textarea,select{user-select:text;-webkit-user-select:text;font-family:inherit;}
+:root{
+  --bg:#0c0604;--panel:rgba(28,14,8,0.72);--line:rgba(255,180,60,0.18);
+  --text:#fff8f0;--text-dim:rgba(255,248,240,0.62);--text-faint:rgba(255,248,240,0.36);
+  --gold:#ffc61a;--gold2:#ff9d00;--orange:#ff6b1a;--green:#2fe28a;--red:#ff3d2e;
+}
+nav{position:sticky;top:0;z-index:50;height:56px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(12,6,4,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);}
+.nav-logo img{width:36px;height:36px;border-radius:50%;background:#fff;object-fit:contain;}
+.nav-word{font-family:'Orbitron',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;}
+.nav-word span{color:var(--gold);}
+.nav-user{display:flex;align-items:center;gap:8px;font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:1px;color:var(--text-dim);}
+.nav-user img{width:28px;height:28px;border-radius:50%;}
+.btn-ghost{background:none;border:1px solid var(--line);color:var(--text-dim);font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;padding:7px 12px;border-radius:6px;cursor:pointer;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+
+#login-gate,#reg-app,#done-screen,#status-screen{display:none;min-height:calc(100vh - 56px);}
+#login-gate.show,#reg-app.show,#done-screen.show,#status-screen.show{display:block;}
+.status-card{max-width:420px;margin:40px auto;padding:28px 20px;text-align:center;border:1px solid var(--line);border-radius:16px;background:var(--panel);}
+.status-pill{display:inline-block;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;padding:8px 14px;border-radius:999px;margin:12px 0;}
+.status-pill.pending{background:rgba(80,140,255,0.15);color:#7eb6ff;border:1px solid rgba(80,140,255,0.35);}
+.status-pill.verifying{background:rgba(255,157,0,0.12);color:#ffb347;border:1px solid rgba(255,157,0,0.35);}
+.status-pill.selected{background:rgba(47,226,138,0.12);color:#2fe28a;border:1px solid rgba(47,226,138,0.4);}
+.status-pill.rejected{background:rgba(255,61,46,0.12);color:#ff6b6b;border:1px solid rgba(255,61,46,0.35);}
+.confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:99999;overflow:hidden;}
+.confetti-piece{position:absolute;width:8px;height:12px;top:-16px;animation:confettiFall linear forwards;border-radius:2px;}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(105vh) rotate(720deg);opacity:0;}}
+.congrats-banner{position:fixed;left:50%;top:28%;transform:translate(-50%,-50%);z-index:100000;background:rgba(12,6,4,0.95);border:2px solid #ffc61a;border-radius:16px;padding:24px 22px;max-width:90vw;width:360px;text-align:center;pointer-events:none;animation:congratsIn .6s cubic-bezier(0.22,1,0.36,1) forwards;}
+.congrats-banner h2{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:900;color:#ffc61a;letter-spacing:1px;line-height:1.35;margin-bottom:8px;}
+.congrats-banner p{font-size:13px;color:var(--text-dim);}
+@keyframes congratsIn{0%{opacity:0;transform:translate(-50%,-40%) scale(0.85);}100%{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+
+.login-wrap{max-width:420px;margin:0 auto;padding:48px 20px;text-align:center;}
+.login-icon{width:72px;height:72px;margin:0 auto 20px;border-radius:50%;background:rgba(255,198,26,0.12);border:1px solid rgba(255,198,26,0.35);display:flex;align-items:center;justify-content:center;}
+.login-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:22px;letter-spacing:1px;margin-bottom:8px;}
+.login-title span{color:var(--gold);}
+.login-sub{font-size:14px;color:var(--text-dim);margin-bottom:28px;line-height:1.5;}
+.google-btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;width:100%;max-width:320px;background:#fff;color:#1a1a1a;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:800;letter-spacing:1px;padding:14px 20px;border:none;border-radius:10px;cursor:pointer;transition:transform .15s,filter .15s;}
+.google-btn:hover{transform:translateY(-1px);filter:brightness(1.05);}
+.google-btn:disabled{opacity:0.6;pointer-events:none;}
+.google-btn svg{flex-shrink:0;}
+.login-err{margin-top:16px;font-family:'Orbitron',sans-serif;font-size:10px;color:var(--red);letter-spacing:1px;display:none;}
+.login-match{margin-top:28px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);text-align:left;}
+.login-match .lm-label{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:6px;}
+.login-match .lm-name{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:800;}
+.login-match .lm-meta{font-size:12px;color:var(--text-dim);margin-top:4px;}
+
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 48px;}
+.match-card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);margin-bottom:18px;}
+.match-banner{width:100%;aspect-ratio:16/7;object-fit:cover;display:block;background:#1a0c06;}
+.match-body{padding:16px;}
+.match-kicker{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
+.match-name{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;line-height:1.15;margin-bottom:6px;}
+.match-sub{font-size:13px;color:var(--text-dim);margin-bottom:12px;}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;}
+.meta-chip{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.5px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,0.04);}
+.meta-chip .lbl{color:var(--text-faint);font-size:8px;display:block;margin-bottom:2px;letter-spacing:1px;}
+.meta-chip .val{color:var(--text);}
+.meta-chip .val.gold{color:var(--gold);}
+.meta-chip .val.green{color:var(--green);}
+
+.card{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:16px;margin-bottom:14px;}
+.card-h{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;color:var(--gold);margin-bottom:14px;text-transform:uppercase;}
+.fgroup{margin-bottom:12px;}
+.flabel{display:block;font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text-dim);margin-bottom:6px;text-transform:uppercase;}
+.finput{width:100%;background:rgba(0,0,0,0.35);border:1.5px solid var(--line);border-radius:8px;padding:11px 12px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:var(--text);}
+.finput:focus{border-color:var(--gold);}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.player-block{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:rgba(0,0,0,0.2);}
+.player-slot{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;color:var(--gold);letter-spacing:1px;margin-bottom:8px;}
+
+.dz{border:2px dashed var(--line);border-radius:10px;padding:20px 14px;text-align:center;cursor:pointer;position:relative;background:rgba(0,0,0,0.25);}
+.dz:hover,.dz.over{border-color:var(--gold);background:rgba(255,198,26,0.06);}
+.dz input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:1;}
+.dz-txt{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text-dim);margin-top:8px;}
+.dz-preview{max-width:100%;border-radius:8px;margin-top:10px;display:none;}
+.upload-prog{display:none;align-items:center;gap:8px;margin-top:10px;font-family:'Orbitron',sans-serif;font-size:9px;color:var(--gold);}
+.upload-prog.show{display:flex;}
+.spin{width:12px;height:12px;border:2px solid rgba(255,198,26,0.3);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.submit-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a0a00;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:900;letter-spacing:1.5px;padding:16px;border:none;border-radius:10px;cursor:pointer;text-transform:uppercase;margin-top:8px;}
+.submit-btn{transition:filter .15s ease,transform .15s ease,opacity .2s ease;}
+.submit-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.submit-btn:disabled{opacity:0.55;pointer-events:none;}
+.hint{font-size:12px;color:var(--text-dim);line-height:1.45;margin-bottom:12px;}
+.err-box{background:rgba(255,61,46,0.12);border:1px solid rgba(255,61,46,0.4);color:#ff8a7a;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:1px;padding:12px;border-radius:8px;margin-bottom:12px;display:none;}
+.success-wrap{text-align:center;padding:48px 20px;max-width:420px;margin:0 auto;}
+.success-wrap h1{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;margin:16px 0 8px;}
+.success-wrap p{color:var(--text-dim);font-size:14px;line-height:1.5;margin-bottom:20px;}
+.code-box{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;letter-spacing:4px;color:var(--gold);padding:16px;border:1px solid rgba(255,198,26,0.35);border-radius:12px;background:rgba(255,198,26,0.08);margin-bottom:20px;}
+.back-link{display:inline-block;margin-top:12px;color:var(--gold);font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:1px;text-decoration:none;}
+.loading-center{text-align:center;padding:60px 20px;font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;color:var(--text-dim);}
+
+/* NH SHARED USER SIDEBAR */
+.nh-user-status{margin:0 0 24px;padding:14px 12px;border:1px solid var(--line,rgba(255,180,60,.18));border-radius:14px;background:rgba(255,255,255,.035);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.nh-user-head{display:flex;align-items:center;gap:10px;min-width:0;}
+.nh-user-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:rgba(255,198,26,.1);border:1px solid rgba(255,198,26,.35);flex:none;}
+.nh-user-copy{min-width:0;flex:1;}
+.nh-user-name{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;letter-spacing:1px;color:var(--text,#fff8f0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nh-user-state{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-dim,rgba(255,248,240,.62));margin-top:3px;text-transform:uppercase;}
+.nh-user-state.logged{color:var(--green,#2fe28a);}
+.nh-user-actions{display:flex;gap:7px;margin-top:10px;}
+.nh-user-btn{flex:1;border:1px solid var(--line,rgba(255,180,60,.18));background:rgba(255,255,255,.035);color:var(--text-dim,rgba(255,248,240,.62));border-radius:8px;padding:8px 7px;font-family:'Orbitron',sans-serif;font-size:8px;font-weight:800;letter-spacing:.8px;cursor:pointer;}
+.nh-user-btn:hover{border-color:var(--gold,#ffc61a);color:var(--gold,#ffc61a);}
+.nh-user-btn.google{background:linear-gradient(135deg,var(--gold,#ffc61a),var(--orange,#ff6b1a));border-color:transparent;color:#1a0a00;}
+.nh-user-btn:disabled{opacity:.55;pointer-events:none;}
+.nh-google-dot{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;background:#fff;color:#4285f4;font-family:Arial,sans-serif;font-weight:900;font-size:19px;border:1px solid rgba(255,255,255,.7);}
+@media(max-width:420px){.nh-user-status{padding:12px 10px}.nh-user-name{font-size:9px}}
+.nh-shell-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:900;opacity:0;pointer-events:none;transition:opacity .4s cubic-bezier(.22,1,.36,1)}.nh-shell-overlay.open{opacity:1;pointer-events:auto}.nh-shell-sidebar{position:fixed;top:0;right:0;bottom:0;width:min(310px,88vw);z-index:901;padding:24px 20px;background:rgba(18,10,6,.72);backdrop-filter:blur(36px) saturate(1.35);-webkit-backdrop-filter:blur(36px) saturate(1.35);border-left:1px solid rgba(255,255,255,.12);box-shadow:-16px 0 50px rgba(0,0,0,.38);transform:translate3d(100%,0,0);transition:transform .45s cubic-bezier(.22,1,.36,1);overflow-y:auto}.nh-shell-sidebar.open{transform:translate3d(0,0,0)}.nh-shell-close{width:36px;height:36px;border:0;background:none;color:var(--text,#fff);margin:0 0 28px auto;display:grid;place-items:center;cursor:pointer}.nh-shell-link{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--line,rgba(255,180,60,.18));font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:800;letter-spacing:1.8px;color:var(--text-dim,rgba(255,248,240,.62));text-decoration:none;transition:color .25s ease,transform .3s cubic-bezier(.22,1,.36,1)}.nh-shell-link:before{content:'';width:6px;height:6px;background:var(--gold,#ffc61a);clip-path:polygon(0 0,100% 50%,0 100%)}.nh-shell-link:hover{color:#fff;transform:translateX(4px)}.nh-sidebar-links{display:flex;flex-direction:column}
+/* NH SHARED USER SIDEBAR */
+.nh-user-status{margin:0 0 24px;padding:14px 12px;border:1px solid var(--line,rgba(255,180,60,.18));border-radius:14px;background:rgba(255,255,255,.035);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.nh-user-head{display:flex;align-items:center;gap:10px;min-width:0;}
+.nh-user-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:rgba(255,198,26,.1);border:1px solid rgba(255,198,26,.35);flex:none;}
+.nh-user-copy{min-width:0;flex:1;}
+.nh-user-name{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:800;letter-spacing:1px;color:var(--text,#fff8f0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nh-user-state{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-dim,rgba(255,248,240,.62));margin-top:3px;text-transform:uppercase;}
+.nh-user-state.logged{color:var(--green,#2fe28a);}
+.nh-user-actions{display:flex;gap:7px;margin-top:10px;}
+.nh-user-btn{flex:1;border:1px solid var(--line,rgba(255,180,60,.18));background:rgba(255,255,255,.035);color:var(--text-dim,rgba(255,248,240,.62));border-radius:8px;padding:8px 7px;font-family:'Orbitron',sans-serif;font-size:8px;font-weight:800;letter-spacing:.8px;cursor:pointer;}
+.nh-user-btn:hover{border-color:var(--gold,#ffc61a);color:var(--gold,#ffc61a);}
+.nh-user-btn.google{background:linear-gradient(135deg,var(--gold,#ffc61a),var(--orange,#ff6b1a));border-color:transparent;color:#1a0a00;}
+.nh-user-btn:disabled{opacity:.55;pointer-events:none;}
+.nh-google-dot{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;background:#fff;color:#4285f4;font-family:Arial,sans-serif;font-weight:900;font-size:19px;border:1px solid rgba(255,255,255,.7);}
+@media(max-width:420px){.nh-user-status{padding:12px 10px}.nh-user-name{font-size:9px}}
+.nh-shell-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(12,6,4,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line,rgba(255,180,60,.18))}.nh-shell-menu{width:40px;height:40px;border:0;background:none;color:var(--text,#fff);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent}.nh-shell-menu:active{transform:scale(.94)}
+/* INDEX-MATCHED REGISTRATION SHELL */
+html{scroll-behavior:smooth;background:#0c0604;}
+body{position:relative;overflow-x:hidden;background:#0c0604;color:var(--text,#fff8f0);}
+#page-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#0c0604;}
+#page-bg::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(12,6,4,.78),rgba(20,10,6,.58),rgba(9,5,4,.82));z-index:2;}
+#page-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;filter:contrast(1.08) brightness(.48) saturate(1.15);transition:opacity .8s cubic-bezier(.22,1,.36,1);z-index:1;}
+#page-bg-img.loaded{opacity:.48;}
+.bg-grid{position:absolute;inset:0;z-index:3;background-image:linear-gradient(rgba(255,198,26,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,198,26,.045) 1px,transparent 1px);background-size:36px 36px;opacity:.8;}
+.bg-glow{position:absolute;border-radius:50%;filter:blur(70px);z-index:3;pointer-events:none;}
+.bg-glow-a{width:42vw;height:42vw;left:-14vw;top:-12vw;background:rgba(255,157,0,.12);}
+.bg-glow-b{width:38vw;height:38vw;right:-12vw;top:24vh;background:rgba(196,30,58,.10);}
+body > *:not(#page-bg){position:relative;z-index:4;}
+.nh-index-nav,.sidebar,.sidebar-overlay{z-index:800!important;}
+.nh-index-nav{position:fixed!important;top:0;left:0;right:0;height:64px;z-index:800!important;padding:0 20px!important;display:flex!important;align-items:center;justify-content:space-between;background:rgba(12,6,4,.72)!important;backdrop-filter:blur(18px) saturate(1.25)!important;-webkit-backdrop-filter:blur(18px) saturate(1.25)!important;border-bottom:1px solid var(--line)!important;box-shadow:0 8px 32px rgba(0,0,0,.16);}
+.nh-index-nav::after{content:"";position:absolute;left:8%;right:8%;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,198,26,.5),transparent);animation:regNavLine 4s ease-in-out infinite;}
+@keyframes regNavLine{0%,100%{opacity:.25;transform:scaleX(.75)}50%{opacity:1;transform:scaleX(1)}}
+.nh-index-nav .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);}
+.nh-index-nav .nav-logo img{width:42px;height:42px;object-fit:contain;display:block;border-radius:50%;background:#fff;}
+.nh-index-nav .nav-word{font-family:'Orbitron',sans-serif;font-weight:800;font-size:15px;letter-spacing:1.5px;}
+.nh-index-nav .nav-word span{color:var(--gold);}
+.nh-index-nav .menu-btn{width:40px;height:40px;background:none;border:0;display:flex;align-items:center;justify-content:center;color:var(--text);cursor:pointer;}
+.nh-index-nav .menu-btn svg{transition:transform .3s cubic-bezier(.22,1,.36,1);}
+.nh-index-nav .menu-btn:active svg{transform:scale(.9);}
+.sidebar-overlay{position:fixed!important;inset:0!important;background:rgba(0,0,0,.5)!important;backdrop-filter:blur(7px)!important;-webkit-backdrop-filter:blur(7px)!important;z-index:850!important;opacity:0;pointer-events:none;transition:opacity .42s cubic-bezier(.22,1,.36,1)!important;}
+.sidebar-overlay.open{opacity:1;pointer-events:auto;}
+.sidebar{position:fixed!important;top:0!important;right:0!important;bottom:0!important;width:min(310px,88vw)!important;z-index:851!important;padding:24px 20px!important;display:flex!important;flex-direction:column!important;background:rgba(18,10,6,.72)!important;backdrop-filter:blur(36px) saturate(1.35)!important;-webkit-backdrop-filter:blur(36px) saturate(1.35)!important;border-left:1px solid rgba(255,255,255,.12)!important;box-shadow:-18px 0 55px rgba(0,0,0,.42)!important;transform:translate3d(100%,0,0)!important;transition:transform .48s cubic-bezier(.22,1,.36,1)!important;will-change:transform;overflow-y:auto;}
+.sidebar.open{transform:translate3d(0,0,0)!important;}
+.sidebar-close{width:38px;height:38px;margin:0 0 22px auto;display:grid;place-items:center;background:rgba(255,255,255,.035);border:1px solid rgba(255,198,26,.16);border-radius:10px;color:var(--text);cursor:pointer;transition:transform .3s ease,border-color .3s ease;}
+.sidebar-close:hover{transform:rotate(90deg);border-color:rgba(255,198,26,.55);}
+.sidebar-nav-title{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;color:var(--gold);margin:2px 0 4px;padding-bottom:10px;border-bottom:1px solid rgba(255,198,26,.14);}
+.sidebar-links{display:flex;flex-direction:column;}
+.sidebar-link{display:flex;align-items:center;gap:12px;padding:16px 0;border-bottom:1px solid var(--line);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;color:var(--text-dim);text-decoration:none;text-transform:uppercase;transition:color .25s ease,transform .3s cubic-bezier(.22,1,.36,1),padding-left .3s cubic-bezier(.22,1,.36,1);}
+.sidebar-link::before{content:"";width:6px;height:6px;background:var(--gold);clip-path:polygon(0 0,100% 50%,0 100%);flex:none;transition:transform .25s ease;}
+.sidebar-link:hover{color:var(--text);transform:translateX(3px);padding-left:4px;}
+.sidebar-link:hover::before{transform:translateX(2px);}
+.sidebar-foot{margin-top:auto;padding-top:22px;font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:1.5px;color:var(--text-faint);text-align:center;}
+/* keep registration content below the fixed index-style header */
+body > main, body > #boot-loading, body > #login-gate, body > #reg-app, body > .page{position:relative;z-index:2;}
+body > #boot-loading{padding-top:90px!important;}
+#login-gate,#reg-app{padding-top:84px;}
+@media(max-width:600px){.nh-index-nav{padding:0 16px!important;height:60px;}.nh-index-nav .nav-logo img{width:38px;height:38px}.nh-index-nav .nav-word{font-size:13px}.sidebar{width:min(320px,91vw)!important;padding:20px 18px!important}.sidebar-link{padding:15px 0;}#login-gate,#reg-app{padding-top:76px;}}
+@media(prefers-reduced-motion:reduce){.nh-index-nav::after{animation:none}.sidebar,.sidebar-overlay,.sidebar-link,.sidebar-close{transition:none!important;}}
+
+</style>
+
+<style id="nh-reg-polish">
+* , *::before, *::after{ -webkit-tap-highlight-color:transparent !important; }
+html{scroll-behavior:smooth;}
+body{background-attachment:fixed;overflow-x:hidden;}
+.nh-shell-sidebar,.nh-shell-overlay{will-change:transform,opacity;}
+.nh-shell-sidebar{transition:transform .52s cubic-bezier(.22,1,.36,1),box-shadow .52s ease;}
+.nh-shell-link{transition:color .25s ease,transform .35s cubic-bezier(.22,1,.36,1),padding-left .35s cubic-bezier(.22,1,.36,1);}
+.nh-shell-link:hover{padding-left:6px;}
+.reveal,.card,.panel,.form-card,.match-card{will-change:transform,opacity;}
+@keyframes nhRegFloat{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-7px,0)}}
+@keyframes nhRegGlow{0%,100%{opacity:.35}50%{opacity:.7}}
+.nh-reg-header{position:sticky;top:0;z-index:850;margin:0 -20px 22px;padding:12px 20px;background:rgba(18,10,6,.48);backdrop-filter:blur(24px) saturate(1.35);-webkit-backdrop-filter:blur(24px) saturate(1.35);border-bottom:1px solid rgba(255,198,26,.14);box-shadow:0 8px 30px rgba(0,0,0,.16);}
+.nh-reg-header::after{content:'';position:absolute;left:8%;right:8%;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,198,26,.55),transparent);animation:nhRegGlow 3s ease-in-out infinite;}
+.nh-reg-header-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:1180px;margin:auto;}
+.nh-reg-brand{font-family:Orbitron,sans-serif;font-size:13px;font-weight:900;letter-spacing:2px;color:#fff8f0;text-decoration:none;text-shadow:0 0 22px rgba(255,198,26,.12);}
+.nh-reg-brand span{color:var(--gold,#ffc61a);}
+.nh-reg-menu{width:42px;height:42px;border:1px solid rgba(255,198,26,.2);border-radius:11px;background:rgba(255,255,255,.035);color:#fff8f0;display:grid;place-items:center;cursor:pointer;transition:transform .3s ease,border-color .3s ease,background .3s ease;}
+.nh-reg-menu:hover{transform:translateY(-2px);border-color:rgba(255,198,26,.55);background:rgba(255,198,26,.08);}
+@media(max-width:600px){.nh-reg-header{margin:0 -14px 18px;padding:10px 14px}.nh-reg-brand{font-size:11px;letter-spacing:1.6px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.nh-reg-header::after{animation:none}.nh-reg-menu,.nh-shell-link{transition:none !important}}
+</style>
+<style>
+.sidebar-overlay{transition:opacity .45s cubic-bezier(.22,1,.36,1)!important;will-change:opacity}.sidebar{transform:translate3d(105%,0,0)!important;transition:transform .52s cubic-bezier(.16,1,.3,1)!important;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden}.sidebar.open{transform:translate3d(0,0,0)!important}.sidebar-link{opacity:0;transform:translate3d(18px,0,0);transition:color .25s ease,transform .38s cubic-bezier(.22,1,.36,1),padding-left .38s cubic-bezier(.22,1,.36,1)!important}.sidebar.open .sidebar-link{animation:nhSideIn .5s cubic-bezier(.22,1,.36,1) forwards}.sidebar.open .sidebar-link:nth-child(1){animation-delay:.08s}.sidebar.open .sidebar-link:nth-child(2){animation-delay:.12s}.sidebar.open .sidebar-link:nth-child(3){animation-delay:.16s}.sidebar.open .sidebar-link:nth-child(4){animation-delay:.20s}.sidebar.open .sidebar-link:nth-child(5){animation-delay:.24s}@keyframes nhSideIn{to{opacity:1;transform:translate3d(0,0,0)}}.sidebar-close{transition:transform .38s cubic-bezier(.22,1,.36,1),border-color .3s ease!important}.sidebar.open .sidebar-close{animation:nhCloseIn .45s cubic-bezier(.22,1,.36,1)}@keyframes nhCloseIn{from{opacity:0;transform:translateY(-8px) rotate(-15deg) scale(.9)}to{opacity:1;transform:none}}.nh-user-status{transition:transform .42s cubic-bezier(.22,1,.36,1)!important}.sidebar.open .nh-user-status{animation:nhUserIn .5s .03s cubic-bezier(.22,1,.36,1) both}@keyframes nhUserIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){.sidebar,.sidebar-overlay,.sidebar-link,.sidebar-close,.nh-user-status{animation:none!important;transition:none!important}.sidebar{transform:translate3d(100%,0,0)!important}.sidebar.open{transform:none!important}.sidebar-link{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div id="page-bg" aria-hidden="true"><div class="bg-grid"></div><div class="bg-glow bg-glow-a"></div><div class="bg-glow bg-glow-b"></div><img id="page-bg-img" alt="" decoding="async"/></div>
+<nav class="nh-index-nav" id="nh-index-nav">
+  <a href="index.html#hero" class="nav-logo" aria-label="Not Humans Home">
+    <img src="nh.png" alt="Not Humans" onerror="this.style.display='none'"/>
+    <div class="nav-word">NH <span>ESPORTS</span></div>
+  </a>
+  <button class="menu-btn" type="button" onclick="nhOpenMenu()" aria-label="Open menu">
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true">
+      <rect width="22" height="2.2" rx="1" fill="currentColor"/>
+      <rect y="6.9" width="16" height="2.2" rx="1" fill="currentColor"/>
+      <rect y="13.8" width="10" height="2.2" rx="1" fill="var(--gold)"/>
+    </svg>
+  </button>
+</nav>
+
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="nhCloseMenu()"></div>
+<aside class="sidebar" id="sidebar" aria-label="Main navigation">
+  <button class="sidebar-close" type="button" onclick="nhCloseMenu()" aria-label="Close menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M6 6l12 12M18 6L6 18"/>
+    </svg>
+  </button>
+  <div class="nh-user-status" id="nh-user-status">
+    <div class="nh-user-head">
+      <div class="nh-google-dot" id="nh-user-fallback">G</div>
+      <img class="nh-user-avatar" id="nh-user-avatar" src="" alt="Google profile" style="display:none" referrerpolicy="no-referrer"/>
+      <div class="nh-user-copy">
+        <div class="nh-user-name" id="nh-user-name">NOT LOGGED IN</div>
+        <div class="nh-user-state" id="nh-user-state">GOOGLE ACCOUNT</div>
+      </div>
+    </div>
+    <div class="nh-user-actions">
+      <button class="nh-user-btn google" id="nh-login-btn" type="button" onclick="NHLogin()">LOGIN WITH GOOGLE</button>
+      <button class="nh-user-btn" id="nh-logout-btn" type="button" onclick="NHLogout()" style="display:none">LOGOUT</button>
+    </div>
+  </div>
+  <div class="sidebar-nav-title">NAVIGATION</div>
+  <div class="sidebar-links">
+    <a href="index.html#hero" class="sidebar-link" onclick="nhCloseMenu()">HOME</a>
+    <a href="index.html#tournaments" class="sidebar-link" onclick="nhCloseMenu()">TOURNAMENTS</a>
+    <a href="rules.html" class="sidebar-link">RULES</a>
+    <a href="verify.html" class="sidebar-link">VERIFY / CODES</a>
+    <a href="index.html#pipeline" class="sidebar-link" onclick="nhCloseMenu()">HOW IT WORKS</a>
+  </div>
+  <div class="sidebar-foot">NOT HUMANS · ESPORTS ARENA</div>
+</aside>
+
+
+<div id="boot-loading" class="loading-center">LOADING MATCH…</div>
+
+<!-- Google login gate -->
+<div id="login-gate">
+  <div class="login-wrap">
+    <div class="login-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffc61a" stroke-width="1.8"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+    </div>
+    <div class="login-title">SIGN IN TO <span>REGISTER</span></div>
+    <p class="login-sub">Continue with Google to lock your squad for this tournament.</p>
+    <button class="google-btn" id="google-btn" type="button" onclick="doGoogleLogin()">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3.1l5.7-5.7C34.2 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3.1l5.7-5.7C34.2 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.1 3.2-3.5 5.7-6.5 7.1l6.2 5.2C38.9 37 44 31.5 44 24c0-1.3-.1-2.5-.4-3.5z"/></svg>
+      CONTINUE WITH GOOGLE
+    </button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-match" id="login-match-info" style="display:none;">
+      <div class="lm-label">REGISTERING FOR</div>
+      <div class="lm-name" id="login-match-name">—</div>
+      <div class="lm-meta" id="login-match-meta">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- Registration form -->
+<div id="reg-app">
+  <div class="wrap">
+    <div class="match-card" id="match-card">
+      <img class="match-banner" id="match-banner" alt="" style="display:none;"/>
+      <div class="match-body">
+        <div class="match-kicker" id="match-kicker">TOURNAMENT</div>
+        <div class="match-name" id="match-name">—</div>
+        <div class="match-sub" id="match-sub"></div>
+        <div class="meta-row" id="match-meta"></div>
+      </div>
+    </div>
+
+    <div class="err-box" id="form-err"></div>
+
+    <div class="card">
+      <div class="card-h">Team details</div>
+      <div class="fgroup">
+        <label class="flabel">Team name *</label>
+        <input class="finput" id="r-team" placeholder="Your squad name" maxlength="40"/>
+      </div>
+      <div class="fgrid">
+        <div class="fgroup">
+          <label class="flabel">Guild / clan</label>
+          <input class="finput" id="r-guild" placeholder="Optional"/>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">IGL contact *</label>
+          <input class="finput" id="r-igl" placeholder="WhatsApp / phone" inputmode="tel"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="custom-card" style="display:none;">
+      <div class="card-h">Registration form</div>
+      <p class="hint">Fields set by the tournament admin — fill every required box.</p>
+      <div id="custom-box"></div>
+    </div>
+
+    <div class="card" id="roster-card">
+      <div class="card-h">Squad roster</div>
+      <p class="hint" id="roster-hint">Fill each player slot for this mode.</p>
+      <div id="players-box"></div>
+    </div>
+
+    <div class="card" id="payment-card">
+      <div class="card-h">Payment screenshot</div>
+      <p class="hint" id="pay-hint">Upload UPI / payment proof. Admin will verify before confirming your slot.</p>
+      <div class="dz" id="pay-dz"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="handlePayDrop(event)"
+        onclick="document.getElementById('pay-inp').click()">
+        <input type="file" id="pay-inp" accept="image/*" onchange="if(this.files[0])uploadPayShot(this.files[0])"/>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffc61a" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <div class="dz-txt">TAP OR DROP PAYMENT SCREENSHOT</div>
+        <img class="dz-preview" id="pay-prev" alt=""/>
+      </div>
+      <div class="upload-prog" id="pay-prog"><div class="spin"></div><span id="pay-prog-txt">UPLOADING…</span></div>
+      <input type="hidden" id="pay-url"/>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" type="button" onclick="submitReg()">SUBMIT REGISTRATION</button>
+    <a class="back-link" href="index.html">← BACK TO HOME</a>
+  </div>
+</div>
+
+<!-- Success (paid code) -->
+<div id="done-screen">
+  <div class="success-wrap">
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#2fe28a" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+    <h1 id="done-title">REGISTRATION SENT</h1>
+    <p id="done-msg">Your squad is in the verification queue. Save this code — admin may ask for it.</p>
+    <div class="code-box" id="done-code">————</div>
+    <p style="font-size:12px;" id="done-foot">Status updates when admin confirms. Keep your contact active.</p>
+    <a class="back-link" href="index.html">← BACK TO HOME</a>
+  </div>
+</div>
+
+<!-- Existing registration status -->
+<div id="status-screen">
+  <div class="status-card">
+    <div style="font-family:Orbitron,sans-serif;font-size:10px;letter-spacing:2px;color:var(--gold);">YOUR REGISTRATION</div>
+    <div style="font-family:Orbitron,sans-serif;font-size:18px;font-weight:900;margin-top:10px;" id="st-team">—</div>
+    <div style="font-size:13px;color:var(--text-dim);margin-top:4px;" id="st-match">—</div>
+    <div class="status-pill pending" id="st-pill">PENDING</div>
+    <p style="font-size:13px;color:var(--text-dim);line-height:1.45;" id="st-desc">Your team is registered. Waiting for final selection.</p>
+    <a class="back-link" href="index.html">← BACK TO HOME</a>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, collection, addDoc, serverTimestamp, query, where, getDocs, increment } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDrg8CHeOGiPR9kFLSTreRbP4p8TGF9jMY",
+  authDomain: "nothumans-7e285.firebaseapp.com",
+  projectId: "nothumans-7e285",
+  storageBucket: "nothumans-7e285.firebasestorage.app",
+  messagingSenderId: "409725804600",
+  appId: "1:409725804600:web:ec0344bf1ac49a55edc6cd"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+const IMGBB_KEY = '405018efab5e2bd5e75f4dd0040a41c3';
+
+// Load the same global page background used by the NH index page.
+(async function loadNHPageBackground(){
+  try{
+    const snap = await getDoc(doc(db, 'settings', 'global'));
+    const url = snap.exists() ? snap.data().pageBackground : null;
+    const img = document.getElementById('page-bg-img');
+    if(!img || !url) return;
+    img.onload = () => img.classList.add('loaded');
+    img.onerror = () => console.warn('NH page background failed to load');
+    img.src = url;
+  }catch(e){
+    console.warn('NH page background unavailable', e);
+  }
+})();
+
+const params = new URLSearchParams(location.search);
+const matchId = params.get('matchId') || '';
+
+let currentUser = null;
+let match = null;
+let playerCount = 4;
+
+function show(id){
+  ['boot-loading','login-gate','reg-app','done-screen','status-screen'].forEach(x => {
+    const el = document.getElementById(x);
+    if(!el) return;
+    if(x === 'boot-loading') el.style.display = (id === x) ? 'block' : 'none';
+    else el.classList.toggle('show', id === x);
+  });
+}
+
+function playCongrats(msg){
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  const colors = ['#ffc61a','#ff9d00','#ff6b1a','#fff','#2fe28a','#1a6fff'];
+  for(let i=0;i<56;i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = (Math.random()*100)+'%';
+    p.style.background = colors[i%colors.length];
+    p.style.animationDuration = (1.5+Math.random()*1.8)+'s';
+    p.style.animationDelay = (Math.random()*0.3)+'s';
+    layer.appendChild(p);
+  }
+  document.body.appendChild(layer);
+  const banner = document.createElement('div');
+  banner.className = 'congrats-banner';
+  banner.innerHTML = `<h2>CONGRATULATIONS</h2><p>${msg||'Your team has been selected for NotHumans!'}</p>`;
+  document.body.appendChild(banner);
+  setTimeout(()=>{ layer.remove(); banner.remove(); }, 3200);
+}
+
+function showExistingStatus(reg){
+  const st = reg.status || 'pending';
+  const isFreeReg = reg.matchType === 'free' || Number(reg.entryFee) === 0;
+  document.getElementById('st-team').textContent = reg.teamName || 'Your team';
+  document.getElementById('st-match').textContent = reg.matchName || match?.name || '';
+  const pill = document.getElementById('st-pill');
+  const norm = (st === 'confirmed') ? 'selected' : st;
+  pill.className = 'status-pill ' + (norm === 'selected' ? 'selected' : norm);
+  pill.textContent = norm.toUpperCase();
+  const desc = document.getElementById('st-desc');
+
+  // Free: confirmed (pool) → selected (admin picked, popper)
+  // Paid: verifying → selected/rejected
+  if(st === 'selected'){
+    if(isFreeReg){
+      desc.textContent = 'Admin selected your team for NotHumans. See you in the lobby.';
+      playCongrats('Your team has been selected for NotHumans!');
+    } else {
+      desc.textContent = 'Your paid registration is confirmed. No further action needed.';
+    }
+  } else if(st === 'confirmed'){
+    // Free auto-confirm pool
+    desc.textContent = 'Registration CONFIRMED. Waiting for admin to SELECT your team for a final slot.';
+    pill.className = 'status-pill selected';
+    pill.textContent = 'CONFIRMED';
+  } else if(st === 'pending' || st === 'verifying'){
+    desc.textContent = 'Payment / registration is pending verification.';
+    pill.textContent = 'PENDING';
+  } else if(st === 'rejected'){
+    desc.textContent = 'This registration was rejected. Contact admin if needed.';
+  } else {
+    desc.textContent = 'Status: ' + st;
+  }
+  show('status-screen');
+}
+
+async function checkExistingReg(user){
+  if(!user || !match) return null;
+  try{
+    const existing = await getDocs(query(
+      collection(db, 'registrations'),
+      where('matchId', '==', match.id),
+      where('userId', '==', user.uid)
+    ));
+    if(existing.empty) return null;
+    return { id: existing.docs[0].id, ...existing.docs[0].data() };
+  }catch(e){ return null; }
+}
+
+function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function slotsForMode(mode){
+  const m = String(mode||'').toLowerCase().trim();
+  if(m === '1v1' || m === '1') return 1;
+  if(m === '2v2' || m === '2') return 2;
+  if(m === '4v4' || m.includes('br · squad') || m === 'br squad') return 4;
+  if(m.includes('5')) return 5;
+  return 4;
+}
+
+/** Ready-made roster only for exact standard modes. Custom modes (e.g. "4v4 Mac") → custom fields only. */
+function isStandardMode(mode){
+  const m = String(mode||'').trim();
+  const allowed = ['1v1','2v2','4v4','BR · SQUAD'];
+  return allowed.some(a => a.toLowerCase() === m.toLowerCase());
+}
+
+function isFreeMatch(m){
+  if(!m) return false;
+  return m.matchType === 'free' || Number(m.entry) === 0;
+}
+
+async function loadMatch(){
+  if(!matchId){
+    document.getElementById('boot-loading').textContent = 'NO MATCH SELECTED — OPEN FROM HOME';
+    return null;
+  }
+  try{
+    const snap = await getDoc(doc(db, 'matches', matchId));
+    if(!snap.exists()){
+      document.getElementById('boot-loading').textContent = 'MATCH NOT FOUND';
+      return null;
+    }
+    match = { id: snap.id, ...snap.data() };
+    playerCount = slotsForMode(match.mode);
+    renderMatchSummary();
+    return match;
+  }catch(e){
+    console.error(e);
+    document.getElementById('boot-loading').textContent = 'COULD NOT LOAD MATCH';
+    return null;
+  }
+}
+
+function renderMatchSummary(){
+  if(!match) return;
+  const free = isFreeMatch(match);
+  document.getElementById('match-name').textContent = match.name || 'Tournament';
+  document.getElementById('match-sub').textContent = match.subtitle || '';
+  document.getElementById('match-kicker').textContent = (match.mode || 'MATCH') + (match.time ? ' · ' + match.time : '');
+  const banner = document.getElementById('match-banner');
+  if(match.image){ banner.src = match.image; banner.style.display = 'block'; }
+  const meta = [];
+  if(match.prize) meta.push(`<div class="meta-chip"><span class="lbl">PRIZE</span><span class="val gold">${esc(match.prize)}</span></div>`);
+  meta.push(`<div class="meta-chip"><span class="lbl">ENTRY</span><span class="val ${free?'green':''}">${free?'FREE':('₹'+esc(String(match.entry||0)))}</span></div>`);
+  meta.push(`<div class="meta-chip"><span class="lbl">SLOTS</span><span class="val">${esc(String(match.slots||12))}</span></div>`);
+  document.getElementById('match-meta').innerHTML = meta.join('');
+
+  // login gate preview
+  document.getElementById('login-match-info').style.display = 'block';
+  document.getElementById('login-match-name').textContent = match.name || 'Tournament';
+  document.getElementById('login-match-meta').textContent =
+    (match.mode||'') + (match.time ? ' · ' + match.time : '') + ' · ' + (free ? 'FREE' : ('₹'+(match.entry||0)));
+
+  // Payment is on payment.html for paid matches
+  const payCard = document.getElementById('payment-card');
+  if(payCard) payCard.style.display = 'none';
+  const subBtn = document.getElementById('submit-btn');
+  if(subBtn) subBtn.textContent = free ? 'SUBMIT REGISTRATION' : 'CONTINUE TO PAYMENT';
+
+  /* Diagram rules:
+     FREE  → custom inputs only
+     PAID  → fixed roster if 1v1/2v2/4v4/BR · else custom only
+  */
+  const standard = isStandardMode(match.mode);
+  const useFixed = !free && standard; // paid + standard mode only
+  let teamDetailsCard = document.getElementById('r-team')?.closest('.card');
+  if(teamDetailsCard) teamDetailsCard.id = 'team-card';
+  const rosterCard = document.getElementById('roster-card');
+
+  if(useFixed){
+    if(teamDetailsCard) teamDetailsCard.style.display = 'block';
+    if(rosterCard) rosterCard.style.display = 'block';
+    const box = document.getElementById('players-box');
+    document.getElementById('roster-hint').textContent = `This mode needs ${playerCount} player${playerCount>1?'s':''}.`;
+    let html = '';
+    for(let i = 1; i <= playerCount; i++){
+      html += `<div class="player-block">
+        <div class="player-slot">PLAYER ${i}${i===1?' · IGL':''}</div>
+        <div class="fgrid">
+          <div class="fgroup" style="margin:0;">
+            <label class="flabel">IGN *</label>
+            <input class="finput" data-p="ign" data-slot="${i}" placeholder="In-game name"/>
+          </div>
+          <div class="fgroup" style="margin:0;">
+            <label class="flabel">UID *</label>
+            <input class="finput" data-p="uid" data-slot="${i}" placeholder="Game UID"/>
+          </div>
+        </div>
+        <div class="fgroup" style="margin-top:10px;margin-bottom:0;">
+          <label class="flabel">Role</label>
+          <input class="finput" data-p="role" data-slot="${i}" placeholder="IGL / Fragger / Support…"/>
+        </div>
+      </div>`;
+    }
+    if(box) box.innerHTML = html;
+  } else {
+    // Free OR paid custom mode → no ready-made team/roster
+    if(teamDetailsCard) teamDetailsCard.style.display = 'none';
+    if(rosterCard) rosterCard.style.display = 'none';
+    const box = document.getElementById('players-box');
+    if(box) box.innerHTML = '';
+  }
+
+  // Custom fields: always for free; for paid always too (extra + required when custom mode)
+  const customs = Array.isArray(match.customFields) ? match.customFields : [];
+  const ccard = document.getElementById('custom-card');
+  const cbox = document.getElementById('custom-box');
+  if(customs.length){
+    ccard.style.display = 'block';
+    cbox.innerHTML = customs.map(f => {
+      const req = f.required ? ' *' : '';
+      const tag = f.type === 'textarea'
+        ? `<textarea class="finput" data-cf="${esc(f.id)}" rows="3" placeholder="${esc(f.placeholder||'')}"></textarea>`
+        : `<input class="finput" data-cf="${esc(f.id)}" type="${esc(f.type==='number'?'number':f.type==='email'?'email':f.type==='tel'?'tel':f.type==='url'?'url':'text')}" placeholder="${esc(f.placeholder||'')}"/>`;
+      return `<div class="fgroup"><label class="flabel">${esc(f.label||'Field')}${req}</label>${tag}</div>`;
+    }).join('');
+  } else {
+    // Free needs custom fields; paid standard can work without
+    if(free || !useFixed){
+      ccard.style.display = 'block';
+      cbox.innerHTML = '<p class="hint">Admin has not added registration fields yet. Ask them to add inputs on the match.</p>';
+    } else {
+      ccard.style.display = 'none';
+      cbox.innerHTML = '';
+    }
+  }
+}
+
+function setNavUser(user){
+  const box = document.getElementById('nav-user');
+  if(!box) return;
+  if(!user){ box.style.display = 'none'; return; }
+  box.style.display = 'flex';
+  document.getElementById('nav-name').textContent = (user.displayName || user.email || 'Player').split(' ')[0];
+  const av = document.getElementById('nav-avatar');
+  if(user.photoURL){ av.src = user.photoURL; av.style.display = 'block'; }
+  else av.style.display = 'none';
+}
+
+async function saveSiteUser(user){
+  if(!user) return;
+  try{
+    const ref = doc(db, 'users', user.uid);
+    const snap = await getDoc(ref);
+    if(snap.exists()){
+      await setDoc(ref, {
+        email: user.email || '',
+        name: user.displayName || '',
+        photoURL: user.photoURL || '',
+        lastLoginAt: serverTimestamp()
+      }, { merge: true });
+    } else {
+      await setDoc(ref, {
+        email: user.email || '',
+        name: user.displayName || '',
+        photoURL: user.photoURL || '',
+        createdAt: serverTimestamp(),
+        lastLoginAt: serverTimestamp(),
+        provider: 'google'
+      });
+      try { await setDoc(doc(db, 'settings', 'global'), { totalUsers: increment(1) }, { merge: true }); } catch(_){}
+    }
+  }catch(e){ console.warn('saveSiteUser', e); }
+}
+
+async function routeForAuth(user){
+  currentUser = user;
+  setNavUser(user);
+  if(user) saveSiteUser(user);
+  if(!match){ show('boot-loading'); return; }
+  if(!user){
+    show('login-gate');
+    return;
+  }
+  const existing = await checkExistingReg(user);
+  if(existing){
+    showExistingStatus(existing);
+    return;
+  }
+  show('reg-app');
+}
+
+window.doGoogleLogin = async () => {
+  const btn = document.getElementById('google-btn');
+  const err = document.getElementById('login-err');
+  err.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'OPENING GOOGLE…';
+  try{
+    // popup first; fallback redirect on mobile blockers
+    try {
+      await signInWithPopup(auth, provider);
+    } catch(popErr){
+      console.warn('popup failed, trying redirect', popErr);
+      if(popErr.code === 'auth/popup-blocked' || popErr.code === 'auth/cancelled-popup-request'){
+        await signInWithRedirect(auth, provider);
+        return;
+      }
+      throw popErr;
+    }
+  }catch(e){
+    console.error(e);
+    err.style.display = 'block';
+    err.textContent = e.code === 'auth/unauthorized-domain'
+      ? 'ADD THIS DOMAIN IN FIREBASE AUTH → SETTINGS'
+      : (e.message || 'GOOGLE SIGN-IN FAILED');
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3.1l5.7-5.7C34.2 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3.1l5.7-5.7C34.2 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.1 3.2-3.5 5.7-6.5 7.1l6.2 5.2C38.9 37 44 31.5 44 24c0-1.3-.1-2.5-.4-3.5z"/></svg> CONTINUE WITH GOOGLE`;
+  }
+};
+
+window.doLogout = async () => {
+  try { await signOut(auth); } catch(_){}
+};
+
+window.handlePayDrop = (e) => {
+  e.preventDefault();
+  e.currentTarget.classList.remove('over');
+  const f = e.dataTransfer.files[0];
+  if(f) uploadPayShot(f);
+};
+
+window.uploadPayShot = async (file) => {
+  if(!file) return;
+  const prog = document.getElementById('pay-prog');
+  const txt = document.getElementById('pay-prog-txt');
+  prog.classList.add('show');
+  txt.textContent = 'UPLOADING…';
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('pay-prev');
+    prev.src = e.target.result;
+    prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  try{
+    const fd = new FormData();
+    fd.append('image', file);
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
+    const json = await res.json();
+    if(!json.success) throw new Error('upload failed');
+    document.getElementById('pay-url').value = json.data.url;
+    txt.textContent = 'UPLOADED';
+    setTimeout(() => prog.classList.remove('show'), 1000);
+  }catch(e){
+    txt.textContent = 'FAILED';
+    document.getElementById('form-err').style.display = 'block';
+    document.getElementById('form-err').textContent = 'PAYMENT IMAGE UPLOAD FAILED';
+  }
+};
+
+function genVerifyCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for(let i=0;i<6;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+
+window.submitReg = async () => {
+  const err = document.getElementById('form-err');
+  err.style.display = 'none';
+  if(!currentUser || !match){
+    err.style.display = 'block';
+    err.textContent = 'SIGN IN REQUIRED';
+    show('login-gate');
+    return;
+  }
+  if((match.status||'open') === 'closed' || (match.status||'') === 'completed'){
+    err.style.display = 'block';
+    err.textContent = 'REGISTRATION CLOSED FOR THIS MATCH';
+    return;
+  }
+
+  const free = isFreeMatch(match);
+  const standard = isStandardMode(match.mode);
+  const useFixed = !free && standard; // paid + standard only
+  let teamName = '';
+  let guild = '';
+  let iglContact = '';
+  let players = [];
+
+  if(useFixed){
+    teamName = document.getElementById('r-team').value.trim();
+    guild = document.getElementById('r-guild').value.trim();
+    iglContact = document.getElementById('r-igl').value.trim();
+    if(!teamName){ err.style.display='block'; err.textContent='ENTER TEAM NAME'; return; }
+    if(!iglContact){ err.style.display='block'; err.textContent='ENTER IGL CONTACT'; return; }
+
+    for(let i=1;i<=playerCount;i++){
+      const ign = document.querySelector(`input[data-p="ign"][data-slot="${i}"]`)?.value.trim() || '';
+      const uid = document.querySelector(`input[data-p="uid"][data-slot="${i}"]`)?.value.trim() || '';
+      const role = document.querySelector(`input[data-p="role"][data-slot="${i}"]`)?.value.trim() || '';
+      if(!ign || !uid){
+        err.style.display='block';
+        err.textContent = `FILL IGN + UID FOR PLAYER ${i}`;
+        return;
+      }
+      players.push({ slot: i, ign, uid, role });
+    }
+  }
+
+  // custom fields — required for free & for paid custom mode
+  const customAnswers = {};
+  const customs = Array.isArray(match.customFields) ? match.customFields : [];
+  if((free || !useFixed) && !customs.length){
+    err.style.display='block';
+    err.textContent='NO FORM FIELDS SET BY ADMIN';
+    return;
+  }
+  for(const f of customs){
+    const el = document.querySelector(`[data-cf="${CSS.escape(f.id)}"]`);
+    const val = el ? el.value.trim() : '';
+    if(f.required && !val){
+      err.style.display='block';
+      err.textContent = `FILL: ${(f.label||'FIELD').toUpperCase()}`;
+      return;
+    }
+    if(val) customAnswers[f.id] = { label: f.label||'', value: val };
+  }
+
+  // Derive team display name from custom answers when no fixed form
+  if(!useFixed){
+    const firstVal = Object.values(customAnswers)[0];
+    teamName = (firstVal && firstVal.value) ? String(firstVal.value).slice(0, 40) : (currentUser.displayName || 'Player');
+    for(const a of Object.values(customAnswers)){
+      const lab = (a.label||'').toUpperCase();
+      if(lab.includes('TEAM')) { teamName = a.value; break; }
+    }
+    for(const a of Object.values(customAnswers)){
+      const lab = (a.label||'').toUpperCase();
+      if(lab.includes('GUILD')) guild = a.value;
+      if(lab.includes('IGL') || lab.includes('WHATSAPP') || lab.includes('CONTACT')) iglContact = a.value;
+    }
+  }
+
+  // optional: block duplicate team for same match by same user
+  try{
+    const existing = await getDocs(query(
+      collection(db, 'registrations'),
+      where('matchId', '==', match.id),
+      where('userId', '==', currentUser.uid)
+    ));
+    if(!existing.empty){
+      err.style.display='block';
+      err.textContent='YOU ALREADY REGISTERED FOR THIS MATCH';
+      return;
+    }
+  }catch(_){}
+
+  const freeMode = free;
+  const verifyCode = freeMode ? '' : genVerifyCode();
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'SUBMITTING…';
+
+  const data = {
+    matchId: match.id,
+    matchName: match.name || '',
+    teamName,
+    guild,
+    iglContact,
+    players,
+    entryFee: freeMode ? 0 : (parseInt(match.entry,10)||0),
+    matchType: freeMode ? 'free' : 'paid',
+    screenshotUrl: '',
+    customAnswers,
+    // Free → auto CONFIRMED. Paid goes to payment.html (not saved here).
+    status: 'confirmed',
+    verifyCode: null,
+    codeSentToAdmin: false,
+    userId: currentUser.uid,
+    userEmail: currentUser.email || '',
+    userName: currentUser.displayName || '',
+    registeredAt: serverTimestamp()
+  };
+
+  // PAID → stash form + open payment page (QR + SS + success code)
+  if(!freeMode){
+    const payload = {
+      matchId: match.id,
+      matchName: match.name || '',
+      matchTime: match.time || '',
+      matchPrize: match.prize || '',
+      entryFee: parseInt(match.entry,10)||0,
+      teamName,
+      guild,
+      iglContact,
+      players,
+      customAnswers,
+      mode: match.mode || '',
+      userId: currentUser.uid,
+      userEmail: currentUser.email || '',
+      userName: currentUser.displayName || ''
+    };
+    sessionStorage.setItem('nh_paid_reg', JSON.stringify(payload));
+    window.location.href = 'payment.html?matchId=' + encodeURIComponent(match.id);
+    return;
+  }
+
+  try{
+    await addDoc(collection(db, 'registrations'), data);
+    // Progress bar +1 on CONFIRMED
+    try {
+      const confSnap = await getDocs(query(collection(db,'registrations'), where('matchId','==',match.id), where('status','==','confirmed')));
+      const selSnap = await getDocs(query(collection(db,'registrations'), where('matchId','==',match.id), where('status','==','selected')));
+      const ids = new Set();
+      confSnap.forEach(d => ids.add(d.id));
+      selSnap.forEach(d => ids.add(d.id));
+      await setDoc(doc(db, 'slotCounts', match.id), { confirmed: ids.size, selected: selSnap.size }, { merge: true });
+    } catch(_){}
+    document.getElementById('done-title').textContent = 'CONFIRMED';
+    document.getElementById('done-msg').textContent = 'Free tournament registration confirmed. Progress updated. Admin will SELECT final teams for slots.';
+    document.getElementById('done-code').style.display = 'none';
+    document.getElementById('done-foot').textContent = 'Status: CONFIRMED · Admin SELECT → SELECTED (progress bar does not change).';
+    show('done-screen');
+  }catch(e){
+    console.error(e);
+    err.style.display='block';
+    err.textContent = e.code === 'permission-denied'
+      ? 'PERMISSION DENIED — CHECK FIRESTORE RULES'
+      : 'SUBMIT FAILED — TRY AGAIN';
+    btn.disabled = false;
+    btn.textContent = 'SUBMIT REGISTRATION';
+  }
+};
+
+// boot
+(async () => {
+  await loadMatch();
+  try { await getRedirectResult(auth); } catch(e){ console.warn(e); }
+  onAuthStateChanged(auth, (user) => {
+    routeForAuth(user);
+  });
+})();
+</script>
+
+<script>
+(()=>{
+ const els=document.querySelectorAll('.reveal,.form-card,.panel,.card,.match-card');
+ if(!els.length)return;
+ if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('in-view'));return;}
+ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in-view');io.unobserve(e.target)}}),{threshold:.08,rootMargin:'0px 0px -7% 0px'});
+ els.forEach(e=>io.observe(e));
+})();
+</script>
+
+<script>
+window.nhOpenMenu=function(){document.getElementById('sidebar')?.classList.add('open');document.getElementById('sidebar-overlay')?.classList.add('open');document.body.style.overflow='hidden';};
+window.nhCloseMenu=function(){document.getElementById('sidebar')?.classList.remove('open');document.getElementById('sidebar-overlay')?.classList.remove('open');document.body.style.overflow='';};
+</script>
+</body>
+</html>
