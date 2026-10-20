@@ -3,7 +3,60 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>NotHumans — Esports Tournament Arena</title>
+<title>NOT HUMANS Esports — Online Tournament Arena | Register Free & Paid Matches</title>
+<!-- NH SEO START -->
+<meta name="description" content="Join NOT HUMANS (NotHumans) esports tournaments at nothumans.space. Register free and paid matches, track slots, verify payments, and compete with guilds."/>
+<meta name="keywords" content="NOT HUMANS, NotHumans, nothumans.space, NH Esports, esports tournament, online tournament, free slot, paid match, gaming tournament India, BGMI tournament, Free Fire tournament"/>
+<meta name="author" content="NOT HUMANS Esports"/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
+<meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
+<meta name="theme-color" content="#0c0604"/>
+<meta name="color-scheme" content="dark"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="application-name" content="NOT HUMANS Esports"/>
+<meta name="apple-mobile-web-app-title" content="NOT HUMANS"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<link rel="canonical" href="https://nothumans.space/"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="NOT HUMANS Esports"/>
+<meta property="og:title" content="NOT HUMANS Esports — Online Tournament Arena | Register Free & Paid Matches"/>
+<meta property="og:description" content="Join NOT HUMANS (NotHumans) esports tournaments at nothumans.space. Register free and paid matches, track slots, verify payments, and compete with guilds."/>
+<meta property="og:url" content="https://nothumans.space/"/>
+<meta property="og:locale" content="en_IN"/>
+<meta property="og:image" content="https://nothumans.space/nh.png"/>
+<meta property="og:image:alt" content="NOT HUMANS Esports logo"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="NOT HUMANS Esports — Online Tournament Arena | Register Free & Paid Matches"/>
+<meta name="twitter:description" content="Join NOT HUMANS (NotHumans) esports tournaments at nothumans.space. Register free and paid matches, track slots, verify payments, and compete with guilds."/>
+<meta name="twitter:image" content="https://nothumans.space/nh.png"/>
+<meta name="twitter:image:alt" content="NOT HUMANS Esports"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SportsOrganization", "name": "NOT HUMANS Esports", "alternateName": ["NotHumans", "NH Esports", "NOT HUMANS"], "description": "Official esports tournament arena for competitive gaming matches, free slots, paid entries, and team registration.", "url": "https://nothumans.space/", "logo": "https://nothumans.space/nh.png", "sport": "Esports"}, {"@type": "WebSite", "name": "NOT HUMANS Esports", "alternateName": "NotHumans", "url": "https://nothumans.space/", "potentialAction": {"@type": "SearchAction", "target": "https://nothumans.space/index.html#tournaments", "query-input": "required name=search_term_string"}}, {"@type": "WebPage", "name": "NOT HUMANS Esports — Online Tournament Arena | Register Free & Paid Matches", "description": "Join NOT HUMANS (NotHumans) esports tournaments at nothumans.space. Register free and paid matches, track slots, verify payments, and compete with guilds.", "url": "https://nothumans.space/", "isPartOf": {"@type": "WebSite", "name": "NOT HUMANS Esports", "url": "https://nothumans.space/"}, "inLanguage": "en"}]}</script>
+
+<script>
+(function(){
+  try{
+    var origin = location.origin || 'https://nothumans.space';
+    if(!origin || origin === 'null') origin = 'https://nothumans.space';
+    var path = location.pathname || '/';
+    var url = origin + path + (location.search || '');
+    function setMeta(attr, key, val){
+      if(!val) return;
+      var el = document.querySelector('meta[' + attr + '="' + key + '"]');
+      if(!el){ el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el); }
+      el.setAttribute('content', val);
+    }
+    var can = document.querySelector('link[rel="canonical"]');
+    if(!can){ can = document.createElement('link'); can.rel = 'canonical'; document.head.appendChild(can); }
+    can.href = origin + (path === '/' ? '/' : path);
+    setMeta('property', 'og:url', url);
+    setMeta('name', 'twitter:url', url);
+  }catch(e){}
+})();
+</script>
+
+<!-- NH SEO END -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet"/>
 <style>
@@ -1065,6 +1118,19 @@ function escAttr(s){
   return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/'/g,'&#39;');
 }
 
+function applyFavicon(url){
+  const href = String(url || '').trim();
+  if(!href) return;
+  let link = document.querySelector('link[rel="icon"]') || document.querySelector('link[rel*="icon"]');
+  if(!link){ link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+  const lower = href.toLowerCase();
+  link.type = lower.endsWith('.svg') ? 'image/svg+xml' : (lower.endsWith('.ico') ? 'image/x-icon' : 'image/png');
+  link.href = href;
+  let apple = document.querySelector('link[rel="apple-touch-icon"]');
+  if(!apple){ apple = document.createElement('link'); apple.rel = 'apple-touch-icon'; document.head.appendChild(apple); }
+  apple.href = href;
+}
+
 async function saveSiteUser(user){
   if(!user) return;
   try{
@@ -1365,6 +1431,7 @@ async function bootstrap(){
     if(setSnap.exists()){
       const d = setSnap.data();
       pageUrl = d.pageBackground || null;
+      if(d.favicon) applyFavicon(d.favicon);
       if(Array.isArray(d.sidebarLinks)) applySidebarLinks(d.sidebarLinks);
       if(d.maintenanceMode){
         document.getElementById('maintenance-overlay').style.display = 'flex';
@@ -1523,6 +1590,7 @@ function applyPublicTicker(d){
 onSnapshot(doc(db, 'settings', 'global'), (snap) => {
   if(!snap.exists() || !gate.db) return;
   const d = snap.data();
+  if(d.favicon) applyFavicon(d.favicon);
   if(Array.isArray(d.sidebarLinks)) applySidebarLinks(d.sidebarLinks);
   if(d.pageBackground){
     loadImageWithWave(

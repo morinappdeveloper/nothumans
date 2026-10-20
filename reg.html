@@ -3,7 +3,60 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>Register — NotHumans</title>
+<title>Register for Tournament — NOT HUMANS Esports</title>
+<!-- NH SEO START -->
+<meta name="description" content="Register your team for NOT HUMANS esports tournaments at nothumans.space. Free and paid match registration with Google sign-in."/>
+<meta name="keywords" content="tournament registration, nothumans.space register, NOT HUMANS signup"/>
+<meta name="author" content="NOT HUMANS Esports"/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
+<meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
+<meta name="theme-color" content="#0c0604"/>
+<meta name="color-scheme" content="dark"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="application-name" content="NOT HUMANS Esports"/>
+<meta name="apple-mobile-web-app-title" content="NOT HUMANS"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<link rel="canonical" href="https://nothumans.space/reg.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="NOT HUMANS Esports"/>
+<meta property="og:title" content="Register for Tournament — NOT HUMANS Esports"/>
+<meta property="og:description" content="Register your team for NOT HUMANS esports tournaments at nothumans.space. Free and paid match registration with Google sign-in."/>
+<meta property="og:url" content="https://nothumans.space/reg.html"/>
+<meta property="og:locale" content="en_IN"/>
+<meta property="og:image" content="https://nothumans.space/nh.png"/>
+<meta property="og:image:alt" content="NOT HUMANS Esports logo"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Register for Tournament — NOT HUMANS Esports"/>
+<meta name="twitter:description" content="Register your team for NOT HUMANS esports tournaments at nothumans.space. Free and paid match registration with Google sign-in."/>
+<meta name="twitter:image" content="https://nothumans.space/nh.png"/>
+<meta name="twitter:image:alt" content="NOT HUMANS Esports"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SportsOrganization", "name": "NOT HUMANS Esports", "alternateName": ["NotHumans", "NH Esports", "NOT HUMANS"], "description": "Official esports tournament arena for competitive gaming matches, free slots, paid entries, and team registration.", "url": "https://nothumans.space/", "logo": "https://nothumans.space/nh.png", "sport": "Esports"}, {"@type": "WebSite", "name": "NOT HUMANS Esports", "alternateName": "NotHumans", "url": "https://nothumans.space/", "potentialAction": {"@type": "SearchAction", "target": "https://nothumans.space/index.html#tournaments", "query-input": "required name=search_term_string"}}, {"@type": "WebPage", "name": "Register for Tournament — NOT HUMANS Esports", "description": "Register your team for NOT HUMANS esports tournaments at nothumans.space. Free and paid match registration with Google sign-in.", "url": "https://nothumans.space/reg.html", "isPartOf": {"@type": "WebSite", "name": "NOT HUMANS Esports", "url": "https://nothumans.space/"}, "inLanguage": "en"}]}</script>
+
+<script>
+(function(){
+  try{
+    var origin = location.origin || 'https://nothumans.space';
+    if(!origin || origin === 'null') origin = 'https://nothumans.space';
+    var path = location.pathname || '/';
+    var url = origin + path + (location.search || '');
+    function setMeta(attr, key, val){
+      if(!val) return;
+      var el = document.querySelector('meta[' + attr + '="' + key + '"]');
+      if(!el){ el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el); }
+      el.setAttribute('content', val);
+    }
+    var can = document.querySelector('link[rel="canonical"]');
+    if(!can){ can = document.createElement('link'); can.rel = 'canonical'; document.head.appendChild(can); }
+    can.href = origin + (path === '/' ? '/' : path);
+    setMeta('property', 'og:url', url);
+    setMeta('name', 'twitter:url', url);
+  }catch(e){}
+})();
+</script>
+
+<!-- NH SEO END -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet"/>
 <style>
@@ -389,11 +442,28 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 const IMGBB_KEY = '405018efab5e2bd5e75f4dd0040a41c3';
 
-// Load the same global page background used by the NH index page.
+
+function applyFavicon(url){
+  const href = String(url || '').trim();
+  if(!href) return;
+  let link = document.querySelector('link[rel="icon"]') || document.querySelector('link[rel*="icon"]');
+  if(!link){ link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+  const lower = href.toLowerCase();
+  link.type = lower.endsWith('.svg') ? 'image/svg+xml' : (lower.endsWith('.ico') ? 'image/x-icon' : 'image/png');
+  link.href = href;
+  let apple = document.querySelector('link[rel="apple-touch-icon"]');
+  if(!apple){ apple = document.createElement('link'); apple.rel = 'apple-touch-icon'; document.head.appendChild(apple); }
+  apple.href = href;
+}
+
+// Load the same global page background + favicon used by the NH index page.
 (async function loadNHPageBackground(){
   try{
     const snap = await getDoc(doc(db, 'settings', 'global'));
-    const url = snap.exists() ? snap.data().pageBackground : null;
+    if(!snap.exists()) return;
+    const d = snap.data();
+    if(d.favicon) applyFavicon(d.favicon);
+    const url = d.pageBackground || null;
     const img = document.getElementById('page-bg-img');
     if(!img || !url) return;
     img.onload = () => img.classList.add('loaded');

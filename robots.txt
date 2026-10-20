@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /payment.html
+Disallow: /success.html
+Disallow: /admin
+Disallow: /index-2.html
+
+Sitemap: https://nothumans.space/sitemap.xml

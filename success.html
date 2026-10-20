@@ -3,7 +3,60 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>Success — NotHumans</title>
+<title>Registration Submitted — NOT HUMANS Esports</title>
+<!-- NH SEO START -->
+<meta name="description" content="Your NOT HUMANS tournament registration was submitted successfully on nothumans.space."/>
+<meta name="keywords" content="registration success, nothumans.space"/>
+<meta name="author" content="NOT HUMANS Esports"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="googlebot" content="noindex, nofollow"/>
+<meta name="theme-color" content="#0c0604"/>
+<meta name="color-scheme" content="dark"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="application-name" content="NOT HUMANS Esports"/>
+<meta name="apple-mobile-web-app-title" content="NOT HUMANS"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<link rel="canonical" href="https://nothumans.space/success.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="NOT HUMANS Esports"/>
+<meta property="og:title" content="Registration Submitted — NOT HUMANS Esports"/>
+<meta property="og:description" content="Your NOT HUMANS tournament registration was submitted successfully on nothumans.space."/>
+<meta property="og:url" content="https://nothumans.space/success.html"/>
+<meta property="og:locale" content="en_IN"/>
+<meta property="og:image" content="https://nothumans.space/nh.png"/>
+<meta property="og:image:alt" content="NOT HUMANS Esports logo"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Registration Submitted — NOT HUMANS Esports"/>
+<meta name="twitter:description" content="Your NOT HUMANS tournament registration was submitted successfully on nothumans.space."/>
+<meta name="twitter:image" content="https://nothumans.space/nh.png"/>
+<meta name="twitter:image:alt" content="NOT HUMANS Esports"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SportsOrganization", "name": "NOT HUMANS Esports", "alternateName": ["NotHumans", "NH Esports", "NOT HUMANS"], "description": "Official esports tournament arena for competitive gaming matches, free slots, paid entries, and team registration.", "url": "https://nothumans.space/", "logo": "https://nothumans.space/nh.png", "sport": "Esports"}, {"@type": "WebSite", "name": "NOT HUMANS Esports", "alternateName": "NotHumans", "url": "https://nothumans.space/", "potentialAction": {"@type": "SearchAction", "target": "https://nothumans.space/index.html#tournaments", "query-input": "required name=search_term_string"}}, {"@type": "WebPage", "name": "Registration Submitted — NOT HUMANS Esports", "description": "Your NOT HUMANS tournament registration was submitted successfully on nothumans.space.", "url": "https://nothumans.space/success.html", "isPartOf": {"@type": "WebSite", "name": "NOT HUMANS Esports", "url": "https://nothumans.space/"}, "inLanguage": "en"}]}</script>
+
+<script>
+(function(){
+  try{
+    var origin = location.origin || 'https://nothumans.space';
+    if(!origin || origin === 'null') origin = 'https://nothumans.space';
+    var path = location.pathname || '/';
+    var url = origin + path + (location.search || '');
+    function setMeta(attr, key, val){
+      if(!val) return;
+      var el = document.querySelector('meta[' + attr + '="' + key + '"]');
+      if(!el){ el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el); }
+      el.setAttribute('content', val);
+    }
+    var can = document.querySelector('link[rel="canonical"]');
+    if(!can){ can = document.createElement('link'); can.rel = 'canonical'; document.head.appendChild(can); }
+    can.href = origin + (path === '/' ? '/' : path);
+    setMeta('property', 'og:url', url);
+    setMeta('name', 'twitter:url', url);
+  }catch(e){}
+})();
+</script>
+
+<!-- NH SEO END -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet"/>
 <style>
@@ -240,7 +293,21 @@ document.getElementById('nh-login-btn')?.addEventListener('click',async()=>{try{
 document.getElementById('nh-logout-btn')?.addEventListener('click',async()=>{try{await signOut(nhAuth)}catch(e){console.error(e)}});
 onAuthStateChanged(nhAuth,u=>{const n=document.getElementById('nh-user-name'),st=document.getElementById('nh-user-state'),av=document.getElementById('nh-user-avatar'),fb=document.getElementById('nh-user-fallback'),li=document.getElementById('nh-login-btn'),lo=document.getElementById('nh-logout-btn');if(!n)return;if(u){n.textContent=u.displayName||u.email||'GOOGLE USER';st.textContent='LOGGED IN · GOOGLE';st.classList.add('logged');if(u.photoURL){av.src=u.photoURL;av.style.display='block';fb.style.display='none'}else{av.style.display='none';fb.style.display='grid'}li.style.display='none';lo.style.display='block'}else{n.textContent='NOT LOGGED IN';st.textContent='GOOGLE ACCOUNT';st.classList.remove('logged');av.style.display='none';fb.style.display='grid';li.style.display='block';lo.style.display='none'}});
 
-async function loadPageBackground(){try{const snap=await getDoc(doc(db,'settings','global'));if(snap.exists()){const url=snap.data().pageBackground||'';if(url){const im=document.getElementById('page-bg-img');im.onload=()=>im.classList.add('loaded');im.src=url;}}}catch(e){}}
+
+function applyFavicon(url){
+  const href = String(url || '').trim();
+  if(!href) return;
+  let link = document.querySelector('link[rel="icon"]') || document.querySelector('link[rel*="icon"]');
+  if(!link){ link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+  const lower = href.toLowerCase();
+  link.type = lower.endsWith('.svg') ? 'image/svg+xml' : (lower.endsWith('.ico') ? 'image/x-icon' : 'image/png');
+  link.href = href;
+  let apple = document.querySelector('link[rel="apple-touch-icon"]');
+  if(!apple){ apple = document.createElement('link'); apple.rel = 'apple-touch-icon'; document.head.appendChild(apple); }
+  apple.href = href;
+}
+
+async function loadPageBackground(){try{const snap=await getDoc(doc(db,'settings','global'));if(snap.exists()){const d=snap.data();if(d.favicon)applyFavicon(d.favicon);const url=d.pageBackground||'';if(url){const im=document.getElementById('page-bg-img');im.onload=()=>im.classList.add('loaded');im.src=url;}}}catch(e){}}
 loadPageBackground();
 
 const DEFAULTS = {
@@ -286,6 +353,7 @@ async function loadSettings(){
     const snap = await getDoc(doc(db, 'settings', 'global'));
     if(snap.exists()){
       const d = snap.data();
+      if(d.favicon) applyFavicon(d.favicon);
       adminWa = String(d.adminWhatsapp || d.whatsapp || '').replace(/\D/g,'');
       if(d.successPage) mergeCfg(d.successPage);
     }
