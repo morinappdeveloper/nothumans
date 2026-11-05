@@ -10,7 +10,7 @@
 <meta name="author" content="NOT HUMANS Esports"/>
 <meta name="robots" content="noindex, nofollow"/>
 <meta name="googlebot" content="noindex, nofollow"/>
-<meta name="theme-color" content="#0c0604"/>
+<meta name="theme-color" content="#130506"/>
 <meta name="color-scheme" content="dark"/>
 <meta name="format-detection" content="telephone=no"/>
 <meta name="application-name" content="NOT HUMANS Esports"/>
@@ -210,6 +210,44 @@ body::after{z-index:0;}
 .wrap{padding-top:92px;}
 @media(max-width:520px){.top-nav{padding:0 14px}.top-nav .nav-word{font-size:13px}.wrap{padding-top:86px;padding-left:14px;padding-right:14px;}.sidebar{width:min(320px,92vw);}}
 @media(prefers-reduced-motion:reduce){.sidebar,.sidebar-overlay{transition-duration:.22s!important;transition-timing-function:ease-out!important}.check-ring,.code,.confetti-piece{animation:none!important;transition:none!important;}}
+
+/* ===== NH DIWALI THEME (shared) ===== */
+:root{
+  --bg:#130506!important;--bg2:#1c0908!important;
+  --panel:rgba(46,15,8,0.66)!important;
+  --line:rgba(255,180,60,0.18)!important;
+  --line-strong:rgba(255,198,26,0.45)!important;
+  --text:#fff8f0!important;--text-dim:rgba(255,248,240,0.62)!important;
+  --text-faint:rgba(255,248,240,0.36)!important;
+  --gold:#ffc61a!important;--gold2:#ff9d00!important;--orange:#ff6b1a!important;
+  --red:#ff3d2e!important;--crimson:#c41e3a!important;--green:#2fe28a!important;
+}
+body{
+  background:radial-gradient(ellipse at 20% 0%,rgba(255,120,30,.10),transparent 42%),
+             radial-gradient(ellipse at 90% 20%,rgba(196,30,58,.10),transparent 40%),
+             linear-gradient(180deg,#130506 0%,#1a0806 50%,#0e0404 100%)!important;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,198,26,0.03) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,198,26,0.03) 1px,transparent 1px);
+  background-size:36px 36px;
+}
+#nh-diwali-lights{position:fixed;top:56px;left:0;right:0;height:24px;z-index:99;pointer-events:none;overflow:hidden;}
+#nh-diwali-lights svg{position:absolute;left:0;top:0;}
+#nh-diwali-lights i{position:absolute;width:8px;height:11px;border-radius:50% 50% 45% 45%;background:var(--c);
+  box-shadow:0 0 8px 2px var(--c),0 0 16px 4px var(--c);animation:nhBulb 1.7s ease-in-out infinite alternate;}
+@keyframes nhBulb{from{opacity:.55;transform:scale(.9)}to{opacity:1;transform:scale(1.08)}}
+nav,.top-nav,.nh-index-nav,.nh-shell-nav{
+  background:rgba(12,6,4,0.78)!important;
+  backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important;
+  border-bottom:1px solid rgba(255,180,60,0.18)!important;
+}
+.card,.rules-card,.hero-card,.status-card,.match-card,.invoice,.empty-card{
+  border-color:rgba(255,180,60,0.22)!important;
+  box-shadow:0 16px 48px rgba(0,0,0,.35),0 0 0 1px rgba(255,198,26,.05) inset!important;
+}
+
 </style>
 </head>
 <body>
