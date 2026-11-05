@@ -537,7 +537,7 @@ html.nh-skip-intro #main-ui{opacity:1!important;}
 <path d="M172 522V632A28 8 0 0 0 228 632V522Z" fill="url(#tsh)"/>
 <path d="M172 552A28 8 0 0 0 228 552V560A28 8 0 0 1 172 560Z" fill="url(#gb)"/>
 <path d="M172 604A28 8 0 0 0 228 604V610A28 8 0 0 1 172 610Z" fill="url(#gb)"/>
-<text x="200" y="583" text-anchor="middle" font-family="Arial Black,system-ui" font-weight="900" font-size="13" fill="#fff4cf" letter-spacing="1">NHMAC</text>
+<text x="200" y="583" text-anchor="middle" font-family="Arial Black,system-ui" font-weight="900" font-size="13" fill="#fff4cf" letter-spacing="1">NHUGC</text>
 <text x="200" y="595" text-anchor="middle" font-family="system-ui" font-weight="700" font-size="5" fill="#ffd84a" letter-spacing="2">SKY SHOT</text>
 <ellipse cx="200" cy="522" rx="28" ry="8" fill="#ffb34a"/><ellipse cx="200" cy="522" rx="24" ry="6" fill="#140408"/>
 <ellipse id="tglow" cx="200" cy="520" rx="22" ry="6" fill="#ffd27a" opacity="0"/>
@@ -1332,7 +1332,7 @@ function renderMatches(matches){
       }
       let kickerParts=[];
       if(sf('date') && m.time) kickerParts.push(`<span>${esc(m.time)}</span>`);
-      if(sf('mode') && m.mode) kickerParts.push(`<span class="dot"></span><span>${esc(m.mode)}</span>`);
+      if(sf('mode') && m.mode) kickerParts.push(`<span class="dot"></span><span>${esc(displayMode(m.mode))}</span>`);
       const kicker = kickerParts.length ? `<div class="tour-kicker">${kickerParts.join('')}</div>` : '';
       const title = sf('title') ? `<div class="tour-title">${esc(m.name||'Tournament')}</div>` : '';
       const subtitle = (sf('subtitle') && m.subtitle) ? `<div class="tour-subtitle">${esc(m.subtitle)}</div>` : '';
@@ -1372,6 +1372,15 @@ function renderMatches(matches){
   c.querySelectorAll('img.wave-target[data-src]').forEach(img=>{ const url=img.getAttribute('data-src'); img.removeAttribute('data-src'); const loader=img.previousElementSibling&&img.previousElementSibling.classList.contains('wave-loader')?img.previousElementSibling:null; loadImageWithWave(img,loader,url); });
   startScheduleTimer();
   initMotion();
+}
+
+
+function displayMode(mode){
+  /* Show admin mode with Mac → UGC (e.g. "4v4 Mac" → "4v4 UGC") */
+  let s = String(mode || '').trim();
+  if(!s) return '';
+  s = s.replace(/\bMAC\b/gi, 'UGC').replace(/\bMac\b/g, 'UGC').replace(/\bmac\b/g, 'UGC');
+  return s;
 }
 
 function esc(s){
